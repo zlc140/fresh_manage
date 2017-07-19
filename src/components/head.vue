@@ -125,7 +125,7 @@ export default {
     width:40px;
     height:40px;
     margin-top: 10px;
-    float:right;
+    // float:right;
 }
 .tools{
     padding: 0 20px;
