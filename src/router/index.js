@@ -25,8 +25,8 @@ Vue.use(Router)
 export default new Router({
   mode:'history',
   routes: [
-    {  path: '/', name: 'Hello', component: Hello },
-    {  path:'/login', name:'登录', component:Login },
+    {  path: '*', redirect: '/login'},
+    {  path:'/login', name:'登录', component:Login }, 
     {
       path:'/view',
       name:'商品模块',

@@ -57,14 +57,14 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss"  >
+.header.header-dark>.top{
+     background-color:#242f42;
+}
 .header{
     width:100%;
     height:100px;
     color:white;
-}
-.header.header-dark>.top{
-     background-color:#242f42;
 }
 .header>.el-col{
     background-color:#20a0ff;
