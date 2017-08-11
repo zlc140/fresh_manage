@@ -66,7 +66,7 @@ class StarFlow {
        window.requestAnimationFrame(this.flowing.bind(this))
     }
    
-  }
+  } 
 }
 
 export default {
