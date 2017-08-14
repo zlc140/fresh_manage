@@ -6,10 +6,13 @@ import router from './router'
 
 import elementUI from 'element-ui'
 import 'element-ui/lib/theme-default/index.css'
-import 'element-ui/lib/index.js'
+// import 'element-ui/lib/index.js'
 
 Vue.config.productionTip = false
 
+// 全局引入组件
+// import coreImage from '@/components/uploadImg'
+// Vue.component('core-image',coreImage)
 Vue.use(elementUI)
 /* eslint-disable no-new */
 new Vue({

@@ -50,12 +50,12 @@ export default {
   -ms-flex-grow: 1;
   max-width:calc(100% - 260px);
   padding:30px 20px 10px;
-  overflow: hidden;
-  overflow-y:auto;
+  /* overflow: hidden;
+  overflow-y:auto; */
   
 }
 .section>div{
-    background-color: #ccc;
+    /* background-color: #ccc; */
 }
 .aside{
   max-width:230px;

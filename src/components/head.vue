@@ -74,7 +74,8 @@ export default {
 }
 
 
-.header>.breadcrumb{
+.header{
+   &>.breadcrumb{
     height: 30px;
     line-height: 30px;
     padding-left: 260px;
@@ -82,6 +83,7 @@ export default {
 }
 .el-breadcrumb{
     line-height: 30px;
+}
 }
 .header .logo{
     width:231px;
