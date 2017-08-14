@@ -72,8 +72,6 @@ export default {
     width:100%;
     line-height: 70px;
 }
-
-
 .header{
    &>.breadcrumb{
     height: 30px;
