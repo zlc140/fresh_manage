@@ -1,6 +1,5 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Hello from '@/components/Hello'
 import {Login} from './component'
 
 
@@ -44,10 +43,10 @@ export default new Router({
       name:'前台用户管理',
       component:main,
       children:[
-        {path:'userlist',component:proList,name:'用户管理'},
-        {path:'newuser',component:classList,name:'新增用户'},
-        {path:'reply',component:brand,name:'回复用户'},
-        {path:'feedback',component:proAdd,name:'用户回馈列表'},
+        {path:'userlist',component:userList,name:'用户管理'},
+        {path:'newuser',component:newuser,name:'新增用户'},
+        {path:'reply',component:reply,name:'回复用户'},
+        {path:'feedback',component:feedback,name:'用户回馈列表'},
       ]
     },
      {
