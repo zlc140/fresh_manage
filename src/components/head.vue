@@ -15,11 +15,7 @@
                         <a>
                         退出 
                         </a>
-                        <!-- <el-dropdown trigger = "hover">
-                        <el-dropdown-menu slot="dropdown">
-                            <el-dropdown-item >退出登录</el-dropdown-item>
-                        </el-dropdown-menu>
-                        </el-dropdown> -->
+                    
                     <a>生鲜馆首页</a>
                 </el-col>
             </el-col>
