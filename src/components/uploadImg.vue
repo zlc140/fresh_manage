@@ -87,7 +87,6 @@ export default {
                 this.srcs= []
                 this.srcs.push(res[0])
             }
-            console.log(this.srcs)
             this.$emit('getImg', this.srcs)
         },
         handleError() {
@@ -113,6 +112,9 @@ export default {
 <style lang="scss" scoped>
  .imgBox{
         text-align: center;
+        img{
+            border: 1px solid #f0f0f0;
+        }
     }
 
 .imgList {

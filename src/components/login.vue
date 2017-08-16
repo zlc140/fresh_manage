@@ -1,6 +1,6 @@
 <template>
         <div class="" id="auth" :style="bg">
-            <!-- <star-flow></star-flow> -->
+             <star-flow></star-flow> 
             <div class="form_box">
               <h2>生鲜馆后台管理系统</h2>
             <el-form :model="user" :rules="rules" ref="ruleForm" label-position="center" v-loading="loginLoading" class="demo-ruleForm login-container" >
@@ -28,7 +28,8 @@
         </div>
 </template>
 <script>
-
+import {Login} from '@/service/config_router.js'
+import { getStore } from '@/config/storage'
 import starFlow from "./startFlow"
     export default {
         data() {
@@ -36,7 +37,7 @@ import starFlow from "./startFlow"
                 loginLoading:false,
                 bg:{background:"url("+require('../assets/auth-bg.jpg')+") no-repeat",backgroundSize:"100% 100%"},
                 user:{
-                    username:'',
+                    username:'admin',
                     password: ''                
                 },
                 rules: {
@@ -59,9 +60,6 @@ import starFlow from "./startFlow"
                     return /^1[34578]\d{9}$/gi.test(this.user.username) 
             }
         },
-        mounted() {
-            console.log(this.user)
-        },
         methods: {
             getValue (url) {
                     let values = {}
@@ -74,12 +72,23 @@ import starFlow from "./startFlow"
                     return values
             }, 
             check () {
-               
+               let _this = this
               this.$refs.ruleForm.validate((valid) => {
                 if(valid) {
-                  if(this.user.username == 'admin'){
-                    this.$router.push('/view')
-                  }
+                    if(getStore('username') != null){//当前有账号登录，却要登录另一个号怎么处理
+                         this.$router.push('/view/prolist')
+                         return false
+                    }
+                    let prop={
+                        name:this.user.username
+                    }
+
+                    Login(prop).then((res) => {
+                        this.$router.push('/view/prolist')
+                           
+                    })
+                     
+                 
                     // this.loginLoading=true
                     // this.$store.dispatch('checkUser',this.user).then((res) => {
                     //     this.loginLoading=false
@@ -103,7 +112,8 @@ import starFlow from "./startFlow"
                     }
                 })
 
-            }
+            },
+           
         }
     }
 </script>

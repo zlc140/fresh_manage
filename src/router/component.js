@@ -38,3 +38,5 @@ export const manageList = r => require.ensure([],() => r(require('../view/manage
 
 // 统计报表
 export const baobiao = r => require.ensure([],() => r(require('../view/baobiao')),'group-baobiao');
+
+

@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Hello from '@/components/Hello'
+
 import {Login} from './component'
 
 
@@ -21,12 +21,10 @@ import {transport,manageList} from './component'
 import {baobiao} from './component'
 
 Vue.use(Router)
-
-export default new Router({
+export const router = new Router({
   mode:'history',
   routes: [
-    {  path: '*', redirect: '/login'},
-    {  path:'/login', name:'登录', component:Login }, 
+    {  path:'/login', name:'登录', component:Login },
     {
       path:'/view',
       name:'商品模块',
@@ -40,18 +38,18 @@ export default new Router({
       ]
     },
     {
-      path:'/user',
+      path:'/User',
       name:'前台用户管理',
       component:main,
       children:[
-        {path:'userlist',component:proList,name:'用户管理'},
-        {path:'newuser',component:classList,name:'新增用户'},
-        {path:'reply',component:brand,name:'回复用户'},
-        {path:'feedback',component:proAdd,name:'用户回馈列表'},
+        {path:'userlist',component:userList,name:'用户管理'},
+        {path:'newuser',component:newuser,name:'新增用户'},
+        {path:'reply',component:reply,name:'回复用户'},
+        {path:'feedback',component:feedback,name:'用户回馈列表'},
       ]
     },
      {
-      path:'/order',
+      path:'/Order',
       name:'用户订单管理',
       component:main,
       children:[
@@ -59,11 +57,10 @@ export default new Router({
         {path:'advorder',component:advorder,name:'预订单管理'},
         {path:'bill',component:bill,name:'账单管理'},
         {path:'orderdetail',component:orderDetail,name:'订单详情'}
-        
       ]
     },
      {
-      path:'/kucun',
+      path:'/Kucun',
       name:'商品库存管理',
       component:main,
       children:[
@@ -82,28 +79,27 @@ export default new Router({
           {path:'nav',component:nav,name:'头部导航管理'},
           {path:'floor',component:floor,name:'首页楼层管理'},
           {path:'essayclass',component:essayClass,name:'文章分类管理'},
-          {path:'essaymanage',component:essayManage,name:'文章管理'},
+          {path:'essaymanage',component:essayManage,name:'文章管理'}
        
       ]
     },
      {
-      path:'/manage',
+      path:'/Manage',
       name:'系统管理',
       component:main,
       children:[
           {path:'managelist',component:manageList,name:'后台用户管理'},
           {path:'transport',component:transport,name:'物流管理'}
-         
-       
       ]
     },
     {
-      path:'/view',
+      path:'/tabel',
       name:'统计报表',
       component:main,
       children:[
-          {path:'baobiao',component:baobiao,name:'报表展示'},
+          {path:'baobiao',component:baobiao,name:'报表展示'}
       ]
-    },
-  ]
+    }
+    ]
 })
+  
