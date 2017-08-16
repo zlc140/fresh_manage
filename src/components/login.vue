@@ -1,6 +1,6 @@
 <template>
         <div class="" id="auth" :style="bg">
-            <!-- <star-flow></star-flow> -->
+             <star-flow></star-flow> 
             <div class="form_box">
               <h2>生鲜馆后台管理系统</h2>
             <el-form :model="user" :rules="rules" ref="ruleForm" label-position="center" v-loading="loginLoading" class="demo-ruleForm login-container" >
@@ -28,6 +28,7 @@
         </div>
 </template>
 <script>
+import {Login} from '@/service/config_router.js'
 
 import starFlow from "./startFlow"
     export default {
@@ -36,7 +37,7 @@ import starFlow from "./startFlow"
                 loginLoading:false,
                 bg:{background:"url("+require('../assets/auth-bg.jpg')+") no-repeat",backgroundSize:"100% 100%"},
                 user:{
-                    username:'',
+                    username:'admin',
                     password: ''                
                 },
                 rules: {
@@ -60,7 +61,7 @@ import starFlow from "./startFlow"
             }
         },
         mounted() {
-            console.log(this.user)
+             
         },
         methods: {
             getValue (url) {
@@ -74,12 +75,19 @@ import starFlow from "./startFlow"
                     return values
             }, 
             check () {
-               
+               let _this = this
               this.$refs.ruleForm.validate((valid) => {
                 if(valid) {
-                  if(this.user.username == 'admin'){
-                    this.$router.push('/view')
-                  }
+                    let prop={
+                        name:this.user.username
+                    }
+                    Login(prop).then((res) => {
+                        console.log('test',_this.$store.state)
+                        this.$router.push('/view')
+                           
+                    })
+                     
+                 
                     // this.loginLoading=true
                     // this.$store.dispatch('checkUser',this.user).then((res) => {
                     //     this.loginLoading=false
@@ -103,7 +111,8 @@ import starFlow from "./startFlow"
                     }
                 })
 
-            }
+            },
+           
         }
     }
 </script>

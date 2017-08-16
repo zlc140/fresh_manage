@@ -3,7 +3,7 @@
       <!--展开的侧边栏-->
       <el-menu class="el-menu-vertical-demo" :default-active="onRouter" :class="collapsed?'':'el-menu--dark'"
         @select="handleselect" unique-opened router>
-        <template v-for="(item,index) in $router.options.routes"   v-if="item.children">     
+        <template v-for="(item,index) in $store.state.addRouters"   v-if="item.children">     
             <el-submenu :index="index+''" v-if="!item.leaf">
               <template slot="title"> {{item.name}} </template>
                 <el-menu-item 
@@ -23,7 +23,6 @@
 <script>
 export default {
     props:['collapsed'],
-
     computed: {
          onRouter(){
              //这里通过路由得到的侧边栏，注意设置默认样式时需要处理

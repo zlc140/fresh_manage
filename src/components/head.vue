@@ -11,11 +11,7 @@
                     </div>
                 </el-col>
                 <el-col :span = "8" class="userinfo">
-                  
-                        <a>
-                        退出 
-                        </a>
-                    
+                        <a @click="logout"> 退出 </a>
                     <a>生鲜馆首页</a>
                 </el-col>
             </el-col>
@@ -46,6 +42,9 @@ export default {
         collapse() {
             this.collapsed = !this.collapsed
             this.$emit('changeCollapsed',this.collapsed)
+        },
+        logout(){
+            
         }
          
     }

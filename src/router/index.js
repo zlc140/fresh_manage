@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+
 import {Login} from './component'
 
 
@@ -20,12 +21,16 @@ import {transport,manageList} from './component'
 import {baobiao} from './component'
 
 Vue.use(Router)
-
-export default new Router({
+export const router = new Router({
   mode:'history',
   routes: [
-    {  path: '*', redirect: '/login'},
-    {  path:'/login', name:'登录', component:Login }, 
+    {  path:'', redirect:'/login' },
+    {  path:'/login', name:'登录', component:Login }
+     
+  ]
+})
+
+export const routerList = [
     {
       path:'/view',
       name:'商品模块',
@@ -58,7 +63,6 @@ export default new Router({
         {path:'advorder',component:advorder,name:'预订单管理'},
         {path:'bill',component:bill,name:'账单管理'},
         {path:'orderdetail',component:orderDetail,name:'订单详情'}
-        
       ]
     },
      {
@@ -103,6 +107,6 @@ export default new Router({
       children:[
           {path:'baobiao',component:baobiao,name:'报表展示'},
       ]
-    },
-  ]
-})
+    }
+    ]
+

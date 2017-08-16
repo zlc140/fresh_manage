@@ -12,6 +12,9 @@ var webpack = require('webpack')
 var proxyMiddleware = require('http-proxy-middleware')
 var webpackConfig = require('./webpack.dev.conf')
 
+var datas = require('./routes.json')
+var bodyParser = require('body-parser')
+
 // default port where dev server listens for incoming traffic
 var port = process.env.PORT || config.dev.port
 // automatically open browser, if not set will be false
@@ -22,6 +25,8 @@ var proxyTable = config.dev.proxyTable
 
 var app = express()
 var compiler = webpack(webpackConfig)
+
+app.use(bodyParser.json())
 
 var devMiddleware = require('webpack-dev-middleware')(compiler, {
   publicPath: webpackConfig.output.publicPath,
@@ -78,6 +83,17 @@ devMiddleware.waitUntilValid(() => {
     opn(uri)
   }
   _resolve()
+})
+
+app.get('/getRouter',function(req,res){
+  if(req.query.name === 'admin'){
+      res.send(datas.listOne)
+  }else if(req.query.name === 'seller'){
+    res.send(datas.listTwo)
+  }else{
+    res.send('权限不够')
+  }
+  
 })
 
 var server = app.listen(port)
