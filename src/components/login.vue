@@ -29,7 +29,7 @@
 </template>
 <script>
 import {Login} from '@/service/config_router.js'
-
+import { getStore } from '@/config/storage'
 import starFlow from "./startFlow"
     export default {
         data() {
@@ -60,9 +60,6 @@ import starFlow from "./startFlow"
                     return /^1[34578]\d{9}$/gi.test(this.user.username) 
             }
         },
-        mounted() {
-             
-        },
         methods: {
             getValue (url) {
                     let values = {}
@@ -78,12 +75,16 @@ import starFlow from "./startFlow"
                let _this = this
               this.$refs.ruleForm.validate((valid) => {
                 if(valid) {
+                    if(getStore('username') != null){//当前有账号登录，却要登录另一个号怎么处理
+                         this.$router.push('/view/prolist')
+                         return false
+                    }
                     let prop={
                         name:this.user.username
                     }
+
                     Login(prop).then((res) => {
-                        console.log('test',_this.$store.state)
-                        this.$router.push('/view')
+                        this.$router.push('/view/prolist')
                            
                     })
                      

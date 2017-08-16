@@ -7,7 +7,7 @@
                 <el-col :span="10">
                     <div class="tools">
                         <i class="el-icon-menu "  @click="collapse"></i>
-                        欢迎  登录生鲜馆后台管理系统
+                        欢迎 {{ userName.name }} 登录生鲜馆后台管理系统
                     </div>
                 </el-col>
                 <el-col :span = "8" class="userinfo">
@@ -26,17 +26,13 @@
 
 <script>
  
- 
+ import { removeStore,getStore } from '@/config/storage'
 export default {
     data() {
         return {
-            userName:'',
+            userName:getStore('username'),
             collapsed:false,
         }
-    },
-    async mounted(){
-        
-
     },
     methods:{
         collapse() {
@@ -44,7 +40,12 @@ export default {
             this.$emit('changeCollapsed',this.collapsed)
         },
         logout(){
-            
+            this.$store.dispatch('Logout').then((res) => {
+                if(res) {
+                    this.$router.push('/login')
+                }
+            })
+
         }
          
     }

@@ -84,7 +84,14 @@ devMiddleware.waitUntilValid(() => {
   }
   _resolve()
 })
-
+app.get('/login',function(req,res){
+  if(req.query.name !== ''){
+      res.send(req.query.name)
+  } else{
+    res.send('还没注册')
+  }
+  
+})
 app.get('/getRouter',function(req,res){
   if(req.query.name === 'admin'){
       res.send(datas.listOne)

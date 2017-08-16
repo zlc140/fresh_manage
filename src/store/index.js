@@ -6,13 +6,19 @@ Vue.use(Vuex)
 
 const state = {
     username:'',
-    routers:[],
     addRouters:[]
 }
 
 const mutations = {
     SET_ROUTES: (state, routers) => {
+        state.addRouters = []
         state.addRouters = routers
+        setStore('addRouters',routers)
+    },
+    LOGOUT: (state) => {
+        state.addRouters = []
+        removeStore('username')
+        removeStore('addRouters')
     }
 }
 

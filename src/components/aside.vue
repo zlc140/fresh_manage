@@ -3,7 +3,7 @@
       <!--展开的侧边栏-->
       <el-menu class="el-menu-vertical-demo" :default-active="onRouter" :class="collapsed?'':'el-menu--dark'"
         @select="handleselect" unique-opened router>
-        <template v-for="(item,index) in $store.state.addRouters"   v-if="item.children">     
+        <template v-for="(item,index) in datas"   v-if="item.children">     
             <el-submenu :index="index+''" v-if="!item.leaf">
               <template slot="title"> {{item.name}} </template>
                 <el-menu-item 
@@ -28,10 +28,10 @@ export default {
              //这里通过路由得到的侧边栏，注意设置默认样式时需要处理
              let routs = this.$route.path.split('/')
              return '/'+routs[1]+'/'+routs[2]
-      }
-    },
-    mounted(){
-         console.log(this.collapsed)
+      },
+       datas() {
+            return this.$store.state.addRouters
+        }
     },
     methods:{
         handleopen() {

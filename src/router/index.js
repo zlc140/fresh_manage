@@ -24,13 +24,7 @@ Vue.use(Router)
 export const router = new Router({
   mode:'history',
   routes: [
-    {  path:'', redirect:'/login' },
-    {  path:'/login', name:'登录', component:Login }
-     
-  ]
-})
-
-export const routerList = [
+    {  path:'/login', name:'登录', component:Login },
     {
       path:'/view',
       name:'商品模块',
@@ -44,7 +38,7 @@ export const routerList = [
       ]
     },
     {
-      path:'/user',
+      path:'/User',
       name:'前台用户管理',
       component:main,
       children:[
@@ -55,7 +49,7 @@ export const routerList = [
       ]
     },
      {
-      path:'/order',
+      path:'/Order',
       name:'用户订单管理',
       component:main,
       children:[
@@ -66,7 +60,7 @@ export const routerList = [
       ]
     },
      {
-      path:'/kucun',
+      path:'/Kucun',
       name:'商品库存管理',
       component:main,
       children:[
@@ -85,28 +79,27 @@ export const routerList = [
           {path:'nav',component:nav,name:'头部导航管理'},
           {path:'floor',component:floor,name:'首页楼层管理'},
           {path:'essayclass',component:essayClass,name:'文章分类管理'},
-          {path:'essaymanage',component:essayManage,name:'文章管理'},
+          {path:'essaymanage',component:essayManage,name:'文章管理'}
        
       ]
     },
      {
-      path:'/manage',
+      path:'/Manage',
       name:'系统管理',
       component:main,
       children:[
           {path:'managelist',component:manageList,name:'后台用户管理'},
           {path:'transport',component:transport,name:'物流管理'}
-         
-       
       ]
     },
     {
-      path:'/view',
+      path:'/tabel',
       name:'统计报表',
       component:main,
       children:[
-          {path:'baobiao',component:baobiao,name:'报表展示'},
+          {path:'baobiao',component:baobiao,name:'报表展示'}
       ]
     }
     ]
-
+})
+  
