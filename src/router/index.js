@@ -30,11 +30,22 @@ export const router = new Router({
       name:'商品模块',
       component:main,
       children:[
+        {path:'proAdd',component:proAdd,name:'新增商品'},
         {path:'prolist',component:proList,name:'商品列表'},
         {path:'classlist',component:classList,name:'商品分类列表'},
         {path:'brand',component:brand,name:'商品品牌列表'},
-        {path:'proAdd',component:proAdd,name:'新增商品'},
         {path:'review',component:review,name:'商品评论'}
+      ]
+    },
+    {
+      path:'/Kucun',
+      name:'商品库存管理',
+      component:main,
+      children:[
+        {path:'kucunlist',component:kucunList,name:'库存管理'},
+        {path:'kucundetail',component:kucunDetail,name:'库存明细'},
+        {path:'sendPro',component:sendPro,name:'发货备货管理'},
+        {path:'returnPro',component:returnPro,name:'退货管理'}
       ]
     },
     {
@@ -48,7 +59,7 @@ export const router = new Router({
         {path:'feedback',component:feedback,name:'用户回馈列表'},
       ]
     },
-     {
+    {
       path:'/Order',
       name:'用户订单管理',
       component:main,
@@ -57,17 +68,6 @@ export const router = new Router({
         {path:'advorder',component:advorder,name:'预订单管理'},
         {path:'bill',component:bill,name:'账单管理'},
         {path:'orderdetail',component:orderDetail,name:'订单详情'}
-      ]
-    },
-     {
-      path:'/Kucun',
-      name:'商品库存管理',
-      component:main,
-      children:[
-        {path:'kucunlist',component:kucunList,name:'库存管理'},
-        {path:'kucundetail',component:kucunDetail,name:'库存明细'},
-        {path:'sendPro',component:sendPro,name:'发货备货管理'},
-        {path:'returnPro',component:returnPro,name:'退货管理'}
       ]
     },
      {

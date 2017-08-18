@@ -5,7 +5,7 @@ import App from './App'
 import { router } from './router'
 import store from './store'
 import { getStore } from '@/config/storage'
-
+import filter from '@/config/filter'
 import elementUI from 'element-ui'
 import 'element-ui/lib/theme-default/index.css'
 // import 'element-ui/lib/index.js'
@@ -59,6 +59,8 @@ router.beforeEach((to, from, next) => {
   }
 
 })
+
+
 
 new Vue({
   el: '#app',
