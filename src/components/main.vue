@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="content">
         <head-bar @changeCollapsed="changeCollapsed"></head-bar>
         <div class="main">
             <div class="aside">
@@ -37,18 +37,15 @@ export default {
    display: flex;
   -webkit-display:flex;
   -ms-display:flex;
-  position: absolute;
-  top: 70px;
   width:100%;
-  bottom: 0;
+  min-height:calc(100% - 70px);
 
 }
-
 .section{
   flex-grow: 1;  
   -webkit-flex-grow: 1;
   -ms-flex-grow: 1;
-  max-width:calc(100% - 260px);
+  max-width:calc(100% - 270px);
   padding:30px 20px 10px;
   /* overflow: hidden;
   overflow-y:auto; */

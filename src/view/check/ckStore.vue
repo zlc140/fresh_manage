@@ -1,7 +1,5 @@
 <template>
-  <div>
-      库存明细
-  </div>
+  <div>审核商铺</div>
 </template>
 
 <script>

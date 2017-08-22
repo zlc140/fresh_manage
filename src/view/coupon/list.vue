@@ -1,5 +1,5 @@
 <template>
-  <div>退货管理</div>
+  <div>代金券管理</div>
 </template>
 
 <script>

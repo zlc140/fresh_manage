@@ -1,7 +1,5 @@
 <template>
-  <div>
-      回复用户的反馈
-  </div>
+  <div>财务管理</div>
 </template>
 
 <script>

@@ -30,7 +30,8 @@ export default {
              return '/'+routs[1]+'/'+routs[2]
       },
        datas() {
-            return this.$store.state.addRouters
+            // return this.$store.state.addRouters
+            return this.$router.options.routes
         }
     },
     methods:{

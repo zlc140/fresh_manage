@@ -1,7 +1,5 @@
 <template>
-  <div>
-      文章分类
-  </div>
+  <div>审核代金券</div>
 </template>
 
 <script>

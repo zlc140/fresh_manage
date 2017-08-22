@@ -54,7 +54,7 @@ export default {
 </script>
 
 <style lang="scss"  >
-.header.header-dark>.top{
+.header.header-dark{
      background-color:#242f42;
 }
 .header{
@@ -62,7 +62,7 @@ export default {
     height:100px;
     color:white;
 }
-.header>.el-col{
+.header{
     background-color:#20a0ff;
     height: 70px;
     width:100%;

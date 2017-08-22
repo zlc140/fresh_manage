@@ -1,7 +1,5 @@
 <template>
-  <div>
-      后台用户管理，权限分配
-  </div>
+  <div>操作日志</div>
 </template>
 
 <script>

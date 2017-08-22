@@ -1,7 +1,5 @@
 <template>
-  <div>
-      账单管理
-  </div>
+  <div>系统管理</div>
 </template>
 
 <script>

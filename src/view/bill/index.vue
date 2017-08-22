@@ -1,7 +1,5 @@
 <template>
-  <div>
-      商品库存列表
-  </div>
+  <div>账单</div>
 </template>
 
 <script>

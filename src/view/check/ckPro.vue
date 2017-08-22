@@ -1,7 +1,5 @@
 <template>
-  <div>
-      用户反馈列表等
-  </div>
+  <div>审核商品</div>
 </template>
 
 <script>

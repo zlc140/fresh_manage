@@ -41,3 +41,22 @@ Vue.filter('filterState',(value)=>{
       return '已签收'
   }
 })
+
+// 商品状态
+Vue.filter('goods',function(value) {
+  if(value==true){
+    return '已上架'
+  }else{
+    return '已下架'
+  }
+})
+ // 商品审核状态
+Vue.filter('goodsstate',function(value) {
+  if(value=='GOODS_STATE_ON_CHECKING'){
+    return '审核中'
+  }else if(value=='GOODS_STATE_CHECK_ON'){
+    return '审核通过'
+  }else{
+    return '审核不通过'
+  }
+})   
