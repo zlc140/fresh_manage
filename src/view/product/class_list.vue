@@ -1,17 +1,67 @@
 <template>
-  <div class="content">
+  <div class="content classTree">
     <div class="title">
-      <el-button @click="addOne">新增分类</el-button>
+      <el-button @click="addOne">添加分类</el-button>
     </div>
-    <el-tree
-      :data="data2"
-      :props="defaultProps"
-      accordion
-      :expand-on-click-node="false"
-      node-key="id"
-      :render-content="renderContent"
-      @node-click="handleNodeClick">
-    </el-tree>
+     <el-table 
+      :data="lists"
+      style="98%">
+        <el-table-column type="expand">
+          <template scope="scope">
+               <el-table  
+                  :data="scope.row.childClass"
+                  style="100%"
+                  :show-header="false">
+                      <el-table-column label="分类名称" prop="classTitle">
+                      </el-table-column>
+                      <el-table-column label="优先级" prop="classTitle">
+                      </el-table-column>
+                      <el-table-column label="是否显示" prop="classTitle" width="150">
+                        <template scope="scope">
+                              <el-switch
+                                v-model="scope.row.gcShow"
+                                on-text="是"
+                                off-text="否"
+                                >
+                              </el-switch>
+                        </template>
+                      </el-table-column>
+                      <el-table-column label="操作" width="100">
+                        <template scope="scope">
+                          <div class="play_box">
+                          <a>编辑</a>
+                          <a>删除</a>
+                          </div>
+                        </template>
+                      </el-table-column>
+                </el-table>
+          </template>
+        </el-table-column>
+          <el-table-column label="分类名称" prop="classTitle">
+          </el-table-column>
+           <el-table-column label="优先级" prop="classTitle">
+          </el-table-column>
+          <el-table-column label="是否显示" prop="classTitle" width="200">
+            <template scope="scope">
+                  <el-switch
+                    v-model="scope.row.gcShow"
+                    on-text="是"
+                    off-text="否"
+                    >
+                  </el-switch>
+            </template>
+          </el-table-column>
+          <el-table-column label="操作" width="100">
+            <template scope="scope">
+              <div class="play_box">
+               <a >添加子类</a>
+               <br>
+               <a>编辑</a>
+               <a>删除</a>
+               </div>
+            </template>
+          </el-table-column>
+     </el-table>
 
   </div>
 </template>
@@ -22,72 +72,55 @@ import { gclist } from '@/service/getData'
   export default {
     data() {
       return {
-        data2: [{
-          label: '一级 1',
-          children: [{
-            label: '二级 1-1'
-          }]
-        }, {
-          label: '一级 2',
-          children: [{
-            label: '二级 2-1'
-            
-          }, {
-            label: '二级 2-2'
-          }]
-        }],
-        lists:[],
+        lists: [],
         defaultProps: {
-          children: 'children',
-          label: 'label'
+          children: 'childClass',
+          label: 'classTitle'
         }
       };
     },
-    created(){
-        this.getList()
+    mounted(){
+      this.getList()
     },
-    methods: {
-      async getList(){
-          this.lists = await gclist()
-          console.log(this.lists)
-      },
-      handleNodeClick(data) {
-        console.log(data);
+    methods:{
+      getList(){
+        gclist().then((res) => {
+          if(res.data.state ==200){
+            this.lists = res.data.content
+            console.log(this.lists)
+          }
+        })
       },
       addOne(){
-          console.log(1)
-      },
-      append(store, data) {
-          this.data2 = [{
-          label: '一级 1',
-          children: [{
-            label: '二级 1-1'
-          }]
-        }]
-        
-        
-      },
-
-      remove(store, data) {
-        store.remove(data);
-      },
-      renderContent(h, { node, data, store }) {
-        return (
-          <span>
-            <span>
-              <span>{node.label}</span>
-            </span>
-            <span style="float: right; margin-right: 20px">
-              <el-button size="mini" on-click={ () => this.append(store, data) }>添加</el-button>
-              <el-button size="mini" on-click={ () => this.remove(store, data) }>删除</el-button>
-            </span>
-          </span>
-          );
+        console.log('添加分类')
       }
     }
+     
+      
   };
 </script>
 
-<style>
-  
+<style lang="scss">
+.classTree{
+  .play_box{
+    width:80px;
+    text-align: center;
+     margin-left: -20px;
+     padding: 10px 0;
+  }
+  .title{
+    text-align: right;
+    padding: 10px 20px;
+  }
+  .el-tree-node__children .del{
+    display: none;
+  }
+  .el-tree-node{
+    border-bottom: 1px solid #d1dbe5 ;
+    padding: 10px;
+    &:last-child{
+      border-bottom: none;
+    }
+  }
+  }
 </style>

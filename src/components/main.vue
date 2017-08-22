@@ -41,6 +41,10 @@ export default {
   min-height:calc(100% - 70px);
 
 }
+.toolbar{
+    padding: 30px;
+    text-align: right;
+}
 .section{
   flex-grow: 1;  
   -webkit-flex-grow: 1;
@@ -56,5 +60,8 @@ export default {
 }
 .aside{
   max-width:230px;
+}
+.el-button {
+    padding: 7px 15px;
 }
 </style>
