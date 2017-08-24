@@ -52,7 +52,9 @@
   </el-form-item>
    <el-form-item label="上传图片" prop="goodsShow">
      <!-- 上传图片  -->
-          <vue-core-image-upload   @getImg = "getImg"  
+          <vue-core-image-upload  
+           @getImg = "getImg"  
+            :picList="selectPic.picList"
           :cropRatio = "selectPic.radio" 
           :sizeBox = 'selectPic.size' 
           :multiple="selectPic.multiple"
@@ -92,7 +94,7 @@ export default {
             label: '食品'
           }
         ],
-         options: [
+         options2: [
           {
           value: '20',
           label: '品牌1'
@@ -120,7 +122,7 @@ export default {
           soldInTime:1156465145,//商品开始时间
           soldOutTime:1156465145,//商品结束时间   
           storeId:12,//商品货号      
-  },
+      },
       // editor
       editor:{
           value:'这是编辑器的默认内容',
@@ -129,10 +131,11 @@ export default {
          // upImg
         radio:'1:1',
         size:['400','400'],
-        cropShow:true,
-        multiple:true
+        cropShow:false,
+        multiple:true,
+        picList:[]
       },
-         rules: {
+      rules: {
             goodsTitle: [
             { required: true, message: '请输入商品名称', trigger: 'blur' },
           ],
@@ -144,14 +147,9 @@ export default {
           ],
           costPrice: [
             { required: true, message: '请输入商品的成本价', trigger: 'blur' },
-          ],
-        },
-    getImg(val){
-      console.log(val)
-    },
-    getContent(con){
-      console.log('编辑器',con)
-    }
+          ]
+        }
+    
       };
     },
   components:{
@@ -175,8 +173,17 @@ export default {
       },
       resetForm(formName) {
         this.$refs[formName].resetFields();
+      },
+      getImg(val){
+      console.log(val)
+      },
+      getContent(con){
+        console.log('编辑器',con)
       }
-    },
+
+
+
+    }
 }
 </script>
 

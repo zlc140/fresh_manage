@@ -132,6 +132,7 @@ export default {
        // 分类数据
         let _this = this
         gclist().then((res) => {
+          console.log(res.data)
           if(res.data.state == 200){
             let datas = res.data.content
            
@@ -168,9 +169,12 @@ export default {
               }
               // 表格数据
               prolist(para).then((res) => {
-                this.getData=res.data.content.content; 
-                console.log(this.getData)
-                this.totalElements=res.data.content.totalElements;
+                console.log(res.data)
+                if(res.data.state == 200){
+                  this.getData=res.data.content.content; 
+                  console.log(this.getData)
+                  this.totalElements=res.data.content.totalElements;
+                }
               })
        },
       // 是否删除

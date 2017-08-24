@@ -32,7 +32,10 @@ export default {
 }
 </script>
 
-<style>
+<style lang="scss">
+.tip{
+    color:orange;
+}
   .main{
    display: flex;
   -webkit-display:flex;
@@ -42,15 +45,16 @@ export default {
 
 }
 .toolbar{
-    padding: 30px;
+    padding: 10px 30;
     text-align: right;
 }
 .section{
+    position:relative;
   flex-grow: 1;  
   -webkit-flex-grow: 1;
   -ms-flex-grow: 1;
   max-width:calc(100% - 270px);
-  padding:30px 20px 10px;
+  padding:50px 20px 10px;
   /* overflow: hidden;
   overflow-y:auto; */
   
@@ -64,4 +68,21 @@ export default {
 .el-button {
     padding: 7px 15px;
 }
+ .dialog{
+     position:absolute;
+     background-color:white;
+     left:0px;
+     top:25px;
+     width:100%;
+     z-index:998;
+     box-sizing:border-box;
+     padding:30px;
+     .title{
+         padding:10px 50px;
+         margin-bottom:15px;
+         border-bottom:1px solid #f0f0f0;
+         color:#888;
+         font-size:18px;
+     }
+ }
 </style>
