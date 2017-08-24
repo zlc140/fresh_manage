@@ -9,20 +9,20 @@
             </el-select>
     </el-form-item>
   <el-form-item label="商品货号"><el-input v-model="form.goodsId"></el-input> </el-form-item>
-    <el-col :span="5">
+    <el-col :span="6">
           <el-form-item label="一级分类">
-            <el-select v-model="form.gclist" @change="getClasses">
+            <el-select v-model="form.gclist"  >
                <el-option  v-for="(item,index) in  gcData"   :key="index"  :label="item.classTitle" :value="item.classId"  >  </el-option> 
             </el-select>
           </el-form-item>
             </el-col>
-                <el-col :span="5">
+           <!-- <el-col :span="5">
           <el-form-item label="二级分类">
             <el-select v-model="form.gclistt">
               <el-option v-for="(item,index) in  gcDatatt"   :key="index"  :label="item.classTitle" :value="item.classId"></el-option>
             </el-select>
           </el-form-item>
-   </el-col>
+          </el-col> -->
         <el-form-item label="商品名称"> <el-input v-model="form.goodstitle"></el-input></el-form-item>
         <el-button type="primary" @click="onSubmit('search')">查询</el-button> </el-form-item>
   </el-row> 
@@ -130,20 +130,33 @@ export default {
      mounted(){ 
         this.getList()    
        // 分类数据
+        let _this = this
         gclist().then((res) => {
-             this.gcData=res.data.content
+          console.log(res.data)
+          if(res.data.state == 200){
+            let datas = res.data.content
+           
+            _this.gcData = []
+             datas.forEach((child) => {
+                  _this.gcData.push({
+                    classId:child.classId,
+                    classTitle:child.classTitle
+                  })
+                  if(child.childClass && child.childClass.length>0){
+                    child.childClass.forEach((item) => [
+                      _this.gcData.push({
+                         classId:item.classId,
+                        classTitle:'　　'+item.classTitle
+                      })
+                    ])
+                  }
+             })
+          }
+            //  this.gcData=res.data.content
          })  
     },
     methods:{
-      getClasses(){
-        this.gcData.forEach((res) => {
-          if(res.classId == this.form.gclist){
-                this.gcDatatt = res.childClass
-                console.log(this.gcDatatt)
-                 this.form.gclistt = ''
-          }
-        })    
-      },
+       
       getList(){ 
               let para={
                  pageNum: this.pageNum-1,
@@ -156,9 +169,12 @@ export default {
               }
               // 表格数据
               prolist(para).then((res) => {
-                this.getData=res.data.content.content; 
-                console.log(this.getData)
-                this.totalElements=res.data.content.totalElements;
+                console.log(res.data)
+                if(res.data.state == 200){
+                  this.getData=res.data.content.content; 
+                  console.log(this.getData)
+                  this.totalElements=res.data.content.totalElements;
+                }
               })
        },
       // 是否删除

@@ -44,25 +44,7 @@ export default {
 
             })
 
-        // return new Promise(resolve => {
-        //     const accessRoutes = router.filter(v => {
-        //            if(JSON.stringify(data).indexOf(v.name) > 0){
-        //                 if(v.children &&　v.children.length > 0){
-        //                    v.children = v.children.filter(child => {
-        //                        if(JSON.stringify(data).indexOf(child.name) >0){
-        //                            return child
-        //                        }
-        //                         return false
-        //                    })
-        //                 }  
-        //              return v
-        //            }
-        //             return false
-                        
-        //     })
-        //     commit('SET_ROUTES',accessRoutes)
-        //     resolve()
-        // })
+       
     },
     Logout( { commit } ) {
             commit('LOGOUT')

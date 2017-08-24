@@ -32,6 +32,7 @@ Vue.use(Router)
 export const router = new Router({
   mode:'history',
   routes: [
+    { path:'/', redirect:'/login'},
     {  path:'/login', name:'登录', component:Login },
     {
       path:'/content',

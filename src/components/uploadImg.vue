@@ -8,7 +8,15 @@
                     <i class="el-icon-delete " @click="delImg(item)"></i>
                 </span>
             </li>
-        <vue-core-image-upload :class="['el-button','pure-button-primary','js-btn-crop']" :crop="crops" text="上传图片" :url="url" :cropRatio="cropRatio" :inputOfFile="filename" extensions="png,gif,jpeg,jpg" @imageuploaded="imageuploaded" @errorhandle="handleError">
+        <vue-core-image-upload 
+                :class="['el-button','pure-button-primary','js-btn-crop']" 
+                :crop="crops" text="上传图片" 
+                :url="url" 
+                :cropRatio="cropRatio" 
+                :inputOfFile="filename" 
+                extensions="png,gif,jpeg,jpg" 
+                @imageuploaded="imageuploaded" 
+                @errorhandle="handleError">
          </vue-core-image-upload>
          </ul>
          <el-dialog v-model="bigImgShow" size="large" :close-on-click-modal="true">
@@ -38,6 +46,10 @@ export default {
         VueCoreImageUpload
     },
     props: {
+        picList:{
+            type:Array,
+            default:null
+        },
         multiple:{
             type: Boolean,
             default: false
@@ -65,7 +77,8 @@ export default {
         }
     },
     mounted() {
-        
+        this.srcs = this.picList
+        console.log(this.srcs)
         if (this.sizeBox != null) {
                 this.styles.width = this.sizeBox[0]+'px'
                 this.styles.Height = this.sizeBox[0]+'px'
@@ -80,13 +93,14 @@ export default {
     },
     methods: {
         imageuploaded(res) {
-           
+           console.log(res)
             if(this.multiple == true){
-                this.srcs.push(res[0])
+                this.srcs.push(res.content.url)
             }else{
                 this.srcs= []
-                this.srcs.push(res[0])
+                this.srcs.push(res.content.url)
             }
+            console.log(this.srcs)
             this.$emit('getImg', this.srcs)
         },
         handleError() {

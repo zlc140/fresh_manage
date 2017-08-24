@@ -28,14 +28,17 @@ module.exports = {
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
     proxyTable: {
-      '/upload':'http://192.168.0.14:8080',
-      '/findcart':'http://192.168.0.129:8080/fresh-order/cart',//购物车
-      '/order':'http://192.168.0.129:8080/fresh-order',//订单
+      '/upload':'http://192.168.0.9:8080//imageBase',
+
+      '/findcart':'http://192.168.0.17:8080/fresh-order/cart',//购物车
+      '/order':'http://192.168.0.17:8080/fresh-order',//订单
+
       '/gc':'http://192.168.0.12:8080',//商品分类
       '/goods':'http://192.168.0.12:8080',//商品
       '/store':'http://192.168.0.12:8080',//商铺
       '/brand':'http://192.168.0.12:8080',//品牌
       '/comment':'http://192.168.0.12:8080',//商品评论
+
       '/adv':'http://192.168.0.9:8080',//首页banner广告
       '/floor':'http://192.168.0.9:8080',//首页楼层
 

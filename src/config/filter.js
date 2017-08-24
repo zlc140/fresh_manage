@@ -17,7 +17,9 @@ Vue.filter('currency',(value) => {
   })
  
 Vue.filter('formatDate',function(value) {
-        let dates = new Date(parseInt(value))
+        if(value == 0 || value == '' || value =='undefined'){
+          return null
+        }
         return tool.formatDate.format((value),'yyyy-MM-dd')
      
 })
@@ -50,13 +52,28 @@ Vue.filter('goods',function(value) {
     return '已下架'
   }
 })
- // 商品审核状态
+ 
+// 商品审核状态
 Vue.filter('goodsstate',function(value) {
   if(value=='GOODS_STATE_ON_CHECKING'){
     return '审核中'
   }else if(value=='GOODS_STATE_CHECK_ON'){
     return '审核通过'
-  }else{
+  }else if(value=='GOODS_STATE_CHECK_OFF'){
     return '审核不通过'
+  }else if(value=='GOODS_STATE_ON_CLOSE'){
+    return '店铺倒闭'
+  }
+})   
+// // 品牌状态
+Vue.filter('brandstate',function(value) {
+  if(value=='BRAND_STATE_ON_CHECKING'){
+    return '品牌审核中'
+  }else if(value=='BRAND_STATE_CHECK_ON'){
+    return '品牌审核通过'
+  }else if(value=='BRAND_STATE_CHECK_OFF'){
+    return '品牌审核不通过'
+  }else if(value='BRAND_STATE_ON_CLOSE'){
+    return '品牌停用'
   }
 })   
