@@ -1,6 +1,18 @@
 <template>
     <div class="content">
-        <ul class="imgList">
+        <vue-core-image-upload 
+                :class="['el-button','pure-button-primary','js-btn-crop']" 
+                :crop="crops" 
+                :text="title" 
+                :url="url" 
+                :cropBtn='cropBtn'
+                :cropRatio="cropRatio" 
+                :inputOfFile="filename" 
+                extensions="png,gif,jpeg,jpg" 
+                @imageuploaded="imageuploaded" 
+                @errorhandle="handleError">
+         </vue-core-image-upload>
+        <ul class="imgList " v-if="showPic">
             <li v-for="item in srcs" :key="item.index">
                 <img :src="item">
                 <span class="doing">
@@ -8,18 +20,9 @@
                     <i class="el-icon-delete " @click="delImg(item)"></i>
                 </span>
             </li>
-        <vue-core-image-upload 
-                :class="['el-button','pure-button-primary','js-btn-crop']" 
-                :crop="crops" text="上传图片" 
-                :url="url" 
-                :cropRatio="cropRatio" 
-                :inputOfFile="filename" 
-                extensions="png,gif,jpeg,jpg" 
-                @imageuploaded="imageuploaded" 
-                @errorhandle="handleError">
-         </vue-core-image-upload>
+        
          </ul>
-         <el-dialog v-model="bigImgShow" size="large" :close-on-click-modal="true">
+         <el-dialog v-model="bigImgShow"   :close-on-click-modal="true">
              <div class="content imgBox">
                  <img :src="bigImg" ref="getImg" :style="styles"/>
             </div>
@@ -32,13 +35,17 @@ import VueCoreImageUpload from 'vue-core-image-upload'
 export default {
     data() {
         return {
+            cropBtn:{
+                ok:'确认',
+                cancel:'取消'
+            },
             srcs: [],
             crops: null,
             bigImg:'',
             bigImgShow:false,
             styles:{
-                width:'0px',
-                Height:'0px'
+                width:'auto',
+                Height:'auto'
             }
         }
     },
@@ -46,6 +53,14 @@ export default {
         VueCoreImageUpload
     },
     props: {
+        title:{
+            type:String,
+            default:'添加图片'
+        },
+        showPic:{
+            type:Boolean,
+            default:true
+        },
         picList:{
             type:Array,
             default:null
@@ -78,12 +93,11 @@ export default {
     },
     mounted() {
         this.srcs = this.picList
-        console.log(this.srcs)
+        // console.log(this.srcs)
         if (this.sizeBox != null) {
                 this.styles.width = this.sizeBox[0]+'px'
                 this.styles.Height = this.sizeBox[0]+'px'
         }
-
         if (this.cropShow == true) {
             this.crops = 'local'
         } else {
@@ -132,7 +146,7 @@ export default {
     }
 
 .imgList {
-    display: inline-block;
+    // display: inline-block;
     overflow: hidden;
     position: relative;
     li {
@@ -176,11 +190,7 @@ export default {
     }
    
 }
-.g-core-image-upload-btn{
-    width:100px;
-    height: 100px;
-    line-height: 80px;
-}
+ 
 .imgList.mul .g-core-image-upload-btn{
     position: absolute;
     left: 0;

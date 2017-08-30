@@ -86,11 +86,11 @@ export const router = new Router({
       ]
     },
     {
-      path:'/store',
+      path:'/shop',
       name:'商铺模块',
       component:main,
       children:[
-          {path:'storeList',component:storeList,name:'商铺管理'}
+          {path:'storeManage',component:storeList,name:'商铺管理'}
       ]
     },
     {

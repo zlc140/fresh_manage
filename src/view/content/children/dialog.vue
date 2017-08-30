@@ -1,5 +1,5 @@
-s<template>
-  <div class="dialog banner">
+<template>
+  <div class="dialog banner small">
     <h3 class="title">{{title}} <el-button class="fr"  size="small" type="danger" :plain="true" @click.native="clean">取消</el-button></h3>
       <el-form :model="addForm" label-width="80px" size="small" :rules="addFormRules" v-loading="loginLoading" ref="addForm">
 				<el-form-item label="广告标题" prop="title">
@@ -99,7 +99,7 @@ export default {
                 radio:'1200:350',
                 size:['1200','350'],
                 cropShow:true,
-                multiple:false,
+                multiple:true,
                 picList:[]
             },
             pickerOptions0: {
@@ -234,7 +234,6 @@ export default {
 .banner{
     height:calc(100% - 100px);
     .el-form{
-        width:800px;
         margin:0 auto;
     }
 }

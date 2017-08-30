@@ -45,7 +45,7 @@ export default {
 
 }
 .toolbar{
-    padding: 10px 30;
+    padding: 10px 30px;
     text-align: right;
 }
 .section{
@@ -69,14 +69,17 @@ export default {
     padding: 7px 15px;
 }
  .dialog{
-     position:absolute;
+    //  position:absolute;
      background-color:white;
-     left:0px;
-     top:25px;
+    //  left:0px;
+    //  top:25px;
      width:100%;
      z-index:998;
      box-sizing:border-box;
      padding:30px;
+     .el-form{
+         padding: 0 50px;
+     }
      .title{
          padding:10px 50px;
          margin-bottom:15px;
@@ -85,4 +88,26 @@ export default {
          font-size:18px;
      }
  }
+//  楼层一d的通过样式
+.imgesList{
+    width:700px;
+    li{
+        display: inline-block;
+        width:195px;
+        height: auto;
+        margin-left: 8px;
+        margin-bottom: 10px;
+        img{
+            width:100%;
+        }
+    &:first-child{
+        margin-left: 0;
+    }
+    &:last-child{
+        margin-left: 0;
+        width:600px;
+    }
+    }
+}
+
 </style>

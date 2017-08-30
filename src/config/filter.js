@@ -77,3 +77,11 @@ Vue.filter('brandstate',function(value) {
     return '品牌停用'
   }
 })   
+// 楼层类型
+Vue.filter('floorType',function(value) {
+  if(value=='FLOOR_IMAGES'){
+    return '广告楼层'
+  }else if(value=='FLOOR_GOODS'){
+    return '商品楼层'
+  } 
+}) 

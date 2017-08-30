@@ -9,7 +9,7 @@ export const review = r => require.ensure([],() => r(require('../view/product/re
 export const kucunList = r => require.ensure([],() => r(require('../view/product/kucun')),'group-product');
 
 // 店铺
-export const storeList = r => require.ensure([],() => r(require('../view/store')),'group-store');
+export const storeList = r => require.ensure([],() => r(require('../view/stores/index')),'group-store');
 
 // 用户管理
 export const userList = r => require.ensure([],() => r(require('../view/frontUser/list')),'group-frontUser');

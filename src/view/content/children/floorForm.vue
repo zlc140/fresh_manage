@@ -1,62 +1,82 @@
 s<template>
   <div class="dialog banner">
     <h3 class="title">{{title}} <el-button class="fr"  size="small" type="danger" :plain="true" @click.native="clean">取消</el-button></h3>
-      <el-form :model="addForm" label-width="80px" size="small" :rules="addFormRules" v-loading="loginLoading" ref="addForm">
-				<el-form-item label="广告标题" prop="title">
-					<el-input v-model="addForm.title" auto-complete="off" ></el-input>
+      <el-form :model="addForm" label-position="right" label-width="160px" size="small" :rules="addFormRules" v-loading="loginLoading" ref="addForm">
+                <el-form-item label="请先选择楼层类型" prop="type">
+					 <el-select v-model="addForm.type">
+                        <el-option v-for="(item,index) in  selType"  :key="index" :label="item.label" :value="item.value">  </el-option> 
+                        </el-select>
 				</el-form-item>
-				<el-form-item label="链接地址" prop="url">
-					<el-input v-model="addForm.image.url" auto-complete="off"></el-input>
-				</el-form-item>
-                <el-form-item label="上传图片" prop="image.path" class="addPicBox">
-                        <!-- 上传图片  -->
-                            <vue-core-image-upload  
+                 <el-form-item label="楼层标题图片" prop="titleImage">
+					<vue-core-image-upload  
                             v-if="picShow"
-                            @getImg = "getImg"  
-                            :cropRatio = "selectPic.radio" 
-                            :picList="selectPic.picList"
-                            :sizeBox = 'selectPic.size' 
-                            :multiple="selectPic.multiple"
-                            :cropShow="selectPic.cropShow">
-                        </vue-core-image-upload> 
-                        <p class="tip">提示：为避免失真，请尽可能上传 1200 × 350 的图片做为首页banner展示图</p>
+                            @getImg = "titleImg"  
+                            :cropRatio = "titlePic.radio" 
+                            :picList="titlePic.picList"
+                            :sizeBox = 'titlePic.size' 
+                            :multiple="titlePic.multiple"
+                            :cropShow="titlePic.cropShow">
+                        </vue-core-image-upload>
+                        <p class="tip">提示：用于楼层标题展示的图片最后都会被拉成宽1200px的图片，请注意比例和大小</p> 
 				</el-form-item>
-                <el-form-item label="永久显示" prop="onlyShow" >
+				<el-form-item label="楼层标题" prop="title">
+					<el-input v-model="addForm.title" auto-complete="off" required></el-input>
+				</el-form-item>
+                <el-form-item label="链接地址" prop="titleImage">
+					<el-input v-model="addForm.titleImage.url" auto-complete="off"></el-input>
+				</el-form-item>
+                <el-form-item label="是否永久显示" prop="onlyShow" >
+                    <el-row class="el-input">
+                    <el-col :span="4">
                         <el-switch
                             v-model="addForm.onlyShow"
                             on-text="on"
                             off-text="off">
                         </el-switch>
+                    </el-col>
+                    <el-col :span="9">
+                    <el-form-item  prop="startTime" v-if="!addForm.onlyShow">
+                        <el-date-picker
+                            v-model="addForm.startTime"
+                            type="date"
+                            placeholder="选择开始日期"
+                            :picker-options="pickerOptions0" >
+                        </el-date-picker>
+                    </el-form-item>
+                </el-col> 
+                <el-col  class="line" :span="2" v-if="!addForm.onlyShow">--</el-col>
+                 <el-col :span="9" v-if="!addForm.onlyShow">
+                    <el-form-item  prop="endTime">
+                        <el-date-picker
+                            v-model="addForm.endTime"
+                            type="date"
+                            placeholder="选择结束日期"
+                            :picker-options="pickerOptions0">
+                        </el-date-picker>
+                    </el-form-item>
+                 </el-col> 
+                  </el-row>
                 </el-form-item>
-				<el-form-item label="开始时间" prop="startTime" v-if="!addForm.onlyShow">
-					<el-date-picker
-                        v-model="addForm.startTime"
-                        type="date"
-                        placeholder="选择日期"
-                        :picker-options="pickerOptions0">
-                    </el-date-picker>
-				</el-form-item>
-                <el-form-item label="结束时间" prop="endTime" v-if="!addForm.onlyShow">
-					<el-date-picker
-                        v-model="addForm.endTime"
-                        type="date"
-                        placeholder="选择日期"
-                        :picker-options="pickerOptions0">
-                      </el-date-picker>
-				</el-form-item>
                  <el-form-item label="排序" prop="sort" >
                         <el-input-number v-model="addForm.sort" :step="1" :min="1"></el-input-number> 
+                </el-form-item>
+                 <el-form-item label="楼层内容编辑" prop="body" required v-if="!addForm.type == ''">
+                        <mod-one v-if="addForm.type == 'FLOOR_IMAGES'" :Onelist="Onelist" @getOne="getDatas"></mod-one>
+                        <mod-two :twoData="twoData" v-if="addForm.type == 'FLOOR_GOODS'" @getTwo="getDatas"> </mod-two>
                 </el-form-item>
 		</el-form>
         <div slot="footer" class="dialog-footer">
             <el-button type="primary" @click.native="addSubmit" :loading="addLoading">保　存</el-button>
         </div>
+        
   </div>
 </template>
 
 <script>
+import modOne from './modOne'
+import modTwo from './modTwo'
 import vueCoreImageUpload from '@/components/uploadImg'
-import { brandList,removeBrand,addBrand,editBrand } from '@/service/getData'
+import { saveFloor,editFloor } from '@/service/getData'
 export default {
     data(){
             var validateaddDate = (rule, value, callback) => {
@@ -72,6 +92,7 @@ export default {
                 }
             }; 
             var compareaddDate = (rule,value,callback) => {
+               
                 if(this.addForm.onlyShow == false){
                 if(value === ''){
                     callback(new Error('请选择结束时间'))
@@ -89,14 +110,32 @@ export default {
                 callback()
                 }
             };
-
+            var checkType = (value,rule,callback) => {
+                if(value ==''){
+                    callback(new Error('请选择楼层类型'))
+                }else{
+                     callback()
+                }
+            }
         return{
+            addFloorVisible:false,
+            selType:[
+                {
+                    value:'FLOOR_IMAGES',
+                    label:'广告楼层'
+                },
+                 {
+                    value:'FLOOR_GOODS',
+                    label:'商品楼层'
+                }
+            ],
+            Onelist:[],
+            twoData:null,
             picShow:false,
-             selectPic:{
-                // upImg
+            titlePic:{
+                showPic:false,
                 radio:'1200:350',
-                size:['1200','350'],
-                cropShow:true,
+                cropShow:false,
                 multiple:false,
                 picList:[]
             },
@@ -107,18 +146,14 @@ export default {
             },
             loginLoading:false,
             addLoading: false,
-            addFormRules: {
-                startTime: [
-                   {validator:validateaddDate, trigger: 'change' }
-                ],
-                endTime: [
-                   {validator:compareaddDate, trigger: 'change' }
-                ]
-            },
+            
             //新增界面数据
             addForm: {
                 title: '',
-                image: {
+                style:'',
+                type:'',
+                body:null,
+                titleImage:{
                     path:'',
                     url:'',
                     title:''
@@ -127,12 +162,25 @@ export default {
                 startTime:'',
                 endTime:'',
                 sort:length
-                
+            },
+            addFormRules: {
+                startTime: [
+                   {validator:validateaddDate, trigger: 'change' }
+                ],
+                endTime: [
+                   {validator:compareaddDate, trigger: 'change' }
+                ],
+                type :[
+                     {validator:checkType, trigger: 'change' }
+                ],
+                title:[
+                    {required:true,message:'楼层标题不能为空',trigger: 'change'}
+                ]
             }
         }
     },
     components:{
-        vueCoreImageUpload
+        vueCoreImageUpload,modOne,modTwo
     },
     props:{
         title:{
@@ -149,12 +197,42 @@ export default {
         }
     },
     mounted(){
-        this.addForm = this.FormData
-        this.selectPic.picList=[]
+        let _this = this
+        this.addForm = Object.assign({},this.addForm,this.FormData)
+        console.log(this.type,this.addForm)
+        if(this.type == 'edit'){
+             this.titlePic.picList=[]
+             if(this.addForm.titleImage.path!=''){
+                 this.titlePic.picList.push(this.addForm.titleImage.path)
+             }
+            if(this.addForm.startTime == 0 || this.addForm.startTime =='0'){
+                this.addForm.startTime = new Date()
+            }else{
+                 this.addForm.startTime = new Date( this.addForm.startTime )
+            }
+            if(this.addForm.endTime == 0 || this.addForm.endTime =='0'){
+                this.addForm.endTime = new Date()
+            }else{
+                this.addForm.endTime = new Date( this.addForm.endTime )
+            }
+        }
+        if(this.addForm.titleImage == null){
+            this.addForm.titleImage = {
+                path:'',
+                url:'',
+                title:''
+            }
+        }
+       
+        if(this.type == 'edit' && this.addForm.type == 'FLOOR_IMAGES'){
+            this.Onelist=[]
+            this.addForm.body[0].images.forEach((v,index) => {
+                    _this.Onelist.push(v)
+            })
+        }else if(this.type=="edit" && this.addForm.type == "FLOOR_GOODS"){
+            _this.twoData = Object.assign({},this.addForm.body)
+        }
         this.picShow = true
-        if(this.addForm.image.path != ''){
-            this.selectPic.picList.push(this.addForm.image.path) 
-        }         
     },
     methods:{
         clean(){
@@ -164,22 +242,52 @@ export default {
         addSubmit(){
             this.$refs.addForm.validate((valid) => {
                 if(valid) {
-                    if(this.addForm.image.path == ''){
-                        this.$message('请上传banner图片')
+                    if(this.addForm.type == ''){
+                        this.$message('请选择类型，并编辑子楼层')
+                        return false
+                    }
+                    if(this.addForm.body == null || this.addForm.body.length!=4 ){
+                        this.$message('请编辑子楼层,每个楼层包含四个子楼层')
                         return false
                     }
                     this.loginLoading = true
-                    let para = Object.assign({}, this.addForm);
-                  
-                    if(para.startTime !=''){
+                    let para = {
+                            title: this.addForm.title,
+                            style: this.addForm.style,
+                            type: this.addForm.type,
+                            body:[],
+                            titleImage: JSON.stringify(this.addForm.titleImage),
+                            onlyShow: this.addForm.onlyShow,
+                            startTime:this.addForm.startTime,
+                            endTime:this.addForm.endTime,
+                            sort:this.addForm.sort
+                            
+                    }
+                    if(para.startTime !='' &&  para.startTime.getFullYear() ){
                         para.startTime = para.startTime.getTime()+'';
                     }
-                    if(para.endTime != ''){
+                    if(para.endTime != '' &&  para.endTime.getFullYear()){
                         para.endTime = para.endTime.getTime()+'';
                     }
-                     console.log('add',para)
+
+                    if(para.type == 'FLOOR_IMAGES'){
+                       para.body = []
+                       para.body.push({
+                            images:this.addForm.body
+                       })
+                        para.body[0].images.forEach(v => {
+                            v = JSON.stringify(v)
+                        })
+                    } 
+                    if(para.type == 'FLOOR_GOODS'){
+                        para.body = []
+                        para.body = this.addForm.body
+                    }
+                  
+                    para.body = JSON.stringify(para.body)
+                    console.log('para',para)
                     if(this.type == 'add'){
-                        addBrand(para).then((res) => {
+                        saveFloor(para).then((res) => {
                             this.loginLoading = false
                             this.addFormVisible = false
                             console.log(res.data)
@@ -197,9 +305,9 @@ export default {
                     }else if (this.type == 'edit'){
                         //  this.$emit('close',false)
                         
-                         para.id = this.FormData.id
+                         para.id = this.FormData.floorId
                          console.log("edit",para)
-                        editBrand(para).then((res) => {
+                        editFloor(para).then((res) => {
                              this.loginLoading = false
                             if(res.data.state == 200){
                                 console.log(res.data)
@@ -220,20 +328,27 @@ export default {
                 }
           })
       },
-      getImg(val){
-          this.addForm.image.path = val[0]
-        console.log(this.addForm.image.path)
+      titleImg(val){
+          this.addForm.titleImage.path = val[0]
+        // console.log(this.addForm.titleImage.path)
       },
+      getDatas(val){
+            this.addForm.body = []
+            this.addForm.body = val
+            // console.log(val)
+      }
+       
+
     }
 }
 </script>
 
 <style lang="scss" soped>
 .banner{
-    height:calc(100% - 100px);
+    // height:calc(100% - 30px);
     .el-form{
-        width:800px;
-        margin:0 auto;
+        margin: 0 auto;
+        overflow: hidden;
     }
 }
   .dialog-footer{

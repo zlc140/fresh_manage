@@ -91,6 +91,54 @@ export const addBrand = (para) => {
 export const floorList = () => {
     return axios({
         method:'post',
-        url:BASE_URL+'/floor/findAll'
+        url:BASE_URL+'/floor/find'
+    })
+}
+
+export const delFloor = (prop) => {
+    return axios({
+        method:'post',
+        url:BASE_URL+'/floor/delete',
+        params:prop
+    })
+}
+export const saveFloor = (prop) => {
+    return axios({
+        method:'post',
+        data:prop,
+        headers : {
+            'Accept' : 'application/json',
+            'Content-Type' : 'application/x-www-form-urlencoded'
+        },
+        transformRequest: [function (data) {
+            // Do whatever you want to transform the data
+            let ret = ''
+            for (let it in data) {
+                    ret += encodeURIComponent(it) + '=' + encodeURIComponent(data[it]) + '&'
+            }
+            ret = ret.substring(0,ret.length-1)
+            return ret
+        }],
+        url:BASE_URL+'/floor/save'
+    })
+}
+export const editFloor = (prop) => {
+    return axios({
+        method:'post',
+        data:prop,
+        headers : {
+            'Accept' : 'application/json',
+            'Content-Type' : 'application/x-www-form-urlencoded'
+        },
+        transformRequest: [function (data) {
+            // Do whatever you want to transform the data
+            let ret = ''
+            for (let it in data) {
+                    ret += encodeURIComponent(it) + '=' + encodeURIComponent(data[it]) + '&'
+            }
+            ret = ret.substring(0,ret.length-1)
+            return ret
+        }],
+        url:BASE_URL+'/floor/update'
     })
 }

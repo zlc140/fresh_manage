@@ -1,27 +1,15 @@
 <template>
   <el-col :span="24"> 
     <!--查询工具条-->
-		<el-col :span="24" class="toolbar" style="padding-bottom: 0px;">
+		<el-col v-if="!addFormVisible" :span="24" class="toolbar" style="padding-bottom: 0px;">
 			<el-form :inline="true" :model="filters">
-				<!--<el-form-item>
-					<el-input v-model="filters.name" placeholder="用户名"></el-input>
-				</el-form-item>-->
-				<el-form-item>
-					<!--<el-button type="primary" v-on:click="getUsers('page')">查询</el-button>-->
-				</el-form-item>
 				<el-form-item>
 					<el-button type="primary" @click="handle('add')">新增</el-button>
 				</el-form-item>
-
 			</el-form>
 		</el-col>
-        <el-table :data="lists" highlight-current-row border stripe v-loading="listLoading"  @selection-change="selsChange" style="width: 100%;">
+        <el-table v-if="!addFormVisible" :data="lists" highlight-current-row border stripe v-loading="listLoading"  @selection-change="selsChange" style="width: 100%;">
             <el-table-column prop="sort" label="排序" min-width="70"  sortable>
-            </el-table-column>
-           <el-table-column prop="onlyShow" label="是否一直显示" width="150" >
-              <template scope= "scope">
-                {{scope.row.onlyShow?'是':'否'}}
-              </template>
             </el-table-column>
              <el-table-column type="expand" prop="advImage" label="图片展示" width="100"  sortable>
                <template scope="scope">
@@ -32,6 +20,11 @@
             </el-table-column>
             
             <el-table-column prop="advImage.url" label="链接地址" width="240" >
+            </el-table-column>
+             <el-table-column prop="onlyShow" label="是否一直显示" width="150" >
+              <template scope= "scope">  
+                    <el-switch v-model="scope.row.onlyShow" on-text="是" @change="handleShow(scope.row)" off-text="否" size="mini"></el-switch>
+              </template>
             </el-table-column>
             <el-table-column prop="startTime" label="开始时间" width="140" sortable>
                  <template scope="scope">
@@ -188,14 +181,23 @@ export default {
                     this.FormData.startTime = new Date(this.FormData.startTime)
                     this.FormData.endTime = new Date(this.FormData.endTime)
                 }
-               
-				
 				
 		},
          close(val){
                 this.getLists()
                 this.addFormVisible = val
         },
+        handleShow(row){
+             row.onlyShow = !row.onlyShow
+            let para = {
+                id:row.advId,
+                onlyShow:row.onlyShow
+            }
+            editBrand(para).then(res => {
+                console.log(res.data)
+            })
+           
+        }
       
   }
 }
