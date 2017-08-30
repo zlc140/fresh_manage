@@ -11,6 +11,13 @@ export const orderlist = (prop) => {
 }
 
 // 商品
+export const addgoods = (prop) => {
+    return axios({
+        methods:'post',
+        url:BASE_URL+'/goods/save',
+        params:prop
+    })
+}
 export const prolist = (prop) => {
     return axios({
         methods:'post',
@@ -18,12 +25,32 @@ export const prolist = (prop) => {
         params:prop
     })
 }
-
+export const editgoods = (prop) => {
+    return axios({
+        methods:'post',
+        url:BASE_URL+'/goods/edit',
+        params:prop
+    })
+}
+export const findgoods = (prop) => {
+    return axios({
+        methods:'post',
+        url:BASE_URL+'/goods/findById',
+        params:prop
+    })
+}
 // 商品分类
 export const gclist = ( ) => {
     return axios({
         methods:'post',
         url:BASE_URL+'/gc/findGcList',
+        
+    })
+}
+export const classlist = ( ) => {
+    return axios({
+        methods:'post',
+        url:BASE_URL+'/gc/findShowGcList',
         
     })
 }
@@ -56,7 +83,34 @@ export const brandlist = (para) => {
         url:BASE_URL+'/brand/findBrands'
     })
 }
-
+export const addbrand = (para) => {
+    return axios({
+        method:'post',
+        params:para,
+        url:BASE_URL+'/brand/save'
+    })
+}
+export const brandupdate = (para) => {
+    return axios({
+        method:'post',
+        params:para,
+        url:BASE_URL+'/brand/update'
+    })
+}
+export const branddelete = (para) => {
+    return axios({
+        method:'post',
+        params:para,
+        url:BASE_URL+'/brand/delete'
+    })
+}
+export const addbrandlist = (para) => {
+    return axios({
+        method:'post',
+        params:para,
+        url:BASE_URL+'/brand/findByGcAndStore'
+    })
+}
 /////////---------------- banner start --------------//////////
 export const brandList = () => {
     return axios({
@@ -83,6 +137,35 @@ export const addBrand = (para) => {
         method:'post',
         params:para,
         url:BASE_URL+'/adv/save'
+    })
+}
+// 店铺
+export const selectStore = (para) => {
+    return axios({
+        method:'post',
+        params:para,
+        url:BASE_URL+'/store/selectStore'
+    })
+}
+export const deleteStore = (para) => {
+    return axios({
+        method:'post',
+        params:para,
+        url:BASE_URL+'/store/delete'
+    })
+}
+export const updateStore = (para) => {
+    return axios({
+        method:'post',
+        params:para,
+        url:BASE_URL+'/store/update'
+    })
+}
+export const saveStore = (para) => {
+    return axios({
+        method:'post',
+        params:para,
+        url:BASE_URL+'/store/save'
     })
 }
 /////////---------------- end --------------//////////

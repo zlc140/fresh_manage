@@ -210,7 +210,6 @@ export default {
           this.lists = res.data.content
         }
       })
-
     },
     // 删除
     handleDel(index, row) {
@@ -335,7 +334,6 @@ export default {
         classTitle: '',
         keywords: '',
         gcShow: true
-
       }
     },
     //  添加分类提交

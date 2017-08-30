@@ -86,7 +86,7 @@ export const router = new Router({
       ]
     },
     {
-      path:'/store',
+      path:'/shop',
       name:'商铺模块',
       component:main,
       children:[
