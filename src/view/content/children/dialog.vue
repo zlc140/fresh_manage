@@ -1,4 +1,4 @@
-s<template>
+<template>
   <div class="dialog banner">
     <h3 class="title">{{title}} <el-button class="fr"  size="small" type="danger" :plain="true" @click.native="clean">取消</el-button></h3>
       <el-form :model="addForm" label-width="80px" size="small" :rules="addFormRules" v-loading="loginLoading" ref="addForm">
@@ -156,6 +156,7 @@ export default {
         this.picShow = true
         if(this.addForm.image.path != ''){
             this.selectPic.picList.push(this.addForm.image.path) 
+            console.log(this.selectPic.picList.push(this.addForm.image.path) )
         }         
     },
     methods:{
@@ -179,12 +180,13 @@ export default {
                     if(para.endTime != ''){
                         para.endTime = para.endTime.getTime()+'';
                     }
-                     console.log('add',para)
+                    //  console.log('add',para)
                     if(this.type == 'add'){
                         addBrand(para).then((res) => {
+                            // console.log(para)
                             this.loginLoading = false
                             this.addFormVisible = false
-                            console.log(res.data)
+                            // console.log(res.data)
                             if(res.data.state == 200){
                                 this.$message('添加成功')
                                 this.$emit('close',false) 
@@ -204,7 +206,7 @@ export default {
                         editBrand(para).then((res) => {
                              this.loginLoading = false
                             if(res.data.state == 200){
-                                console.log(res.data)
+                                // console.log(res.data)
                                 this.$emit('close',false)
                                 this.$message('编辑成功')
                                  

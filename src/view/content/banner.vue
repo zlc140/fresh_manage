@@ -105,6 +105,7 @@ export default {
         getLists() {
            this.listLoading=true
             brandList().then((res) => {
+                console.log(res)
                this.listLoading=false
                if(res.data.state == 200){
                     this.lists=[]
