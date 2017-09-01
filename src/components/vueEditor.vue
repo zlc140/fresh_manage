@@ -164,6 +164,26 @@ import {quillEditor} from 'vue-quill-editor'
         },
       }
     },
+     computed:{
+      editor() {
+        return this.$refs.myTextEditor.quill;
+      }
+    },
+    components: {
+      'quilleditor': quillEditor
+    },
+    mounted(){
+      this.content=this.value;
+    },
+    watch:{
+      'value'(newVal, oldVal) {
+        if (this.editor) {
+          if (newVal !== this.content) {
+            this.content = newVal
+          }
+        }
+      },
+    },
     methods: {
       onChange(){
         this.$emit('input', this.content)
@@ -186,7 +206,8 @@ import {quillEditor} from 'vue-quill-editor'
         data.append(this.fileName,fileInput.files[0]);
         axios.post(this.uploadUrl,data).then(function(res){
           if(res.data) {
-            self.editor.insertEmbed(self.editor.getSelection().index, 'image', res.data[0]);
+            // 上传图片的返回值
+            self.editor.insertEmbed(self.editor.getSelection().index, 'image', res.data.content.url);
           }
         })
       },
@@ -204,27 +225,8 @@ import {quillEditor} from 'vue-quill-editor'
         input.onchange=this.onFileChange;
         input.click();
       }
-    },
-    computed:{
-      editor() {
-        return this.$refs.myTextEditor.quill;
-      }
-    },
-    components: {
-      'quilleditor': quillEditor
-    },
-    mounted(){
-      this.content=this.value;
-    },
-    watch:{
-      'value'(newVal, oldVal) {
-        if (this.editor) {
-          if (newVal !== this.content) {
-            this.content = newVal
-          }
-        }
-      },
     }
+   
 }
 </script>
 

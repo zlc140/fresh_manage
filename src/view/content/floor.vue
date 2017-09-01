@@ -3,12 +3,12 @@
         <!--查询工具条-->
         <el-col  v-if="!addFormVisible" :span="24" class="toolbar" style="padding-bottom: 0px;">
             <el-form>
-                <el-form-item>
+                <el-form-item class="add">
                     <el-button type="primary" @click="handle('add')">新增</el-button>
                 </el-form-item>
             </el-form>
         </el-col>
-        <el-table  v-if="!addFormVisible" :data="lists" highlight-current-row border stripe v-loading="listLoading" style="width: 100%;">
+        <el-table  v-if="!addFormVisible" :data="lists" highlight-current-row border  v-loading="listLoading" style="width: 100%;">
             <el-table-column type="expand" prop="body" label="图片展示" width="80" sortable>
                 <template scope="scope">
                     <floor-body :lists="scope.row.body" :title="scope.row.title" :titleImage="scope.row.titleImage" :type="scope.row.type"></floor-body>
@@ -88,10 +88,12 @@ export default {
     methods: {
         getList() {
             let _this = this
+            this.listLoading = true
             floorList().then(res => {
                 if (res.data.state == 200) {
                     _this.lists = res.data.content.content
                 }
+                this.listLoading = false
             })
 
         },

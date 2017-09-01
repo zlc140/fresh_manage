@@ -3,12 +3,12 @@
     <!--查询工具条-->
 		<el-col v-if="!addFormVisible" :span="24" class="toolbar" style="padding-bottom: 0px;">
 			<el-form :inline="true" :model="filters">
-				<el-form-item>
+				<el-form-item class="add">
 					<el-button type="primary" @click="handle('add')">新增</el-button>
 				</el-form-item>
 			</el-form>
 		</el-col>
-        <el-table v-if="!addFormVisible" :data="lists" highlight-current-row border stripe v-loading="listLoading"  @selection-change="selsChange" style="width: 100%;">
+        <el-table v-if="!addFormVisible" :data="lists" highlight-current-row border  v-loading="listLoading"  @selection-change="selsChange" style="width: 100%;">
             <el-table-column prop="sort" label="排序" min-width="70"  sortable>
             </el-table-column>
              <el-table-column type="expand" prop="advImage" label="图片展示" width="100"  sortable>
@@ -98,6 +98,7 @@ export default {
         getLists() {
            this.listLoading=true
             brandList().then((res) => {
+                console.log(res)
                this.listLoading=false
                if(res.data.state == 200){
                     this.lists=[]

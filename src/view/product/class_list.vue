@@ -48,11 +48,10 @@
       </el-table-column>
       <el-table-column label="操作" width="100">
         <template scope="scope">
-          <div class="play_box">
-            <a @click="addChild(scope.$index, scope.row)">添加子类</a>
-            <br>
-            <a @click="editd(scope.$index, scope.row)">编辑</a>
-            <a @click="handleDel(scope.$index, scope.row)">删除</a>
+           <div class="play_box">
+              <el-button type="text" @click="addChild(scope.$index, scope.row)">添加子类</el-button>
+              <el-button type="text" @click="editd(scope.$index, scope.row)">编辑</el-button>
+              <el-button type="text" @click="handleDel(scope.$index, scope.row)">删除</el-button>
           </div>
         </template>
       </el-table-column>
@@ -210,7 +209,6 @@ export default {
           this.lists = res.data.content
         }
       })
-
     },
     // 删除
     handleDel(index, row) {
@@ -335,7 +333,6 @@ export default {
         classTitle: '',
         keywords: '',
         gcShow: true
-
       }
     },
     //  添加分类提交
@@ -343,12 +340,13 @@ export default {
       let _this = this
       this.$refs.addForm.validate((valid) => {
         if (valid) {
-          this.$confirm('确定添加该分类？', '提示', {}).then(() => {
+          // this.$confirm('确定添加该分类？', '提示', {}).then(() => {
             this.addLoading = false;
             this.addFormVisible = false;
             let para = Object.assign({}, this.addForm);
             // console.log(para)
             addClass(para).then((res) => {
+              console.log(res)
               this.addLoading = true;
               if (res.data.state == '200') {
                 this.$message({
@@ -361,7 +359,7 @@ export default {
                 this.$message('登录超时，请重新登录')
               }
             })
-          })
+          // })
         }
       });
     },

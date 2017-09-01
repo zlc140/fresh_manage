@@ -73,7 +73,7 @@ export const router = new Router({
         {path:'kucunlist',component:kucunList,name:'库存管理'},
         {path:'classlist',component:classList,name:'商品分类'},
         {path:'brand',component:brand,name:'品牌列表'},
-        {path:'review',component:review,name:'商品评论'}
+        // {path:'review',component:review,name:'商品评论'}
       ]
     },
     

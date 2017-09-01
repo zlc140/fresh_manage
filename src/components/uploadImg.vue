@@ -145,51 +145,7 @@ export default {
         }
     }
 
-.imgList {
-    // display: inline-block;
-    overflow: hidden;
-    position: relative;
-    li {
-        float: left;
-        width: 100px;
-        height: 100px;
-        display: inline-block;
-        margin-right: 5px;
-        position: relative;
-        border: 1px solid #f0f0f0;
-        border-radius: 4px;
-        overflow: hidden;
-        img {
-            width: 100%;
-            height:100%;
-        }
-        .doing{
-            position: absolute;
-            display: inline-block;
-            left: 0;
-            width:100%;
-            height: 100%;
-            top: 0;
-            color: #8492A6;
-            display: none;
-            text-align: center;
-            line-height: 100px;
-            background-color: rgba(0,0,0,0.3);
-            i{
-                cursor: pointer;
-                margin-right: 3px;
-                font-size: 18px;
-                &:hover{
-                    font-size: 20px;
-                }
-            }
-        }
-        &:hover .doing{
-            display: block;
-        }
-    }
-   
-}
+
  
 .imgList.mul .g-core-image-upload-btn{
     position: absolute;

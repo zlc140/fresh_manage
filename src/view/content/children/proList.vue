@@ -72,7 +72,7 @@
 </template>
 
 <script>
-import { prolist, gclist } from '@/service/getData'
+import { prolist, classlist } from '@/service/getData'
 export default {
     props:{
         aboutGoods:{
@@ -126,7 +126,7 @@ export default {
         this.getList()
         // 分类数据
         let _this = this
-        gclist().then((res) => {
+        classlist().then((res) => {
             if (res.data.state == 200) {
                 let datas = res.data.content
                 _this.gcData = []

@@ -65,7 +65,19 @@ Vue.filter('goodsstate',function(value) {
     return '店铺倒闭'
   }
 })   
-// // 品牌状态
+// 店铺状态
+Vue.filter('storestate',function(value) {
+  if(value=='STORE_STATE_ON_CHECKING'){
+    return '店铺审核中'
+  }else if(value=='STORE_STATE_CHECK_ON'){
+    return '店铺审核通过'
+  }else if(value=='STORE_STATE_CHECK_OFF'){
+    return '审核不通过'
+  }else if(value=='STORE_STATE_ON_CLOSE'){
+    return '店铺倒闭'
+  }
+})   
+// 品牌状态
 Vue.filter('brandstate',function(value) {
   if(value=='BRAND_STATE_ON_CHECKING'){
     return '品牌审核中'

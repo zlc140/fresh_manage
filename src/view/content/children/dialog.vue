@@ -47,7 +47,7 @@
                       </el-date-picker>
 				</el-form-item>
                  <el-form-item label="排序" prop="sort" >
-                        <el-input-number v-model="addForm.sort" :step="1" :min="1"></el-input-number> 
+                        <el-input-number v-model="addForm.sort" :step="1" :min="1" ></el-input-number> 
                 </el-form-item>
 		</el-form>
         <div slot="footer" class="dialog-footer">
@@ -99,7 +99,7 @@ export default {
                 radio:'1200:350',
                 size:['1200','350'],
                 cropShow:true,
-                multiple:true,
+                multiple: false,
                 picList:[]
             },
             pickerOptions0: {
@@ -156,6 +156,7 @@ export default {
         this.picShow = true
         if(this.addForm.image.path != ''){
             this.selectPic.picList.push(this.addForm.image.path) 
+            console.log(this.selectPic.picList.push(this.addForm.image.path) )
         }         
     },
     methods:{
@@ -179,12 +180,13 @@ export default {
                     if(para.endTime != ''){
                         para.endTime = para.endTime.getTime()+'';
                     }
-                     console.log('add',para)
+                    //  console.log('add',para)
                     if(this.type == 'add'){
                         addBrand(para).then((res) => {
+                            // console.log(para)
                             this.loginLoading = false
                             this.addFormVisible = false
-                            console.log(res.data)
+                            // console.log(res.data)
                             if(res.data.state == 200){
                                 this.$message('添加成功')
                                 this.$emit('close',false) 
@@ -204,7 +206,7 @@ export default {
                         editBrand(para).then((res) => {
                              this.loginLoading = false
                             if(res.data.state == 200){
-                                console.log(res.data)
+                                // console.log(res.data)
                                 this.$emit('close',false)
                                 this.$message('编辑成功')
                                  
@@ -237,16 +239,6 @@ export default {
         margin:0 auto;
     }
 }
-  .dialog-footer{
-      text-align:center;
-      border-top:1px solid #f0f0f0;
-      padding:15px 0;
-  }
-   .dialog-footer .el-button{
-       padding:10px 60px;
-   }
-   .dialog .el-input{
-        max-width:600px;
-   }
+
 </style>
  

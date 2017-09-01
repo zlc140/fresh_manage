@@ -35,6 +35,15 @@ export default {
 <style lang="scss">
 .tip{
     color:orange;
+    font-size: 14px;
+    font-weight: normal;
+}
+.onlyOneRow{
+    white-space: nowrap;
+    display: inline-block;
+    width:100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
   .main{
    display: flex;
@@ -47,6 +56,9 @@ export default {
 .toolbar{
     padding: 10px 30px;
     text-align: right;
+    .add{
+        float:right;
+    }
 }
 .section{
     position:relative;
@@ -109,5 +121,74 @@ export default {
     }
     }
 }
+// 新增编辑
+  .dialog-footer{
+      text-align:center;
+      border-top:1px solid #f0f0f0;
+      padding:15px 0;
+  }
+   .dialog-footer .el-button{
+       padding:10px 60px;
+   }
+   .dialog .el-input{
+        max-width:600px;
+   }
+//    
+.play_box {
+  width: 100px;
+  padding: 10px 0;
+  text-align: center;
+  margin-left: -20px;
+}
+.play_box .el-button{
+    padding: 5px;
+    margin: 0;
+}
 
+// 图片列表
+.imgList {
+    // display: inline-block;
+    overflow: hidden;
+    position: relative;
+    li {
+        float: left;
+        width: 100px;
+        height: 100px;
+        display: inline-block;
+        margin-right: 5px;
+        position: relative;
+        border: 1px solid #f0f0f0;
+        border-radius: 4px;
+        overflow: hidden;
+        img {
+            width: 100%;
+            height:100%;
+        }
+        .doing{
+            position: absolute;
+            display: inline-block;
+            left: 0;
+            width:100%;
+            height: 100%;
+            top: 0;
+            color: #8492A6;
+            display: none;
+            text-align: center;
+            line-height: 100px;
+            background-color: rgba(0,0,0,0.3);
+            i{
+                cursor: pointer;
+                margin-right: 3px;
+                font-size: 18px;
+                &:hover{
+                    font-size: 20px;
+                }
+            }
+        }
+        &:hover .doing{
+            display: block;
+        }
+    }
+   
+}
 </style>
