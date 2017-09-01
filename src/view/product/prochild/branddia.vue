@@ -6,10 +6,10 @@
         <el-input v-model="addForm.storeId" auto-complete="off">
         </el-input>
       </el-form-item>
-      <el-form-item label="品牌编号" prop="brandId">
+      <!-- <el-form-item label="品牌编号" prop="brandId">
         <el-input v-model="addForm.brandId" auto-complete="off">
         </el-input>
-      </el-form-item>
+      </el-form-item> -->
       <el-form-item label="品牌名称" prop="brandTitle">
         <el-input v-model="addForm.brandTitle" auto-complete="off"></el-input>
       </el-form-item>
@@ -133,11 +133,9 @@ export default {
                 pics: this.addForm.pics,
                 brandId: this.addForm.brandId
               }
-              console.log(para)
               para.pics = JSON.stringify(para.pics)
               brandupdate(para).then((res) => {
                 this.addLoading = true;
-                console.log(res)
                 if (res.data.state == '200') {
                   this.$message({
                     message: '修改成功',

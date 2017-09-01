@@ -29,7 +29,7 @@
           <img :src="scope.row.brandPic[0].path" />
         </template>
       </el-table-column>
-      <el-table-column prop="state" label="状态">
+      <el-table-column prop="state" label="品牌审核状态">
         <template scope="scope">
           <span>
             {{ scope.row.state | brandstate }}</span>
@@ -109,7 +109,6 @@ export default {
   mounted() {
     this.getbrandlist()
     this.picShow = true
-
   },
   methods: {
 
@@ -122,16 +121,13 @@ export default {
         storeId: this.form.storeId,
         brandId: this.form.brandId
       }
-      brandlist(para).then((res) => {
-        
+      brandlist(para).then((res) => {    
         _this.getData = res.data.content.content;
-        console.log(_this.getData)
         _this.totalElements = res.data.content.totalElements;
       })
     },
     //   弹框
     handle: function(row) {
-      let length = this.getData.length + 1
       this.addFormVisible = true;
       if (row == 'add') {
         this.type = 'add'
@@ -234,7 +230,7 @@ export default {
   width: 100px;
 }
 
-img {
+.brand img {
   width: 60px;
   height: 60px;
   display: inline-block
