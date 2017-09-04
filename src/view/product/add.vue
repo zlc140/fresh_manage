@@ -264,7 +264,10 @@ export default {
     },
     // 店铺
     getStore() {
-      selectStore().then((res) => {
+       let para = {
+            state:'STORE_STATE_CHECK_ON'
+        }
+      selectStore(para).then((res) => {
         if(res.data.state == 200){
             this.storeData = res.data.content.content;
         }

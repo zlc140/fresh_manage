@@ -86,6 +86,19 @@
         <el-form-item label="是否显示" prop="gcShow">
           <el-switch v-model="addForm.gcShow" on-text="是" off-text="否"></el-switch>
         </el-form-item>
+         <el-form-item label="hover前图片" prop="pics.path">
+          <!-- 上传图片  -->
+          <vue-core-image-upload 
+          v-if="picShow"
+           @getImg="getImg" 
+           :cropRatio="selectPic.radio" 
+           :picList="selectPic.picList" 
+           :sizeBox='selectPic.size' 
+           :multiple="selectPic.multiple" 
+           :cropShow="selectPic.cropShow"
+           >
+          </vue-core-image-upload>
+        </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click.native="clean">取消</el-button>
@@ -344,7 +357,6 @@ export default {
             this.addLoading = false;
             this.addFormVisible = false;
             let para = Object.assign({}, this.addForm);
-            // console.log(para)
             addClass(para).then((res) => {
               console.log(res)
               this.addLoading = true;

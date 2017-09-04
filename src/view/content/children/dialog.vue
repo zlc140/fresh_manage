@@ -156,7 +156,6 @@ export default {
         this.picShow = true
         if(this.addForm.image.path != ''){
             this.selectPic.picList.push(this.addForm.image.path) 
-            console.log(this.selectPic.picList.push(this.addForm.image.path) )
         }         
     },
     methods:{
@@ -180,13 +179,10 @@ export default {
                     if(para.endTime != ''){
                         para.endTime = para.endTime.getTime()+'';
                     }
-                    //  console.log('add',para)
                     if(this.type == 'add'){
                         addBrand(para).then((res) => {
-                            // console.log(para)
                             this.loginLoading = false
                             this.addFormVisible = false
-                            // console.log(res.data)
                             if(res.data.state == 200){
                                 this.$message('添加成功')
                                 this.$emit('close',false) 
@@ -202,7 +198,7 @@ export default {
                         //  this.$emit('close',false)
                         
                          para.id = this.FormData.id
-                         console.log("edit",para)
+                        //  console.log("edit",para)
                         editBrand(para).then((res) => {
                              this.loginLoading = false
                             if(res.data.state == 200){

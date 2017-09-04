@@ -34,7 +34,7 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column prop="state" label="状态">
+      <el-table-column prop="state" label="品牌审核状态">
         <template scope="scope">
           <span>
             {{ scope.row.state | brandstate }}</span>
@@ -115,7 +115,6 @@ export default {
   mounted() {
     this.getbrandlist()
     this.picShow = true
-
   },
   methods: {
 
@@ -140,7 +139,6 @@ export default {
     },
     //   弹框
     handle: function(row) {
-      let length = this.getData.length + 1
       this.addFormVisible = true;
       if (row == 'add') {
         this.type = 'add'

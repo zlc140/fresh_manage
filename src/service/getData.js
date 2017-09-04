@@ -204,31 +204,13 @@ export const addBrand = (para) => {
         url:BASE_URL+'/adv/save'
     })
 }
-// 得到审核过的店铺
-export const selectStore = () => {
+// 得到的店铺
+export const selectStore = (para) => {
      // 店铺审核通过的参数
-     let para = {
-        state:'STORE_STATE_CHECK_ON'
-    }
     return axios({
         method:'post',
         params:para,
         url:BASE_URL+'/store/selectStore'
-    })
-}
-// 店铺
-export const getStore = () => {
-    return axios({
-        method:'post',
-         params:para,
-        url:BASE_URL+'/store/selectStore'
-    })
-}
-export const deleteStore = (para) => {
-    return axios({
-        method:'post',
-        params:para,
-        url:BASE_URL+'/store/delete'
     })
 }
 export const updateStore = (para) => {
@@ -238,6 +220,15 @@ export const updateStore = (para) => {
         url:BASE_URL+'/store/update'
     })
 }
+ 
+export const deleteStore = (para) => {
+    return axios({
+        method:'post',
+        params:para,
+        url:BASE_URL+'/store/delete'
+    })
+}
+
 export const saveStore = (para) => {
     return axios({
         method:'post',
