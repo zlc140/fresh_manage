@@ -163,21 +163,24 @@ export default {
       if (res.data.state == 200 ) {
         let datas = res.data.content
         // console.log(datas)
+        console.log('t',datas)
         _this.gcData = []
-        datas.forEach((child) => {
-          _this.gcData.push({
-            classId: child.classId,
-            classTitle: child.classTitle
+        if(datas){
+          datas.forEach((child) => {
+            _this.gcData.push({
+              classId: child.classId,
+              classTitle: child.classTitle
+            })
+            if (child.childClass && child.childClass.length > 0) {
+              child.childClass.forEach((item) => [
+                _this.gcData.push({
+                  classId: item.classId,
+                  classTitle: '　　' + item.classTitle
+                })
+              ])
+            }
           })
-          if (child.childClass && child.childClass.length > 0) {
-            child.childClass.forEach((item) => [
-              _this.gcData.push({
-                classId: item.classId,
-                classTitle: '　　' + item.classTitle
-              })
-            ])
-          }
-        })
+        }
       }
     })
   },

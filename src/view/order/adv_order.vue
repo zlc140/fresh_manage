@@ -83,11 +83,11 @@ export default {
     return{ 
         // 分页
         currentPage1:1,
-            pageSize: 1,
-            page: 1,
-            total: 0,
-            lists: [],
-            sels: [],//列表选中列
+        pageSize: 1,
+        page: 1,
+        total: 0,
+        lists: [],
+        sels: [],//列表选中列
         getData:[],
     }
   },
@@ -103,8 +103,10 @@ export default {
             }
             para=JSON.stringify(para)
               findadvOrder(para).then((res) => {
-                this.getData=res.data.content.content
-                this.total = res.data.content.totalElements
+                  if(res.data.state == 200){
+                    this.getData=res.data.content.content
+                    this.total = res.data.content.totalElements
+                  }
               })
        },
       //  点击分页

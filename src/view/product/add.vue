@@ -3,7 +3,9 @@
     <h3 class="title">{{title}} <span v-if="title == '编辑商品'" class="tip">注意：商品修改完成需等待平台审核之后才会生效！</span><el-button class="fr"  size="small" type="danger" :plain="true" @click.native="clean">取消</el-button></h3>
      
       <el-form :model="addForm" :rules="rules" ref="addForm" label-width="150px" class="demo-addForm">
-        
+        <el-form-item v-show="classData.length<1">
+          <p class="tip">发布商品之前请先 创建店铺，分类以及品牌！</p>
+        </el-form-item>
         <el-form-item label="店铺名称" prop="storeId">
           <el-select v-model="addForm.storeId" v-on:change="changeStore()" placeholder="请选择店铺">
             <el-option v-for="(item,index) in  storeData" :key="index" :value="item.storeId" :label="item.storeName"> </el-option>
@@ -128,6 +130,7 @@ export default {
             }
     };
     return {
+      tip:true,
       modShow:false,
       title:'发布商品',
       // 添加商品的字段名
@@ -281,6 +284,9 @@ export default {
         if(res.data.state == 200 ){
                 let datas = res.data.content
                 this.classData = []
+                if(!datas){
+                    return false
+                }
                 datas.forEach((child) => {
                     _this.classData.push({
                         classId: child.classId,
