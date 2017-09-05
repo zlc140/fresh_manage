@@ -9,7 +9,14 @@ export const orderlist = (prop) => {
         params:prop
     })
 }
-
+// 预计配送订单
+export const findadvOrder = (prop) => {
+    return axios({
+        method:'post',
+        url:BASE_URL+'/order/findOrdersByStoreAndOrderStart',
+        params:prop
+    })
+}
 // 商品
 export const addgoods = (prop) => {
     return axios({
