@@ -237,7 +237,21 @@ export const saveStore = (para) => {
     })
 }
 /////////---------------- end --------------//////////
-
+// 库存
+export const kucunlist=(para)=>{
+    return axios({
+        method:'post',
+        params:para,
+        url:BASE_URL+'/goodsStock/findByCondition'
+    })
+}
+export const kucunedit=(para)=>{
+    return axios({
+        method:'post',
+        params:para,
+        url:BASE_URL+'/goodsStock/update'
+    })
+}
 // 首页楼层
 export const floorList = () => {
     return axios({
