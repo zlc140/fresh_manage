@@ -146,7 +146,7 @@ import {quillEditor} from 'vue-quill-editor'
       /*上传图片的地址*/
       uploadUrl:{
         type:String,
-        default:'/upload'
+        default:'/image-base/upload'
       },
       /*上传图片的file控件name*/
       fileName:{

@@ -20,7 +20,6 @@
                     <i class="el-icon-delete " @click="delImg(item)"></i>
                 </span>
             </li>
-        
          </ul>
          <el-dialog v-model="bigImgShow"   :close-on-click-modal="true">
              <div class="content imgBox">
@@ -79,7 +78,7 @@ export default {
         },
         url: {
             type: String,
-            default: '/upload'
+            default: '/image-base/upload'
 
         },
         filename: {

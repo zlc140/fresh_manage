@@ -28,22 +28,19 @@ module.exports = {
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
     proxyTable: {
-      '/upload':'http://192.168.0.9:8080//imageBase',
+      '/image-base':'http://192.168.0.111:9090',//图片
+      
+      '/fresh-order' : 'http://192.168.0.111:9090',//订单
+        
+      '/fresh-goods':'http://192.168.0.111:9090',//商品
+        
+      '/fresh-front':'http://192.168.0.111:9090',//首页
 
-      '/findcart':'http://192.168.0.17:8080/fresh-order/cart',//购物车
-      '/order':'http://192.168.0.17:8080/fresh-order',//订单
+      '/fresh-voucher':'http://192.168.0.111:9090',//优惠券
+        
+      '/fresh-bills':'http://192.168.0.111:9090',//账单
 
-      '/gc':'http://192.168.0.12:8080',//商品分类
-      '/goods':'http://192.168.0.12:8080',//商品
-      '/store':'http://192.168.0.12:8080',//商铺
-      '/brand':'http://192.168.0.12:8080',//品牌
-      '/comment':'http://192.168.0.12:8080',//商品评论
-      '/goodsStock':'http://192.168.0.12:8080',//库存
-      '/attrGoods':'http://192.168.0.12:8080',//编辑待审核
-
-      '/adv':'http://192.168.0.9:8080',//首页banner广告
-      '/floor':'http://192.168.0.9:8080',//首页楼层
-      '/goodsStock':'http://192.168.0.12:8080'//库存
+      '/user-center':'http://192.168.0.111:9090',//用户中心
 
       
   },

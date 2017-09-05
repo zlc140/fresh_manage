@@ -1,11 +1,12 @@
 import axios from 'axios'
 
-var BASE_URL = ''
+
+const orderUrl = "fresh-order"
 // 用户订单
 export const orderlist = (prop) => {
     return axios({
         method:'post',
-        url:BASE_URL+'/order/findAllOrders',
+        url:orderUrl+'/order/findAllOrders',
         params:prop
     })
 }
@@ -13,7 +14,7 @@ export const orderlist = (prop) => {
 export const findadvOrder = (prop) => {
     return axios({
         method:'post',
-        url:BASE_URL+'/order/findOrdersByStoreAndOrderStart',
+        url:orderUrl+'/order/findOrdersByStoreAndOrderStart',
         params:prop
     })
 }
@@ -21,7 +22,7 @@ export const findadvOrder = (prop) => {
 export const shipments = (prop) => {
     return axios({
         method:'post',
-        url:BASE_URL+'/order/shipments',
+        url:orderUrl+'/order/shipments',
         params:prop
     })
 }
@@ -29,11 +30,13 @@ export const shipments = (prop) => {
 export const returnCheck = (prop) => {
     return axios({
         method:'post',
-        url:BASE_URL+'/order/returnCheckOrder',
+        url:orderUrl+'/order/returnCheckOrder',
         params:prop
     })
 }
 
+// 商品模块
+const BASE_URL = 'fresh-goods'
 // 商品
 export const addgoods = (prop) => {
     return axios({
@@ -200,34 +203,7 @@ export const addbrandlist = (para) => {
         url:BASE_URL+'/brand/findByGcAndStore'
     })
 }
-/////////---------------- banner start --------------//////////
-export const brandList = () => {
-    return axios({
-        method:'post',
-        url:BASE_URL+'/adv/find'
-    })
-}
-export const removeBrand = (para) => {
-    return axios({
-        method:'post',
-        params:para,
-        url:BASE_URL+'/adv/delete'
-    })
-}
-export const editBrand = (para) => {
-    return axios({
-        method:'post',
-        params:para,
-        url:BASE_URL+'/adv/update'
-    })
-}
-export const addBrand = (para) => {
-    return axios({
-        method:'post',
-        params:para,
-        url:BASE_URL+'/adv/save'
-    })
-}
+
 // 得到的店铺
 export const selectStore = (para) => {
      // 店铺审核通过的参数
@@ -276,18 +252,49 @@ export const kucunedit=(para)=>{
         url:BASE_URL+'/goodsStock/update'
     })
 }
-// 首页楼层
+// 首页
+/////////---------------- banner start --------------//////////
+const onePageUrl = "fresh-front"
+export const brandList = () => {
+    return axios({
+        method:'post',
+        url:onePageUrl+'/adv/find'
+    })
+}
+export const removeBrand = (para) => {
+    return axios({
+        method:'post',
+        params:para,
+        url:onePageUrl+'/adv/delete'
+    })
+}
+export const editBrand = (para) => {
+    return axios({
+        method:'post',
+        params:para,
+        url:onePageUrl+'/adv/update'
+    })
+}
+export const addBranner = (para) => {
+    return axios({
+        method:'post',
+        params:para,
+        url:onePageUrl+'/adv/save'
+    })
+}
+
+// 楼层
 export const floorList = () => {
     return axios({
         method:'post',
-        url:BASE_URL+'/floor/find'
+        url:onePageUrl+'/floor/find'
     })
 }
 
 export const delFloor = (prop) => {
     return axios({
         method:'post',
-        url:BASE_URL+'/floor/delete',
+        url:onePageUrl+'/floor/delete',
         params:prop
     })
 }
@@ -308,7 +315,7 @@ export const saveFloor = (prop) => {
             ret = ret.substring(0,ret.length-1)
             return ret
         }],
-        url:BASE_URL+'/floor/save'
+        url:onePageUrl+'/floor/save'
     })
 }
 export const editFloor = (prop) => {
@@ -328,6 +335,6 @@ export const editFloor = (prop) => {
             ret = ret.substring(0,ret.length-1)
             return ret
         }],
-        url:BASE_URL+'/floor/update'
+        url:onePageUrl+'/floor/update'
     })
 }
