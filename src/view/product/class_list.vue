@@ -14,12 +14,12 @@
               <template scope="scope">
                 <span class="time">{{ scope.row.createTime | formatDate }}</span>
               </template>
-          </el-table-column>
+            </el-table-column>
             <el-table-column label="是否显示" prop="gcShow" width="200">
-        <template scope="scope">
-          <el-switch v-model="scope.row.gcShow" on-text="是" off-text="否" @change="show(scope.$index, scope.row)"> </el-switch>
-        </template>
-      </el-table-column>
+              <template scope="scope">
+                <el-switch v-model="scope.row.gcShow" on-text="是" off-text="否" @change="show(scope.$index, scope.row)"> </el-switch>
+              </template>
+            </el-table-column>
             <el-table-column label="操作" width="100">
               <template scope="scope">
                 <div class="play_box">
@@ -36,12 +36,22 @@
       </el-table-column>
       <el-table-column label="关键字" prop="keywords">
       </el-table-column>
+      <el-table-column prop="classPic" label="hover前图片">
+        <template scope="scope">
+          <img :src="scope.row.classPic[0].path" />
+        </template>
+      </el-table-column>
+      <el-table-column prop="classPic" label="hover后图片">
+        <template scope="scope">
+          <img :src="scope.row.classPic[1].path" />
+        </template>
+      </el-table-column>
       <el-table-column label="创建时间" prop="createTime">
         <template scope="scope">
           <span class="time">{{ scope.row.createTime | formatDate }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="是否显示" prop="gcShow" width="200">
+      <el-table-column label="是否显示" prop="gcShow">
         <template scope="scope">
           <el-switch v-model="scope.row.gcShow" on-text="是" off-text="否" @change="show(scope.$index, scope.row)"> </el-switch>
         </template>
@@ -86,18 +96,19 @@
         <el-form-item label="是否显示" prop="gcShow">
           <el-switch v-model="addForm.gcShow" on-text="是" off-text="否"></el-switch>
         </el-form-item>
-         <el-form-item label="hover前图片" prop="pics.path">
-          <!-- 上传图片  -->
-          <vue-core-image-upload 
-          v-if="picShow"
-           @getImg="getImg" 
-           :cropRatio="selectPic.radio" 
-           :picList="selectPic.picList" 
-           :sizeBox='selectPic.size' 
-           :multiple="selectPic.multiple" 
-           :cropShow="selectPic.cropShow"
-           >
-          </vue-core-image-upload>
+        <!-- hover前图片  -->
+        <el-form-item label="hover前图片" prop="pics[0].path">
+          <template scope="scope">
+            <vue-core-image-upload v-if="picShow" @getImg="addImg" :cropRatio="selectPic.radio" :picList="selectPic.picList" :sizeBox='selectPic.size' :multiple="selectPic.multiple" :cropShow="selectPic.cropShow">
+            </vue-core-image-upload>
+          </template>
+        </el-form-item>
+        <!-- hover后图片  -->
+        <el-form-item label="hover前图片" prop="pics[1].path">
+          <template scope="scope">
+            <vue-core-image-upload v-if="picShow" @getImg="addgetImg" :cropRatio="selectPic.radio" :picList="selectPic.picList" :sizeBox='selectPic.size' :multiple="selectPic.multiple" :cropShow="selectPic.cropShow">
+            </vue-core-image-upload>
+          </template>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -117,6 +128,20 @@
         <el-form-item label="是否显示" prop="gcShow">
           <el-switch v-model="editForm.gcShow" on-text="是" off-text="否"></el-switch>
         </el-form-item>
+        <!-- hover前图片  -->
+        <el-form-item label="hover前图片" prop="pics[0].path">
+          <template scope="scope">
+            <vue-core-image-upload v-if="picShow" @getImg="editImg" :cropRatio="selectPic.radio" :picList="selectPic.picList" :sizeBox='selectPic.size' :multiple="selectPic.multiple" :cropShow="selectPic.cropShow">
+            </vue-core-image-upload>
+          </template>
+        </el-form-item>
+        <!-- hover后图片  -->
+        <el-form-item label="hover前图片" prop="pics[1].path">
+          <template scope="scope">
+            <vue-core-image-upload v-if="picShow" @getImg="editgetImg" :cropRatio="selectPic.radio" :picList="selectPic.picList" :sizeBox='selectPic.size' :multiple="selectPic.multiple" :cropShow="selectPic.cropShow">
+            </vue-core-image-upload>
+          </template>
+        </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click.native="clean">取消</el-button>
@@ -127,13 +152,14 @@
 </template>
 
 <script>
-import { gclist, addClass, removeClass, editData} from '@/service/getData'
+import vueCoreImageUpload from '@/components/uploadImg'
+import { gclist, addClass, removeClass, editData } from '@/service/getData'
 
 export default {
   data() {
     var nospace = (rule, value, callback) => {
       var par = /^[a-zA-Z\u4E00-\u9FA5\_]{2,10}$/
-      if (!par.test(value) && 　value.trim() != '') {
+      if (!par.test(value) && value.trim() != '') {
         callback(new Error('分类名称为中英文,下划线，长度2~10位'));
       } else if (value.trim() == '') {
         callback(new Error('分类名称不能为空'))
@@ -142,6 +168,15 @@ export default {
       }
     }
     return {
+      // 图片
+      picShow: true,
+      selectPic: {
+        radio: '1200:350',
+        size: ['1200', '350'],
+        cropShow: false,
+        multiple: false,
+        picList: []
+      },
       listLoading: false,
       //添加分类
       addFormVisible: false,
@@ -149,7 +184,10 @@ export default {
       addForm: {
         classTitle: '',
         keywords: '',
-        gcShow: true
+        gcShow: true,
+        pics: [{
+          path: ''
+        }],
       },
       addFormRules: {
         classTitle: [
@@ -165,7 +203,12 @@ export default {
         keywords: '',
         gcShow: true,
         parentClassId: '',
-        classId: ''
+        classId: '',
+        pics: [{
+          path: ''
+        },{
+          path:''
+        }],
       },
       editFormRules: {
         classTitle: [
@@ -195,23 +238,31 @@ export default {
       }
     };
   },
+  components: {
+    vueCoreImageUpload
+  },
   mounted() {
     this.getList()
+    this.selectPic.picList = []
+    if (this.addForm.pics[0].path !== '' && this.addForm.pics[1].path !== '') {
+      this.selectPic.picList.push(
+        this.addForm.pics[0].path
+      )
+    }
+    this.picShow = true
   },
   methods: {
-    show(index,row){
-     let show = row.gcShow == true ? false:true
-     
-     let _this = this
-     let para = {
-              gcShow: show,
-              classId: row.classId,
-            }
-       editData(para).then((res) => {
-         if(res.data.state == 200){
-          //  _this.getList()
-         }
-       })
+    show(index, row) {
+      let show = row.gcShow == true ? false : true
+      let _this = this
+      let para = {
+        gcShow: show,
+        classId: row.classId,
+      }
+      editData(para).then((res) => {
+        if (res.data.state == 200) {
+        }
+      })
     },
     selsChange(sels) {
       this.sels = sels;
@@ -272,31 +323,19 @@ export default {
       let _this = this
       this.$refs.editForm.validate((valid) => {
         if (valid) {
-          this.$confirm('确定改变该分类？', '提示', {}).then(() => {
-            this.editFormLoading = false;
-            this.editFormVisible = false;
-            let para = {
-              classTitle: this.editForm.classTitle,
-              keywords: this.editForm.keywords,
-              gcShow: this.editForm.gcShow,
-              classId: this.editForm.classId,
-              parentClassId: this.parentClassId
-            }
-            editData(para).then((res) => {
-              console.log(res)
-              console.log(res.data.state)
-              this.editFormLoading = true;
-              if (res.data.state == '200') {
-                this.$message({
-                  message: '修改成功',
-                  type: 'success'
-                })
-                _this.getList()
-                this.$refs['editForm'].resetFields()
-              } else if (res.data == '') {
-                this.$message('登录超时，请重新登录')
-              }
-            })
+          this.editFormLoading = false;
+          this.editFormVisible = false;
+          let para = {
+            classTitle: this.editForm.classTitle,
+            keywords: this.editForm.keywords,
+            gcShow: this.editForm.gcShow,
+            classId: this.editForm.classId,
+            parentClassId: this.parentClassId
+          }
+          editData(para).then((res) => {
+            this.editFormLoading = true;
+            _this.getList()
+            this.$refs['editForm'].resetFields()
           })
         }
       });
@@ -316,24 +355,13 @@ export default {
       let _this = this
       this.$refs.addChildForm.validate((valid) => {
         if (valid) {
-          this.$confirm('确定添加子分类？', '提示', {}).then(() => {
-            this.addChildLoading = false;
-            this.addChildVisible = false;
-            let para = Object.assign({}, this.addChildForm);
-            console.log(para)
-            addClass(para).then((res) => {
-              this.addChildLoading = true;
-              if (res.data.state == '200') {
-                this.$message({
-                  message: '添加成功',
-                  type: 'success'
-                })
-                _this.getList()
-                this.$refs['addChildForm'].resetFields()
-              } else if (res.data == '') {
-                this.$message('登录超时，请重新登录')
-              }
-            })
+          this.addChildLoading = false;
+          this.addChildVisible = false;
+          let para = Object.assign({}, this.addChildForm);
+          addClass(para).then((res) => {
+            this.addChildLoading = true;
+            _this.getList()
+            this.$refs['addChildForm'].resetFields()
           })
 
         }
@@ -345,7 +373,14 @@ export default {
       this.addForm = {
         classTitle: '',
         keywords: '',
-        gcShow: true
+        gcShow: true,
+        pics: [
+          {
+            path: ''
+          },
+          {
+            path: ''
+          }],
       }
     },
     //  添加分类提交
@@ -353,27 +388,37 @@ export default {
       let _this = this
       this.$refs.addForm.validate((valid) => {
         if (valid) {
-          // this.$confirm('确定添加该分类？', '提示', {}).then(() => {
-            this.addLoading = false;
-            this.addFormVisible = false;
-            let para = Object.assign({}, this.addForm);
-            addClass(para).then((res) => {
-              console.log(res)
-              this.addLoading = true;
-              if (res.data.state == '200') {
-                this.$message({
-                  message: '添加成功',
-                  type: 'success'
-                })
-                _this.getList()
-                this.$refs['addForm'].resetFields()
-              } else if (res.data == '') {
-                this.$message('登录超时，请重新登录')
-              }
-            })
-          // })
+           if(this.addForm.pics[0].path == '' || this.addForm.pics[1].path==''){
+                  this.$message('请上传banner图片')
+                   return false
+             }
+          this.addLoading = false;
+          this.addFormVisible = false;
+          let para = Object.assign({}, this.addForm);
+          para.pics = JSON.stringify(para.pics)
+          addClass(para).then((res) => {
+            // console.log(para)
+            // console.log(res.data.content)
+            this.addLoading = true;
+            _this.getList()
+            this.$refs['addForm'].resetFields()
+          })
         }
       });
+    },
+    // 添加分类上传图片 
+    addImg(val) {
+      this.addForm.pics[0].path = val[0]
+    },
+    addgetImg(val) {
+      this.addForm.pics[1].path = val[0]
+    },
+    // 编辑上传图片
+    editImg(val) {
+      this.editForm.pics[0].path = val[0]
+    },
+    editgetImg(val) {
+      this.editForm.pics[1].path = val[0]
     },
   },
 };
@@ -391,6 +436,11 @@ export default {
     text-align: right;
     padding: 10px 20px;
   }
+  img {
+    width: 60px;
+    height: 60px;
+    display: inline-block
+  }
   .el-tree-node__children .del {
     display: none;
   }
@@ -400,6 +450,19 @@ export default {
     &:last-child {
       border-bottom: none;
     }
+  }
+  .el-dialog--small {
+    width: 33%;
+  }
+  .el-form-item {
+    margin-bottom: 22px;
+    width: 520px;
+  }
+  .el-form-item:nth-child(4) label {
+    width: 100px!important;
+  }
+  .el-form-item:nth-child(5) label {
+    width: 100px!important;
   }
 }
 </style>
