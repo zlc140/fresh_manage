@@ -174,7 +174,6 @@ export default {
     })
   },
   methods: {
-
     getList() {
       let para = {
         pageNum: this.pageNum - 1,
