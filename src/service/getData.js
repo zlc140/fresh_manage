@@ -17,6 +17,23 @@ export const findadvOrder = (prop) => {
         params:prop
     })
 }
+// 发货
+export const shipments = (prop) => {
+    return axios({
+        method:'post',
+        url:BASE_URL+'/order/shipments',
+        params:prop
+    })
+}
+// 商家对退货订单进行审核
+export const returnCheck = (prop) => {
+    return axios({
+        method:'post',
+        url:BASE_URL+'/order/returnCheckOrder',
+        params:prop
+    })
+}
+
 // 商品
 export const addgoods = (prop) => {
     return axios({
