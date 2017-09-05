@@ -1,30 +1,31 @@
  <template>
   <!-- 顶部表单 -->
   <div>
-    <el-form ref="form" :model="form" label-width="80px">
-      <el-form-item label="订单编号">
-        <el-input v-model="form.ordersId "></el-input>
+      <div class="search_pro">
+        <el-form ref="form" class="" :model="form" label-width="80px">
+          <el-form-item label="订单编号">
+            <el-input v-model="form.ordersId "></el-input>
+          </el-form-item>
+          <el-form-item label="订单状态"  >
+            <el-select  v-model="form.States" >
+              <el-option v-for="item in options"   :key="item.value" :label="item.label" :value="item.value">  </el-option> 
+            </el-select>
+          </el-form-item>
+      <el-form-item label="下单时间" >
+        <el-date-picker  type="datetime"  placeholder="选择开始日期时间" v-model="form.startTime"></el-date-picker>
+        <el-date-picker  type="datetime"  placeholder="选择结束日期时间" v-model="form.endTime"> </el-date-picker>
       </el-form-item>
-      <el-form-item label="订单状态"  >
-        <el-select  v-model="form.States" >
-           <el-option v-for="item in options"   :key="item.value" :label="item.label" :value="item.value">  </el-option> 
-        </el-select>
+      
+      <el-form-item>
+        <el-button type="primary" @click="onSubmit('search')">查询</el-button>
       </el-form-item>
-  <el-form-item label="下单时间" >
-    <el-date-picker  type="datetime"  placeholder="选择开始日期时间" v-model="form.startTime"></el-date-picker>
-    <el-date-picker  type="datetime"  placeholder="选择结束日期时间" v-model="form.endTime"> </el-date-picker>
-  </el-form-item>
-  
-  <el-form-item>
-    <el-button type="primary" @click="onSubmit('search')">查询</el-button>
-  </el-form-item>
-</el-form>
- 
-  <el-table  :data="getData" style="width: 98%">
+    </el-form>
+  </div>
+  <el-table border :data="getData" style="width: 98%">
     <!-- 子级 -->
     <el-table-column type="expand" prop="goodsList">
       <template scope="scope">
-            <el-table    :data="scope.row.goodsList"  style="width: 90%">  
+            <el-table border  :data="scope.row.goodsList"  style="width: 90%">  
                 <el-table-column   prop="goods.goodsTitle"  label="商品名称" min-width="200px"> </el-table-column>
                 <el-table-column prop="goodsId"  label="商品编号" width="200px"> </el-table-column>
                 <el-table-column  prop="goods.price.GOODS_MARKET_PRICE" label="商品单价" width="100px">
@@ -39,6 +40,11 @@
                 </template>
                 </el-table-column>
           </el-table>
+          <ul class="getAddr">
+             <li><span>收货人:</span> {{scope.row.orderDaddress.name}}</li>
+             <li><span>电话:</span> {{scope.row.orderDaddress.phone}}</li>
+            <li><span>收货地址:</span> {{scope.row.orderDaddress.address}}</li>
+          </ul>
       </template>
     </el-table-column>
     <!-- 父级 -->
@@ -148,9 +154,18 @@ export default {
 }
 </script>
 
-<style>
-.el-form-item {
-    margin-bottom: 22px;
-    float: left;
+ 
+<style lang="scss">
+.getAddr{
+  padding: 20px;
+  line-height: 30px;
+  li{
+    span{
+      display: inline-block;
+      width:60px;
+      text-align: right;
+      padding-right: 20px;
+    }
+  }
 }
 </style>

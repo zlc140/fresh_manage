@@ -1,7 +1,7 @@
 <template>
   <div class="prolist">
     <!-- form表单 -->
-    <div class="pro_o">
+    <div class="search_pro">
       <el-form ref="form" :model="form" label-width="80px">
         <el-row :gutter="10" class="margin-top">
           <el-form-item label="商品状态">
@@ -12,13 +12,11 @@
           <el-form-item label="商品货号">
             <el-input v-model="form.goodsId"></el-input>
           </el-form-item>
-          <el-col :span="6">
             <el-form-item label="一级分类">
               <el-select v-model="form.gclist">
                 <el-option v-for="(item,index) in  gcData" :key="index" :label="item.classTitle" :value="item.classId"> </el-option>
               </el-select>
             </el-form-item>
-          </el-col>
           <!-- <el-col :span="5">
             <el-form-item label="二级分类">
               <el-select v-model="form.gclistt">
@@ -31,10 +29,9 @@
           </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="onSubmit('search')">查询</el-button>
+            <el-button class="fr"  :plain="true" ><router-link to="/viwe/proAdd">发布商品</router-link></el-button>
           </el-form-item>
-           <el-form-item>
-            <el-button type="primary">新增</el-button>
-          </el-form-item>
+           
         </el-row>
       </el-form>
     </div>
@@ -245,30 +242,8 @@ export default {
 }
 </script>
 <style>
-.prolist .pro_o .el-form-item {
-  margin-bottom: 22px;
-  float: left;
-}
 
-
-.prolist .pro_o .section {
-  -webkit-box-flex: 1;
-  -ms-flex-positive: 1;
-  flex-grow: 1;
-  -webkit-flex-grow: 1;
-  -ms-flex-grow: 1;
-  max-width: calc(100% - 260px);
-  padding: 55px 20px 10px;
-}
-
-.prolist .pro_o .el-button--primary {
-  color: #fff;
-  background-color: #20a0ff;
-  border-color: #20a0ff;
-  margin-left: 40px;
-}
-
-.prolist .el-col-5 {
+/* .prolist .el-col-5 {
   width: 15%;
 }
 .prolist .el-dialog--small {
@@ -276,7 +251,7 @@ export default {
 }
 .prolist .el-col-6 {
     width: 15%;
-}
+} */
 </style>
 
  

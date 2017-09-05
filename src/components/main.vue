@@ -191,4 +191,27 @@ export default {
     }
    
 }
+// 搜索
+.search_pro .el-form-item {
+  margin-bottom: 22px;
+  float: left;
+}
+
+
+ .search_pro .section {
+  -webkit-box-flex: 1;
+  -ms-flex-positive: 1;
+  flex-grow: 1;
+  -webkit-flex-grow: 1;
+  -ms-flex-grow: 1;
+  max-width: calc(100% - 260px);
+  padding: 55px 20px 10px;
+}
+
+ .search_pro .el-button--primary {
+  color: #fff;
+  background-color: #20a0ff;
+  border-color: #20a0ff;
+  margin-left: 40px;
+}
 </style>

@@ -4,7 +4,7 @@
 		<el-col v-if="!addFormVisible" :span="24" class="toolbar" style="padding-bottom: 0px;">
 			<el-form :inline="true" :model="filters">
 				<el-form-item class="add">
-					<el-button type="primary" @click="handle('add')">新增</el-button>
+					<el-button type="primary" :plain="true" @click="handle('add')">新增banner</el-button>
 				</el-form-item>
 			</el-form>
 		</el-col>

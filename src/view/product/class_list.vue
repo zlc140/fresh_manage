@@ -1,7 +1,7 @@
 <template>
   <div class="content classTree">
     <div class="title toolbar">
-      <el-button @click="addOne" v-show="!addFormVisible">添加分类</el-button>
+      <el-button @click="addOne" :plain="true" v-show="!addFormVisible">添加分类</el-button>
     </div>
     <el-table :data="lists" style="98%" v-loading="listLoading" @selection-change="selsChange" v-show="!addFormVisible">
       <!-- 子级 -->

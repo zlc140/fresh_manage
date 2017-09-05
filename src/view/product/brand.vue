@@ -9,7 +9,7 @@
         <el-button type="primary" @click="onSubmit('search')">查询</el-button>
       </el-form-item>
       <el-form-item class="add">
-        <el-button type="primary" @click="handle('add')">新增</el-button>
+        <el-button type="primary" :plain="true" @click="handle('add')">新增品牌</el-button>
       </el-form-item>
     </el-form>
     <!-- 表格 -->
