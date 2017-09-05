@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 
-const orderUrl = "fresh-order"
+const orderUrl = "/fresh-order"
 // 用户订单
 export const orderlist = (prop) => {
     return axios({
@@ -36,7 +36,7 @@ export const returnCheck = (prop) => {
 }
 
 // 商品模块
-const BASE_URL = 'fresh-goods'
+const BASE_URL = '/fresh-goods'
 // 商品
 export const addgoods = (prop) => {
     return axios({
@@ -254,28 +254,28 @@ export const kucunedit=(para)=>{
 }
 // 首页
 /////////---------------- banner start --------------//////////
-const onePageUrl = "fresh-front"
-export const brandList = () => {
+const onePageUrl = "/fresh-front"
+export const bannerList = () => {
     return axios({
         method:'post',
         url:onePageUrl+'/adv/find'
     })
 }
-export const removeBrand = (para) => {
+export const removeBanner = (para) => {
     return axios({
         method:'post',
         params:para,
         url:onePageUrl+'/adv/delete'
     })
 }
-export const editBrand = (para) => {
+export const editBanner = (para) => {
     return axios({
         method:'post',
         params:para,
         url:onePageUrl+'/adv/update'
     })
 }
-export const addBranner = (para) => {
+export const addBanner = (para) => {
     return axios({
         method:'post',
         params:para,

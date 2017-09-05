@@ -60,7 +60,7 @@
 
 <script>
 import dialogTem from './children/dialog'
-import { brandList,removeBrand,addBrand,editBrand } from '@/service/getData'
+import { bannerList,removeBanner,addBanner,editBanner } from '@/service/getData'
 // import VueCoreImageUpload  from 'vue-core-image-upload'
 export default {
   data() {
@@ -97,7 +97,7 @@ export default {
        
         getLists() {
            this.listLoading=true
-            brandList().then((res) => {
+            bannerList().then((res) => {
                 console.log(res)
                this.listLoading=false
                if(res.data.state == 200){
@@ -134,7 +134,7 @@ export default {
                     this.listLoding = true;
                     let para = {id : row.advId}
                      
-                    removeBrand(para).then((res) => {
+                    removeBanner(para).then((res) => {
                         this.listLoding = false;
                         this.$message({
                             message:'删除成功',
@@ -194,7 +194,7 @@ export default {
                 id:row.advId,
                 onlyShow:row.onlyShow
             }
-            editBrand(para).then(res => {
+            editBanner(para).then(res => {
                 console.log(res.data)
             })
            

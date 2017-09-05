@@ -58,7 +58,7 @@
 
 <script>
 import vueCoreImageUpload from '@/components/uploadImg'
-import { brandList,removeBrand,addBrand,editBrand } from '@/service/getData'
+import { addBanner,editBanner } from '@/service/getData'
 export default {
     data(){
             var validateaddDate = (rule, value, callback) => {
@@ -180,7 +180,7 @@ export default {
                         para.endTime = para.endTime.getTime()+'';
                     }
                     if(this.type == 'add'){
-                        addBrand(para).then((res) => {
+                        addBanner(para).then((res) => {
                             this.loginLoading = false
                             this.addFormVisible = false
                             if(res.data.state == 200){
@@ -199,7 +199,7 @@ export default {
                         
                          para.id = this.FormData.id
                         //  console.log("edit",para)
-                        editBrand(para).then((res) => {
+                        editBanner(para).then((res) => {
                              this.loginLoading = false
                             if(res.data.state == 200){
                                 // console.log(res.data)
