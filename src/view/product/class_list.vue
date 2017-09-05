@@ -1,9 +1,9 @@
 <template>
   <div class="content classTree">
-    <div class="title">
-      <el-button @click="addOne">添加分类</el-button>
+    <div class="title toolbar">
+      <el-button @click="addOne" v-show="!addFormVisible">添加分类</el-button>
     </div>
-    <el-table :data="lists" style="98%" v-loading="listLoading" @selection-change="selsChange">
+    <el-table :data="lists" style="98%" v-loading="listLoading" @selection-change="selsChange" v-show="!addFormVisible">
       <!-- 子级 -->
       <el-table-column type="expand">
         <template scope="scope">
@@ -23,7 +23,7 @@
             <el-table-column label="操作" width="100">
               <template scope="scope">
                 <div class="play_box">
-                  <a @click="editd(scope.$index, scope.row)">编辑</a>
+                  <a @click="editChild(scope.$index, scope.row)">编辑</a>
                   <a @click="handleDel(scope.$index, scope.row)">删除</a>
                 </div>
               </template>
@@ -58,129 +58,35 @@
       </el-table-column>
       <el-table-column label="操作" width="100">
         <template scope="scope">
-           <div class="play_box">
-              <el-button type="text" @click="addChild(scope.$index, scope.row)">添加子类</el-button>
-              <el-button type="text" @click="editd(scope.$index, scope.row)">编辑</el-button>
-              <el-button type="text" @click="handleDel(scope.$index, scope.row)">删除</el-button>
+          <div class="play_box">
+            <el-button type="text" @click="addChild(scope.$index, scope.row)">添加子类</el-button>
+            <el-button type="text" @click="editd(scope.$index, scope.row)">编辑</el-button>
+            <el-button type="text" @click="handleDel(scope.$index, scope.row)">删除</el-button>
           </div>
         </template>
       </el-table-column>
     </el-table>
-    <!-- 添加子分类界面 -->
-    <el-dialog title="添加子分类" v-model="addChildVisible" :close-on-click-modal="false">
-      <el-form :model="addChildForm" :rules="addChildRules" label-width="80px" ref="addChildForm">
-        <el-form-item label="分类名称" prop="classTitle">
-          <el-input v-model="addChildForm.classTitle" placeholder="分类名称长度应在2-10位，推荐3-6个汉字" auto-complete="off"></el-input>
-        </el-form-item>
-        <el-form-item label="关键字" prop="keywords">
-          <el-input v-model="addChildForm.keywords"></el-input>
-        </el-form-item>
-        <el-form-item label="是否显示" prop="gcShow">
-          <el-switch v-model="addChildForm.gcShow" on-text="是" off-text="否"></el-switch>
-        </el-form-item>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click.native="clean">取消</el-button>
-        <el-button type="primary" @click.native="addChildSubmit">提交</el-button>
-      </div>
-    </el-dialog>
-    <!--添加分类-->
-    <el-dialog title="添加分类" v-model="addFormVisible" :close-on-click-modal="false">
-      <el-form :model="addForm" :rules="addFormRules" label-width="80px" ref="addForm">
-        <el-form-item label="分类名称" prop="classTitle">
-          <el-input v-model="addForm.classTitle" placeholder="分类名称长度应在2-10位，推荐3-6个汉字" auto-complete="off"></el-input>
-        </el-form-item>
-        <el-form-item label="关键字" prop="keywords">
-          <el-input v-model="addForm.keywords" auto-complete="off"></el-input>
-        </el-form-item>
-        <el-form-item label="是否显示" prop="gcShow">
-          <el-switch v-model="addForm.gcShow" on-text="是" off-text="否"></el-switch>
-        </el-form-item>
-        <!-- hover前图片  -->
-        <el-form-item label="hover前图片" prop="pics[0].path">
-          <template scope="scope">
-            <vue-core-image-upload v-if="picShow" @getImg="addImg" :cropRatio="selectPic.radio" :picList="selectPic.picList" :sizeBox='selectPic.size' :multiple="selectPic.multiple" :cropShow="selectPic.cropShow">
-            </vue-core-image-upload>
-          </template>
-        </el-form-item>
-        <!-- hover后图片  -->
-        <el-form-item label="hover前图片" prop="pics[1].path">
-          <template scope="scope">
-            <vue-core-image-upload v-if="picShow" @getImg="addgetImg" :cropRatio="selectPic.radio" :picList="selectPic.picList" :sizeBox='selectPic.size' :multiple="selectPic.multiple" :cropShow="selectPic.cropShow">
-            </vue-core-image-upload>
-          </template>
-        </el-form-item>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click.native="clean">取消</el-button>
-        <el-button type="primary" @click.native="addSubmit">提交</el-button>
-      </div>
-    </el-dialog>
-    <!--编辑界面-->
-    <el-dialog title="编辑" v-model="editFormVisible" :close-on-click-modal="false">
-      <el-form :model="editForm" :rules="editFormRules" label-width="80px" ref="editForm">
-        <el-form-item label="分类名称" prop="classTitle">
-          <el-input v-model="editForm.classTitle" placeholder="分类名称长度应在2-10位，推荐3-6个汉字" auto-complete="off"></el-input>
-        </el-form-item>
-        <el-form-item label="关键字" prop="keywords">
-          <el-input v-model="editForm.keywords" auto-complete="off"></el-input>
-        </el-form-item>
-        <el-form-item label="是否显示" prop="gcShow">
-          <el-switch v-model="editForm.gcShow" on-text="是" off-text="否"></el-switch>
-        </el-form-item>
-        <!-- hover前图片  -->
-        <el-form-item label="hover前图片" prop="pics[0].path">
-          <template scope="scope">
-            <vue-core-image-upload v-if="picShow" @getImg="editImg" :cropRatio="selectPic.radio" :picList="selectPic.picList" :sizeBox='selectPic.size' :multiple="selectPic.multiple" :cropShow="selectPic.cropShow">
-            </vue-core-image-upload>
-          </template>
-        </el-form-item>
-        <!-- hover后图片  -->
-        <el-form-item label="hover前图片" prop="pics[1].path">
-          <template scope="scope">
-            <vue-core-image-upload v-if="picShow" @getImg="editgetImg" :cropRatio="selectPic.radio" :picList="selectPic.picList" :sizeBox='selectPic.size' :multiple="selectPic.multiple" :cropShow="selectPic.cropShow">
-            </vue-core-image-upload>
-          </template>
-        </el-form-item>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click.native="clean">取消</el-button>
-        <el-button type="primary" @click.native="editSubmit">提交</el-button>
-      </div>
-    </el-dialog>
+    <!-- 分类的编辑添加 -->
+    <dialog-tem v-if="addFormVisible" :type="type" :title="title" :formData="addForm" @close="close"></dialog-tem>
+
   </div>
 </template>
 
 <script>
-import vueCoreImageUpload from '@/components/uploadImg'
 import { gclist, addClass, removeClass, editData } from '@/service/getData'
-
+import dialogTem from './prochild/dialog'
 export default {
   data() {
-    var nospace = (rule, value, callback) => {
-      var par = /^[a-zA-Z\u4E00-\u9FA5\_]{2,10}$/
-      if (!par.test(value) && value.trim() != '') {
-        callback(new Error('分类名称为中英文,下划线，长度2~10位'));
-      } else if (value.trim() == '') {
-        callback(new Error('分类名称不能为空'))
-      } else {
-        callback()
-      }
-    }
+
     return {
       // 图片
+      type: 'add',
+      title: '添加分类',
       picShow: true,
-      selectPic: {
-        radio: '1200:350',
-        size: ['1200', '350'],
-        cropShow: false,
-        multiple: false,
-        picList: []
-      },
+
       listLoading: false,
       //添加分类
       addFormVisible: false,
-      addLoading: false,
       addForm: {
         classTitle: '',
         keywords: '',
@@ -189,69 +95,21 @@ export default {
           path: ''
         }],
       },
-      addFormRules: {
-        classTitle: [
-          { required: true, message: '分类名称不可为空', trigger: 'blur' },
-          { validator: nospace, trigger: 'blur' }
-        ]
-      },
-      //编辑界面
-      editFormVisible: false,
-      editFormLoading: false,
-      editForm: {
-        classTitle: '',
-        keywords: '',
-        gcShow: true,
-        parentClassId: '',
-        classId: '',
-        pics: [{
-          path: ''
-        },{
-          path:''
-        }],
-      },
-      editFormRules: {
-        classTitle: [
-          { required: true, message: '分类名称不可为空', trigger: 'blur' },
-          { validator: nospace, trigger: 'blur' }
-        ]
-      },
-      //添加子分类
-      addChildVisible: false,
-      addChildLoading: false,
-      addChildForm: {
-        parentClassId: '',
-        classTitle: '',
-        keywords: '',
-        gcShow: true,
-      },
-      addChildRules: {
-        classTitle: [
-          { required: true, message: '分类名称不可为空', trigger: 'blur' },
-          { validator: nospace, trigger: 'blur' }
-        ]
-      },
       lists: [],
-      defaultProps: {
-        children: 'childClass',
-        label: 'classTitle'
-      }
     };
   },
   components: {
-    vueCoreImageUpload
+    dialogTem
   },
   mounted() {
     this.getList()
-    this.selectPic.picList = []
-    if (this.addForm.pics[0].path !== '' && this.addForm.pics[1].path !== '') {
-      this.selectPic.picList.push(
-        this.addForm.pics[0].path
-      )
-    }
-    this.picShow = true
   },
   methods: {
+    close() {
+      this.getList()
+
+      this.addFormVisible = false
+    },
     show(index, row) {
       let show = row.gcShow == true ? false : true
       let _this = this
@@ -270,6 +128,7 @@ export default {
     getList() {
       gclist().then((res) => {
         if (res.data.state == 200) {
+          console.log(res.data.content)
           this.lists = res.data.content
         }
       })
@@ -300,75 +159,41 @@ export default {
         })
       })
     },
-    // 取消
-    clean() {
-      if (this.addFormVisible == true) {
-        this.addFormVisible = false
-        this.$refs['addForm'].resetFields()
-      } else if (this.addChildVisible == true) {
-        this.addChildVisible = false
-        this.$refs['addChildForm'].resetFields()
-      } else if (this.editFormVisible == true) {
-        this.editFormVisible == false
-        this.$refs['editForm'].resetFields()
-      }
-    },
+
     // 编辑
     editd(index, row) {
-      this.editFormVisible = true;
-      this.editForm = Object.assign({}, row)
+      this.type = "edit"
+      this.title = "编辑分类"
+      this.addFormVisible = true;
+      this.addForm = Object.assign({}, row)
     },
-    // 编辑提交
-    editSubmit() {
-      let _this = this
-      this.$refs.editForm.validate((valid) => {
-        if (valid) {
-          this.editFormLoading = false;
-          this.editFormVisible = false;
-          let para = {
-            classTitle: this.editForm.classTitle,
-            keywords: this.editForm.keywords,
-            gcShow: this.editForm.gcShow,
-            classId: this.editForm.classId,
-            parentClassId: this.parentClassId
-          }
-          editData(para).then((res) => {
-            this.editFormLoading = true;
-            _this.getList()
-            this.$refs['editForm'].resetFields()
-          })
-        }
-      });
+    editChild(index,row){
+      this.type = "editChild"
+      this.title = "编辑子分类"
+      this.addFormVisible = true;
+      this.addForm = {
+        classTitle: row.classTitle,
+        keywords: row.keywords,
+        classId: row.classId,
+        gcShow: row.gcShow
+      }
     },
     // 添加子类
     addChild(index, row) {
-      this.addChildVisible = true;
-      this.addChildForm = {
+      this.type = "addChild"
+      this.title = "添加子分类"
+      this.addFormVisible = true;
+      this.addForm = {
         classTitle: '',
         keywords: '',
         parentClassId: row.classId,
         gcShow: true
       }
     },
-    // 添加子类提交
-    addChildSubmit() {
-      let _this = this
-      this.$refs.addChildForm.validate((valid) => {
-        if (valid) {
-          this.addChildLoading = false;
-          this.addChildVisible = false;
-          let para = Object.assign({}, this.addChildForm);
-          addClass(para).then((res) => {
-            this.addChildLoading = true;
-            _this.getList()
-            this.$refs['addChildForm'].resetFields()
-          })
-
-        }
-      })
-    },
     // 添加分类
     addOne() {
+      this.type = "add"
+      this.title = "添加分类"
       this.addFormVisible = true;
       this.addForm = {
         classTitle: '',
@@ -382,44 +207,8 @@ export default {
             path: ''
           }],
       }
-    },
-    //  添加分类提交
-    addSubmit() {
-      let _this = this
-      this.$refs.addForm.validate((valid) => {
-        if (valid) {
-           if(this.addForm.pics[0].path == '' || this.addForm.pics[1].path==''){
-                  this.$message('请上传banner图片')
-                   return false
-             }
-          this.addLoading = false;
-          this.addFormVisible = false;
-          let para = Object.assign({}, this.addForm);
-          para.pics = JSON.stringify(para.pics)
-          addClass(para).then((res) => {
-            // console.log(para)
-            // console.log(res.data.content)
-            this.addLoading = true;
-            _this.getList()
-            this.$refs['addForm'].resetFields()
-          })
-        }
-      });
-    },
-    // 添加分类上传图片 
-    addImg(val) {
-      this.addForm.pics[0].path = val[0]
-    },
-    addgetImg(val) {
-      this.addForm.pics[1].path = val[0]
-    },
-    // 编辑上传图片
-    editImg(val) {
-      this.editForm.pics[0].path = val[0]
-    },
-    editgetImg(val) {
-      this.editForm.pics[1].path = val[0]
-    },
+    }
+
   },
 };
 </script>
@@ -433,7 +222,7 @@ export default {
     padding: 10px 0;
   }
   .title {
-    text-align: right;
+    // text-align: right;
     padding: 10px 20px;
   }
   img {
