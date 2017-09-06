@@ -51,7 +51,7 @@
       </el-table-column>
       <el-table-column  align="center" label="商品单价" prop="GOODS_MARKET_PRICE">
         <template scope="scope">
-          <span>{{ scope.row.price.GOODS_MARKET_PRICE}}</span>
+          <span>{{ scope.row.price.GOODS_MARKET_PRICE | currency}}</span>
         </template>
       </el-table-column>
     </el-table>
@@ -198,19 +198,8 @@ export default {
   }
 }
 </script>
-<style>
-.edit-box{
-  cursor: pointer;
-}
-/* .kucun .el-dialog--small {
-  width: 15%;
-}
+ 
 
-.kucun .el-form-item {
-  margin-bottom: 22px;
-  width: 300px;
-  float: left;
-} */
-</style>
+ 
 
  

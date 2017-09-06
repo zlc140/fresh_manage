@@ -33,6 +33,9 @@ export default {
 </script>
 
 <style lang="scss">
+.edit-box{
+  cursor: pointer;
+}
 .tip{
     color:orange;
     font-size: 14px;

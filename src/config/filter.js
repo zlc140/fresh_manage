@@ -17,7 +17,7 @@ Vue.filter('currency',(value) => {
   })
  
 Vue.filter('formatDate',function(value) {
-        if(value == 0 || value == '' || value =='undefined'){
+        if(value == 0 ||value == '0'|| value == '' || value =='undefined'){
           return null
         }
         return tool.formatDate.format((value),'yyyy-MM-dd')

@@ -54,7 +54,7 @@
       </el-table-column>
       <el-table-column label="商品单价" prop="price" width="100px;">
         <template scope="scope">
-          <span @click="edtiPrice(scope.row)"><i class="el-icon-edit"></i>{{ scope.row.price.GOODS_MARKET_PRICE | currency }}</span>
+          <span class="edit-box" @click="edtiPrice(scope.row)">{{ scope.row.price.GOODS_MARKET_PRICE | currency }}<i class="el-icon-edit"></i></span>
         </template>
       </el-table-column>
       <el-table-column label="关键字" prop="keywords" width="110px">
