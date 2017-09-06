@@ -30,7 +30,17 @@ import {baobiao} from './component'
 
 Vue.use(Router)
 export const router = new Router({
-  mode:'history',
+  // mode:'history',
+  history: false,
+  hashbang: true,
+  base:__dirname,
+  scrollBehavior (to, from, savedPosition) { //这个可以简单的实现路由改变是滚动条回到顶部
+    if (savedPosition) {
+      return savedPosition
+    } else {
+      return { x: 0, y: 0 }
+    }
+  },
   routes: [
     { path:'/', redirect:'/login'},
     {  path:'/login', name:'登录', component:Login },
