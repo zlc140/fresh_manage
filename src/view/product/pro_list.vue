@@ -17,19 +17,12 @@
                 <el-option v-for="(item,index) in  gcData" :key="index" :label="item.classTitle" :value="item.classId"> </el-option>
               </el-select>
             </el-form-item>
-          <!-- <el-col :span="5">
-            <el-form-item label="二级分类">
-              <el-select v-model="form.gclistt">
-                <el-option v-for="(item,index) in  gcDatatt"   :key="index"  :label="item.classTitle" :value="item.classId"></el-option>
-              </el-select>
-            </el-form-item>
-            </el-col> -->
           <el-form-item label="商品名称">
             <el-input v-model="form.goodstitle"></el-input>
           </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="onSubmit('search')">查询</el-button>
-            <el-button class="fr"  :plain="true" ><router-link to="/viwe/proAdd">发布商品</router-link></el-button>
+            <el-button class="fr"  :plain="true" ><router-link to="/view/proAdd">发布商品</router-link></el-button>
           </el-form-item>
            
         </el-row>
@@ -61,7 +54,7 @@
       </el-table-column>
       <el-table-column label="商品单价" prop="price" width="100px;">
         <template scope="scope">
-          <span>{{ scope.row.price.GOODS_MARKET_PRICE | currency }}</span>
+          <span class="edit-box" @click="edtiPrice(scope.row)">{{ scope.row.price.GOODS_MARKET_PRICE | currency }}<i class="el-icon-edit"></i></span>
         </template>
       </el-table-column>
       <el-table-column label="关键字" prop="keywords" width="110px">
@@ -103,13 +96,23 @@
     <el-col :span="24" class="toolbar">
       <el-pagination layout="total,prev,pager,next" :current-page.sync="currentPage1" :page-size='pageSize' :total="totalElements" @current-change="handleCurrentChange"> </el-pagination>
     </el-col>
-
+    <el-dialog title="快速改价" size="mini" v-model="editFormVisible" :close-on-click-modal="false">
+      <el-form :model="editForm" label-width="80px">
+        <el-form-item label="编辑价格" prop="marketPrice">
+          <el-input type="number" v-model="editForm.marketPrice" auto-complete="off"></el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click.native="editSubmit">提交</el-button>
+      </div>
+    </el-dialog>
+       
   </div>
 </template>
 
 <script>
 import dialogTem from './add'
-import { prolist, classlist, delGoods } from '@/service/getData'
+import { prolist, classlist, delGoods,editgoods } from '@/service/getData'
 export default {
   data() {
     return {
@@ -118,8 +121,12 @@ export default {
         state: '', //商品状态
         goodsId: '',//货号
         goodstitle: '',//商品名称
-        gclist: '',//一级菜单
-        gclistt: '',//二级菜单
+        gclist: '',//一级分类
+      },
+      editFormVisible:false,
+      editForm:{
+          goodsId:'',
+          marketPrice:0,
       },
       // 分页
       currentPage1: 1,
@@ -163,21 +170,24 @@ export default {
       if (res.data.state == 200 ) {
         let datas = res.data.content
         // console.log(datas)
+        console.log('t',datas)
         _this.gcData = []
-        datas.forEach((child) => {
-          _this.gcData.push({
-            classId: child.classId,
-            classTitle: child.classTitle
+        if(datas){
+          datas.forEach((child) => {
+            _this.gcData.push({
+              classId: child.classId,
+              classTitle: child.classTitle
+            })
+            if (child.childClass && child.childClass.length > 0) {
+              child.childClass.forEach((item) => [
+                _this.gcData.push({
+                  classId: item.classId,
+                  classTitle: '　　' + item.classTitle
+                })
+              ])
+            }
           })
-          if (child.childClass && child.childClass.length > 0) {
-            child.childClass.forEach((item) => [
-              _this.gcData.push({
-                classId: item.classId,
-                classTitle: '　　' + item.classTitle
-              })
-            ])
-          }
-        })
+        }
       }
     })
   },
@@ -238,6 +248,27 @@ export default {
       this.pageNum = val
       this.getList()
     },
+    // 快速改价
+    edtiPrice(row){
+      this.editFormVisible = true
+      this.editForm = {
+        goodsId:row.goodsId,
+        marketPrice:row.price.GOODS_MARKET_PRICE
+      }
+    },
+    editSubmit(){
+      let _this = this
+      let para = Object.assign({},this.editForm)
+      para.price = JSON.stringify(para.price)
+
+      editgoods(para).then((res) => {
+         this.editFormVisible = false
+        if(res.data.state == 200) {
+          _this.getList()
+        }
+      })
+
+    }
   }
 }
 </script>

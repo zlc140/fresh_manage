@@ -206,12 +206,12 @@ export default {
                  this.titlePic.picList.push(this.addForm.titleImage.path)
              }
             if(this.addForm.startTime == 0 || this.addForm.startTime =='0'){
-                this.addForm.startTime = new Date()
+                this.addForm.startTime = ''
             }else{
                  this.addForm.startTime = new Date( this.addForm.startTime )
             }
             if(this.addForm.endTime == 0 || this.addForm.endTime =='0'){
-                this.addForm.endTime = new Date()
+                this.addForm.endTime = ''
             }else{
                 this.addForm.endTime = new Date( this.addForm.endTime )
             }

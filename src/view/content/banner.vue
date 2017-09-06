@@ -23,7 +23,8 @@
             </el-table-column>
              <el-table-column prop="onlyShow" label="是否一直显示" width="150" >
               <template scope= "scope">  
-                    <el-switch v-model="scope.row.onlyShow" on-text="是" @change="handleShow(scope.row)" off-text="否" size="mini"></el-switch>
+                  {{scope.row.onlyShow?'是':'否'}}
+                    <!-- <el-switch v-model="scope.row.onlyShow" on-text="是" @change="handleShow(scope.row)" off-text="否" size="mini"></el-switch> -->
               </template>
             </el-table-column>
             <el-table-column prop="startTime" label="开始时间" width="140" sortable>
@@ -179,8 +180,7 @@ export default {
                         endTime:row.endTime,
                         sort:row.sort
                     };
-                    this.FormData.startTime = new Date(this.FormData.startTime)
-                    this.FormData.endTime = new Date(this.FormData.endTime)
+                    
                 }
 				
 		},

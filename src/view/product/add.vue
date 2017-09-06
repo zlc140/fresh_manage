@@ -3,7 +3,9 @@
     <h3 class="title">{{title}} <span v-if="title == '编辑商品'" class="tip">注意：商品修改完成需等待平台审核之后才会生效！</span><el-button class="fr"  size="small" type="danger" :plain="true" @click.native="clean">取消</el-button></h3>
      
       <el-form :model="addForm" :rules="rules" ref="addForm" label-width="150px" class="demo-addForm">
-        
+        <el-form-item v-show="classData.length<1">
+          <p class="tip">发布商品之前请先 创建店铺，分类以及品牌！</p>
+        </el-form-item>
         <el-form-item label="店铺名称" prop="storeId">
           <el-select v-model="addForm.storeId" v-on:change="changeStore()" placeholder="请选择店铺">
             <el-option v-for="(item,index) in  storeData" :key="index" :value="item.storeId" :label="item.storeName"> </el-option>
@@ -93,7 +95,7 @@
 <script>
 import vueCoreImageUpload from '@/components/uploadImg'
 import vueEditor from '@/components/vueEditor'
-import { addgoods, addbrandlist, classlist, selectStore,findSku,editgoods } from '@/service/getData'
+import { addgoods, addbrandlist, classlist, selectStore,findgoods,editgoods } from '@/service/getData'
 export default {
   
   data() {
@@ -128,6 +130,7 @@ export default {
             }
     };
     return {
+      tip:true,
       modShow:false,
       title:'发布商品',
       // 添加商品的字段名
@@ -228,32 +231,33 @@ export default {
     getDetail(val){
         let para =  { goodsId:val }
         let _this = this
-        findSku(para).then(res => {
+        findgoods(para).then(res => {
           if(res.data.state == 200){
-            console.log(res.data)
+           
             let datas = res.data.content
+             console.log(datas)
                _this.addForm = {
-                  goodsTitle: datas.goods.goodsTitle,//商品名称
-                  goodsSubTitle: datas.goods.goodsSubTitle,//商品描述
-                  marketPrice: datas.goods.price.GOODS_MARKET_PRICE,//市场价
-                  costPrice: datas.goods.price.GOODS_COST_PRICE,//成本价
-                  storeId: datas.goods.store.storeId,//'店铺Id，平台可选，商家固定'
-                  classId: datas.goods.goodsClass.classId,//'分类Id'
+                  goodsTitle: datas.goodsTitle,//商品名称
+                  goodsSubTitle: datas.goodsSubTitle,//商品描述
+                  marketPrice: datas.price.GOODS_MARKET_PRICE,//市场价
+                  costPrice: datas.price.GOODS_COST_PRICE,//成本价
+                  storeId: datas.store.storeId,//'店铺Id，平台可选，商家固定'
+                  classId: datas.goodsClass.classId,//'分类Id'
                   brandId: '',//'品牌Id'
-                  imgs: datas.goods.goodsPic,//商品图片
-                  goodsBody: datas.goods.goodsBody,//商品详情
-                  keywords: datas.goods.keywords,//商品关键字
-                  repositoryNum: datas.stockNum,//商品的库存有多少
-                  sku: datas.sku,//库存单元
-                  commission: datas.goods.commission,//佣金
-                  goodsShow: datas.goods.goodsShow,//商品展示elementui的开关
-                  soldInTime: datas.goods.soldInTime,//商品开始时间
-                  soldOutTime: datas.goods.soldOutTime,//商品结束时间  
+                  imgs: datas.goodsPic,//商品图片
+                  goodsBody: datas.goodsBody,//商品详情
+                  keywords: datas.keywords,//商品关键字
+                  repositoryNum: datas.goodsStock.stockNum,//商品的库存有多少
+                  sku: datas.goodsStock.sku,//库存单元
+                  commission: datas.commission,//佣金
+                  goodsShow: datas.goodsShow,//商品展示elementui的开关
+                  soldInTime: datas.soldInTime,//商品开始时间
+                  soldOutTime: datas.soldOutTime,//商品结束时间  
                  
                 }
                 _this.modShow = true
                 _this.selectPic.picList =[]
-                 datas.goods.goodsPic.forEach(v=> {
+                 datas.goodsPic.forEach(v=> {
                     _this.selectPic.picList.push(v.path)
                 })
                  _this.addForm.soldInTime = new Date(_this.addForm.soldInTime)
@@ -281,6 +285,9 @@ export default {
         if(res.data.state == 200 ){
                 let datas = res.data.content
                 this.classData = []
+                if(!datas){
+                    return false
+                }
                 datas.forEach((child) => {
                     _this.classData.push({
                         classId: child.classId,

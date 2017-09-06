@@ -69,6 +69,14 @@
             <span>{{ scope.row.orderState | filterState }}</span>
         </template>
     </el-table-column>
+      <el-table-column  label="操作" >
+          <template scope="scope">
+            <div>
+                <el-button type="text" @click="handleDel( scope.row)">删除</el-button>
+                <el-button type="text" @click="handle( scope.row)">发货</el-button>
+          </div>
+        </template>
+      </el-table-column>
   </el-table>
   <!-- 分页 -->
   <el-col :span="24" class="toolbar">
@@ -81,7 +89,7 @@
 
 
 <script>
-import {orderlist} from '@/service/getData'
+import {orderlist,shipments} from '@/service/getData'
 export default {
   data(){
     return{ 
@@ -135,6 +143,25 @@ export default {
                 this.getData=res.data.content.content; 
                 this.total = res.data.content.totalElements
               })
+       },
+      //  发货
+       handle(row){
+          let para={
+            ordersId:row.ordersId
+          }
+          shipments(para).then((res) => {
+            if (res.data.state == '200') {
+              this.$message({
+                message: '发货成功',
+                type: 'success'
+              })
+           this.getorderlist()
+          } 
+              })
+       },
+      //  删除
+       handleDel(row){
+           alert(row.ordersId)
        },
       // 查询
       onSubmit(data){
