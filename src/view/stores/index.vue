@@ -142,7 +142,6 @@ export default {
         state: this.form.state
       }
       selectStore(para).then((res) => {
-        console.log(res.data)
         this.storeData = res.data.content.content
         this.totalElements = res.data.content.totalElements
       })
@@ -183,9 +182,12 @@ export default {
           },// 公司执照图片
           address: row.officeAddress[0],// 店铺地址
           tel: row.officeTel[0],// 店铺电话
-          fax: row.faxes[0],// 店铺传真
+          fax: '',// 店铺传真
           about: row.about,// 店铺简介
           regTime: row.regTime,// 公司成立时间
+        }
+        if(row.faxes){
+          this.FormData.fax = row.faxes[0]
         }
       }
     },

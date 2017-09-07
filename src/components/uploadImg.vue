@@ -21,7 +21,7 @@
                 </span>
             </li>
          </ul>
-         <el-dialog v-model="bigImgShow"   :close-on-click-modal="true">
+         <el-dialog class="imglog" v-model="bigImgShow"   :close-on-click-modal="true">
              <div class="content imgBox">
                  <img :src="bigImg" ref="getImg" :style="styles"/>
             </div>
@@ -136,7 +136,7 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
  .imgBox{
         text-align: center;
         img{
@@ -145,7 +145,9 @@ export default {
     }
 
 
- 
+.el-dialog--small{
+     width:auto!important;
+ }
 .imgList.mul .g-core-image-upload-btn{
     position: absolute;
     left: 0;

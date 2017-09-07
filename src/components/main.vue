@@ -163,9 +163,16 @@ export default {
         border: 1px solid #f0f0f0;
         border-radius: 4px;
         overflow: hidden;
+        position: relative;
         img {
             width: 100%;
-            height:100%;
+            height: auto;
+            margin: auto;
+            position: absolute;
+            left: 0;
+            top: 0;
+            left:0;
+            bottom:0;
         }
         .doing{
             position: absolute;
