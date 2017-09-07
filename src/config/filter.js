@@ -43,7 +43,6 @@ Vue.filter('filterState',(value)=>{
       return '已签收'
   }
 })
-
 // 商品状态
 Vue.filter('goods',function(value) {
   if(value==true){
@@ -97,3 +96,17 @@ Vue.filter('floorType',function(value) {
     return '商品楼层'
   } 
 }) 
+// 代金券状态
+Vue.filter('voucherType',function(value) {
+  if(value=='VOUCHER_STATE_ON_CHECKING'){
+    return '待审核'
+  }else if(value=='VOUCHER_STATE_CHECK_ON'){
+    return '审核通过'
+  }else if(value=='VOUCHER_STATE_CHECK_OFF'){
+    return '审核不通过'
+  }else if(value='VOUCHER_STATE_OV_ERDUE'){
+    return '代金券过期'
+  }else if(value='VOUCHER_STATE_USED'){
+    return '代金券已使用'
+  }
+})   

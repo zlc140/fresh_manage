@@ -1,6 +1,21 @@
  <template>
   <!-- 顶部表单 -->
   <div class="adv">
+      <!-- form -->
+      <div class="search_pro">
+        <el-form ref="form" class="" :model="form" label-width="80px">
+          <el-form-item label="订单编号">
+            <el-input v-model="form.ordersId "></el-input>
+          </el-form-item>       
+      <el-form-item label="下单时间" >
+        <el-date-picker  type="date"  placeholder="选择开始日期时间" v-model="form.startTime"></el-date-picker>
+        <el-date-picker  type="date"  placeholder="选择结束日期时间" v-model="form.endTime"> </el-date-picker>
+      </el-form-item>     
+      <el-form-item>
+        <el-button type="primary" @click="onSubmit('search')">查询</el-button>
+      </el-form-item>
+    </el-form>
+  </div>
   <el-table  :data="getData" style="width: 98%">
     <!-- 子级 -->
     <el-table-column type="expand" prop="goodsList">
@@ -45,11 +60,6 @@
             <span class="price">{{ scope.row.price | currency }}</span>
         </template>
     </el-table-column>
-     <el-table-column label="订单状态" prop="orderState">
-        <template scope="scope">   
-            <span>{{ scope.row.orderState | filterState }}</span>
-        </template>
-    </el-table-column>
      <el-table-column label="买家" prop="name">
         <template scope="scope">   
             <span>{{ scope.row.orderDaddress.name}}</span>
@@ -81,9 +91,15 @@ import {findadvOrder} from '@/service/getData'
 export default {
   data(){
     return{ 
+        form: {
+          ordersId : '',
+          storeName:'',
+          startTime : '',
+          endTime : '',        
+        },
         // 分页
         currentPage1:1,
-            pageSize: 1,
+            pageSize: 10,
             page: 1,
             total: 0,
             lists: [],
@@ -99,14 +115,42 @@ export default {
              let para = {
                 page: this.page-1,
                 pageSize:this.pageSize,
-                storeId:'S20170901141042903'
+                storeId:'S20170901141042903',   
+                startTime:this.form.startTime,
+                endTime:this.form.endTime,
+                ordersId:this.form.ordersId
             }
-            para=JSON.stringify(para)
+            if(para.startTime==''){
+               para.startTime=''
+            }else{
+                para.startTime=para.startTime.getTime()
+            }
+            if(para.endTime==''){
+              para.endTime==''
+            }else{
+              para.endTime=para.endTime.getTime()
+            }
+         
+          this.getData=[]
+          this.total = 0
               findadvOrder(para).then((res) => {
-                this.getData=res.data.content.content
-                this.total = res.data.content.totalElements
+                console.log(para)
+                if(res.data.state == 200){
+                  this.getData=res.data.content.content
+                  this.total = res.data.content.totalElements
+                 }
+            
               })
        },
+      
+        // 查询
+      onSubmit(data){
+        if(data=='search'){
+          this.page = 1
+          this.currentPage1 = 1
+        }       
+        this.getorderlist()
+      },
       //  点击分页
         handleCurrentChange(val) {
             this.page = val
