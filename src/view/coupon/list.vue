@@ -144,7 +144,6 @@ export default {
     },
     //   弹框
     handle: function(row) {
-      console.log(row.member.username )
       this.addFormVisible = true;
       if (row == 'add') {
         this.type = 'add'

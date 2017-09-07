@@ -1,11 +1,13 @@
 <template>
   <div class="dialog brand">
-    <h3 class="title">{{title}} <el-button class="fr" @click.native="clean">取消</el-button></h3>
-    <el-form :model="addForm" :rules="rules" label-width="150px" ref="addForm"> 
-        <el-form-item label="用户名" required prop="userName">
+    <h3 class="title">{{title}}
+      <el-button class="fr" @click.native="clean">取消</el-button>
+    </h3>
+    <el-form :model="addForm" :rules="rules" label-width="150px" ref="addForm">
+      <el-form-item label="用户名" required prop="userName">
         <el-input v-model="addForm.userName" auto-complete="off" placeholder="请输入用户名"></el-input>
-      </el-form-item>      
-       <el-form-item label="代金券金额" required prop="money">
+      </el-form-item>
+      <el-form-item label="代金券金额" required prop="money">
         <el-input v-model="addForm.money" auto-complete="off" placeholder="请填写代金券金额"></el-input>
       </el-form-item>
       <el-form-item label="代金券描述" required prop="description">
@@ -13,27 +15,19 @@
       </el-form-item>
       <el-form-item label="代金券生效时间" required prop="effectiveTime">
         <template>
-            <div class="block">
-                <el-date-picker
-                v-model="addForm.effectiveTime"
-                type="date"
-                placeholder="选择日期"
-                :picker-options="pickerOptions0">
-                </el-date-picker>
-            </div>
-       </template>
+          <div class="block">
+            <el-date-picker v-model="addForm.effectiveTime" type="date" placeholder="选择日期" :picker-options="pickerOptions0">
+            </el-date-picker>
+          </div>
+        </template>
       </el-form-item>
       <el-form-item label="代金券使用期限" required prop="indate">
-           <template>
-            <div class="block">
-                <el-date-picker
-                v-model="addForm.indate"
-                type="date"
-                placeholder="选择日期"
-                :picker-options="pickerOptions0">
-                </el-date-picker>
-            </div>
-       </template>
+        <template>
+          <div class="block">
+            <el-date-picker v-model="addForm.indate" type="date" placeholder="选择日期" :picker-options="pickerOptions0">
+            </el-date-picker>
+          </div>
+        </template>
       </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer">
@@ -43,15 +37,15 @@
 </template>
 
 <script>
-import {voucherlist,addvoucher,editvoucher} from '@/service/getData'
+import { voucherlist, addvoucher, editvoucher } from '@/service/getData'
 export default {
   data() {
     return {
-        pickerOptions0: {
-          disabledDate(time) {
-            return time.getTime() < Date.now() - 8.64e7;
-          }
-        },
+      pickerOptions0: {
+        disabledDate(time) {
+          return time.getTime() < Date.now() - 8.64e7;
+        }
+      },
       // 新增
       addLoading: false,
       addForm: {
@@ -59,20 +53,20 @@ export default {
         memberId: '',
         description: '',//品牌名称
         effectiveTime: '',
-        indate:'',
-        userName:''
+        indate: '',
+        userName: ''
       },
-       rules: {
-               userName: [
-                    { required: true, message: '请输入用户名', trigger: 'blur' },
-                ],
-                money: [
-                    { required: true, message: '代金券金额', trigger: 'blur' },
-                ],
-                description: [
-                    { required: true, message: '请描述代金券', trigger: 'blur' },
-                ],
-       }
+      rules: {
+        userName: [
+          { required: true, message: '请输入用户名', trigger: 'blur' },
+        ],
+        money: [
+          { required: true, message: '代金券金额', trigger: 'blur' },
+        ],
+        description: [
+          { required: true, message: '请描述代金券', trigger: 'blur' },
+        ],
+      }
     }
   },
   props: {
@@ -87,11 +81,11 @@ export default {
     type: {
       type: String,
       default: 'add'
-    },   
+    },
   },
   mounted() {
-    this.addForm = Object.assign({},this.FormData)
-    this.picShow = true  
+    this.addForm = Object.assign({}, this.FormData)
+    this.picShow = true
   },
   methods: {
     clean() {
@@ -102,51 +96,51 @@ export default {
     addSubmit() {
       this.$refs.addForm.validate((valid) => {
         if (valid) {
-             this.addLoading = false;
-                let para = {
-                 money:this.addForm.money,
-                 memberId:this.addForm.memberId,
-                 description:this.addForm.description,
-                 effectiveTime:this.addForm.effectiveTime,
-                 indate:this.addForm.indate,
-                 userName:this.addForm.userName
-              }
-              if(para.effectiveTime=='' || para.indate==''){
-                this.$message('请选择时间')
-                        return false
-              }
-               if(para.effectiveTime==''){
-                   para.effectiveTime=''
-               }else{
-                para.effectiveTime=para.effectiveTime.getTime()
-               }
-                 if(para.indate==''){
-                   para.indate=''
-               }else{
-                para.indate=para.indate.getTime()
-               }
+          this.addLoading = false;
+          let para = {
+            money: this.addForm.money,
+            memberId: this.addForm.memberId,
+            description: this.addForm.description,
+            effectiveTime: this.addForm.effectiveTime,
+            indate: this.addForm.indate,
+            userName: this.addForm.userName
+          }
           if (this.type == 'add') {
-              addvoucher(para).then((res) => {
-                  this.addLoading = true;
-                  this.clean()
-              })
-          } else if (this.type == 'edit') {   
-               para.voucherId=this.addForm.voucherId,
-               para.effectiveTime='',
-               para.indate=''
-              editvoucher(para).then((res) => {
-                if (res.data.state == 200) {
-                  this.$message({
-                    message: '修改成功',
-                    type: 'success'
-                  })
-                  this.clean()
-                } else if (res.data == '') {
-                  this.$message('登录超时，请重新登录')
-                }else{
-                  this.$message(res.data.messages)
-                }
-              })
+            if (para.effectiveTime == '' || para.indate == '') {
+              this.$message('请选择时间')
+              return false
+            }
+            if (para.effectiveTime == '') {
+              para.effectiveTime = ''
+            } else {
+              para.effectiveTime = para.effectiveTime.getTime()
+            }
+            if (para.indate == '') {
+              para.indate = ''
+            } else {
+              para.indate = para.indate.getTime()
+            }
+            addvoucher(para).then((res) => {
+              this.addLoading = true;
+              this.clean()
+            })
+          } else if (this.type == 'edit') {
+            para.voucherId = this.addForm.voucherId,
+              para.effectiveTime = '',
+              para.indate = ''
+            editvoucher(para).then((res) => {
+              if (res.data.state == 200) {
+                this.$message({
+                  message: '修改成功',
+                  type: 'success'
+                })
+                this.clean()
+              } else if (res.data == '') {
+                this.$message('登录超时，请重新登录')
+              } else {
+                this.$message(res.data.messages)
+              }
+            })
           }
 
         }
