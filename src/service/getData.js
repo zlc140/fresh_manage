@@ -228,6 +228,42 @@ export const addBrand = (para) => {
         url:BASE_URL+'/adv/save'
     })
 }
+// 代金券
+export const voucherlist = (para) => {
+    return axios({
+        method:'post',
+        params:para,
+        url:BASE_URL+'/voucher/findVouchers'
+    })
+}
+export const addvoucher = (para) => {
+    return axios({
+        method:'post',
+        params:para,
+        url:BASE_URL+'/voucher/add'
+    })
+}
+export const editvoucher = (para) => {
+    return axios({
+        method:'post',
+        params:para,
+        url:BASE_URL+'/voucher/edit'
+    })
+}
+export const delvoucher = (para) => {
+    return axios({
+        method:'post',
+        params:para,
+        url:BASE_URL+'/voucher/delete'
+    })
+}
+export const checkvoucher = (para) => {
+    return axios({
+        method:'post',
+        params:para,
+        url:BASE_URL+'/voucher/check'
+    })
+}
 // 得到的店铺
 export const selectStore = (para) => {
      // 店铺审核通过的参数

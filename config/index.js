@@ -41,6 +41,7 @@ module.exports = {
       '/adv':'http://192.168.0.9:8080/fresh-front',//首页banner广告
       '/floor':'http://192.168.0.9:8080/fresh-front',//首页楼层
       '/upload':'http://192.168.0.9:8080/image-base',
+       '/voucher':'http://192.168.0.12:8080/v'//代金券
 
   },
     // CSS Sourcemaps off by default because relative paths are "buggy"

@@ -46,7 +46,7 @@
           <el-input v-model="addForm.commission" type="number" min="0"></el-input>
         </el-form-item>
 
-         <el-form-item label="上架时间">
+         <el-form-item label="上架时间" required>
               <el-col :span="6">
                 <el-form-item required prop="soldInTime" >
                   <el-date-picker v-model="addForm.soldInTime" type="date" placeholder="上架开始时间"> </el-date-picker>
