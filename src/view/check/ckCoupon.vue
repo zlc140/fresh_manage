@@ -1,7 +1,7 @@
 
 <template>
   <div>
-    <el-table :data="getData" style="width: 98%">
+    <el-table border :data="getData" style="width: 98%">
       <!-- 表格-->
         <el-table-column label="用户名" prop="username ">
         <template scope="scope">

@@ -45,7 +45,6 @@
         <el-form-item label=" 商品提取佣金" required prop="commission">
           <el-input v-model="addForm.commission" type="number" min="0"></el-input>
         </el-form-item>
-
          <el-form-item label="上架时间" required>
               <el-col :span="6">
                 <el-form-item required prop="soldInTime" >
@@ -58,9 +57,7 @@
                         <el-date-picker v-model="addForm.soldOutTime" type="date" placeholder="上架结束时间"></el-date-picker>
                 </el-form-item>
                 </el-col>
-             
         </el-form-item>
-
         <el-form-item label="商品是否展示" prop="goodsShow">
           <el-switch on-text="" off-text="" v-model="addForm.goodsShow" on-text="是" off-text="否"></el-switch>
         </el-form-item>

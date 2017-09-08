@@ -26,7 +26,7 @@
             <el-form-item label="店铺简介" prop="about">
                 <el-input v-model="addForm.about" auto-complete="off"></el-input>
             </el-form-item>
-            <el-form-item required label="上传执照" prop="imgs.path">
+            <el-form-item required label="上传执照" prop="imgs">
                 <template scope="scope">
                     <!-- 上传图片  -->
                     <vue-core-image-upload 
@@ -57,7 +57,7 @@ export default {
                 }
             },
             // 图片
-            picShow: true,
+            picShow: false,
             selectPic: {
                 radio: '1200:350',
                 cropShow: false,
@@ -122,12 +122,13 @@ export default {
     },
     mounted() {
         this.addForm = Object.assign({}, this.addForm, this.FormData)
-        
+        if(this.addForm.regTime == 0 || this.addForm.regTime == '0'){
+            this.addForm.regTime = ''
+        }
         this.selectPic.picList = []
         if (this.addForm.imgs.path != '' && this.addForm.imgs.path != 'undefined') {
             this.selectPic.picList.push(this.addForm.imgs.path)
         }
-        
         this.picShow = true
     },
     methods: {
@@ -141,17 +142,18 @@ export default {
                     }
                     this.loginLoading = true
                     let para = Object.assign({}, this.addForm)
+                    console.log('test',para.regTime.getTime())
+                    if(para.regTime != ''){
+                        para.regTime = para.regTime.getTime()
+                    }
                     para.imgs = JSON.stringify(para.imgs)
-                    para.regTime = Date.parse(para.regTime)
                     if (this.type == 'add') {
-                        para.regTime = '';
                         saveStore(para).then((res) => {
                             this.loginLoading = false;
                             this.$emit('close', false)
                         })
                     } else if (this.type == 'edit') {
                         para.storeId = this.addForm.storeId;
-                        para.regTime = this.addForm.regTime;
                         updateStore(para).then((res) => {
                             this.loginLoading = false;
                             this.$emit('close', false)

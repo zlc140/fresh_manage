@@ -130,7 +130,7 @@ export default {
       },
       // 分页
       currentPage1: 1,
-      pageSize: 10,
+      pageSize: 3,
       pageNum: 1,
       totalElements: 0,
       lists: [],
@@ -273,9 +273,9 @@ export default {
 }
 </script>
 <style>
-.prolist .el-button+.el-button {
+/* .prolist .el-button+.el-button {
     margin-left: 495px;
-}
+} */
 </style>
 
  

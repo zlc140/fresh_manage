@@ -14,8 +14,8 @@
     </el-form>
     <!-- 表格 -->
     <el-table :data="getData" border style="width: 98%" v-if="!addFormVisible">
-      <el-table-column type="selection" width="55">
-      </el-table-column>
+      <!-- <el-table-column type="selection" width="55">
+      </el-table-column> -->
       <el-table-column prop="brandTitle" label="品牌名称"></el-table-column>
       <el-table-column prop="storeId" label="店铺名称">
         <template scope="scope">
@@ -25,7 +25,11 @@
       <el-table-column prop="brandPic" type="expand" label="品牌LOGO" width="150" >
         <template scope="scope" >
           <div class="logo_box" v-if="scope.row.brandPic"> 
-            <img :src="scope.row.brandPic[0].path" />
+            <ul class="imgList ">
+              <li >
+                  <img :src="scope.row.brandPic[0].path">
+              </li>
+            </ul>
           </div>
         </template>
       </el-table-column>
