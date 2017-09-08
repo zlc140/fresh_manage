@@ -36,12 +36,12 @@
       </el-table-column>
       <el-table-column label="关键字" prop="keywords">
       </el-table-column>
-      <el-table-column prop="classPic" label="hover前图片">
+      <el-table-column prop="classPic" label="鼠标移入">
         <template scope="scope">
           <img :src="scope.row.classPic[0].path" />
         </template>
       </el-table-column>
-      <el-table-column prop="classPic" label="hover后图片">
+      <el-table-column prop="classPic" label="鼠标移出">
         <template scope="scope">
           <img :src="scope.row.classPic[1].path" />
         </template>
@@ -149,8 +149,8 @@ export default {
               type: 'success'
             })
             _this.getList()
-          } else if (res.data == '') {
-            this.$message('登录超时，请重新登录')
+          } else if (res.data.state == '400') {
+            this.$message('分类有子类，请删除子类后再删除!')
           } else {
             this.$message('系统出错')
           }

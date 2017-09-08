@@ -1,7 +1,7 @@
 <template>
   <div class="brand">
     <!-- form -->
-    <el-form :inline="true" :model="form" class="demo-form-inline toolbar" v-if="!addFormVisible">
+    <el-form :inline="true" :model="form" class="demo-form-inline" v-if="!addFormVisible">
       <el-form-item label="品牌名称">
         <el-input v-model="form.brandTitle" placeholder="品牌名称"></el-input>
       </el-form-item>
@@ -124,10 +124,8 @@ export default {
       }
       brandlist(para).then((res) => {
         if(res.data.state == 200){
-          if(res.data.content.content){
             _this.getData = res.data.content.content;
-          }            
-            _this.totalElements = res.data.content.totalElements;
+             _this.totalElements = res.data.content.totalElements;      
         }
       })
     },

@@ -59,11 +59,6 @@
             <span class="price">{{ scope.row.price | currency }}</span>
         </template>
     </el-table-column>
-     <el-table-column label="订单状态" prop="orderState">
-        <template scope="scope">   
-            <span>{{ scope.row.orderState | filterState }}</span>
-        </template>
-    </el-table-column>
      <el-table-column label="买家" prop="name">
         <template scope="scope">   
             <span>{{ scope.row.orderDaddress.name}}</span>
@@ -124,7 +119,19 @@ export default {
                 endTime:this.form.endTime,
                 ordersId:this.form.ordersId
             }
-            para=JSON.stringify(para)
+            if(para.startTime==''){
+               para.startTime=''
+            }else{
+                para.startTime=para.startTime.getTime()
+            }
+            if(para.endTime==''){
+              para.endTime==''
+            }else{
+              para.endTime=para.endTime.getTime()
+            }
+         
+          this.getData=[]
+          this.total = 0
               findadvOrder(para).then((res) => {
                   if(res.data.state == 200){
                     this.getData=res.data.content.content

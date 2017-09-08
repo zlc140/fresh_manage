@@ -43,7 +43,6 @@ Vue.filter('filterState',(value)=>{
       return '已签收'
   }
 })
-
 // 商品状态
 Vue.filter('goods',function(value) {
   if(value==true){

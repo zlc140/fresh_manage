@@ -138,6 +138,8 @@ export default {
         state:this.form.state,
         userName:this.form.userName
       }
+      _this.getData=[]
+      _this.total =0
       voucherlist(para).then((res) => {    
           if(res.data.state == 200){
             _this.getData = res.data.content.content
