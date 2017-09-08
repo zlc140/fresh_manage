@@ -3,7 +3,7 @@
     <h3 class="title">{{title}} <el-button class="fr"  size="small" type="danger" :plain="true" @click.native="clean">取消</el-button></h3>
      <el-form :model="addForm" :rules="addFormRules" label-width="80px" ref="addForm">
         <el-form-item label="分类名称" prop="classTitle">
-          <el-input v-model="addForm.classTitle" placeholder="分类名称长度应在2-10位，推荐3-6个汉字" auto-complete="off"></el-input>
+          <el-input v-model="addForm.classTitle" placeholder="分类名称长度应在2-10位，推荐3-6个汉字" auto-complete="off"  @keyup.enter.native="check"></el-input>
         </el-form-item>
         <el-form-item label="关键字" prop="keywords">
           <el-input v-model="addForm.keywords" auto-complete="off"></el-input>
@@ -12,14 +12,14 @@
           <el-switch v-model="addForm.gcShow" on-text="是" off-text="否"></el-switch>
         </el-form-item>
         <!-- hover前图片  -->
-        <el-form-item label="hover前图片" prop="pics[0].path" v-if="parentClass">
+        <el-form-item label="鼠标移入" prop="pics[0].path" required v-if="parentClass">
           <template scope="scope">
             <vue-core-image-upload v-if="picShow" @getImg="addImg" :cropRatio="selectPic.radio" :picList="selectPic.picList" :sizeBox='selectPic.size' :multiple="selectPic.multiple" :cropShow="selectPic.cropShow">
             </vue-core-image-upload>
           </template>
         </el-form-item>
         <!-- hover后图片  -->
-        <el-form-item label="hover前图片" prop="pics[1].path" v-if="parentClass">
+        <el-form-item label="鼠标移出" prop="pics[1].path" required v-if="parentClass">
           <template scope="scope">
             <vue-core-image-upload v-if="picShow" @getImg="addgetImg" :cropRatio="selectPic.radio" :picList="selectPic2.picList" :sizeBox='selectPic.size' :multiple="selectPic.multiple" :cropShow="selectPic.cropShow">
             </vue-core-image-upload>
@@ -51,14 +51,14 @@ export default {
             parentClass:true,
             selectPic: {
                 radio: '1:1',
-                size: ['1200', '350'],
+                size: ['60', '60'],
                 cropShow: false,
                 multiple: false,
                 picList: []
             },
             selectPic2: {
                 radio: '1:1',
-                size: ['1200', '350'],
+                size: ['60', '60'],
                 cropShow: false,
                 multiple: false,
                 picList: []
@@ -130,10 +130,16 @@ export default {
         }
     },
     methods:{
+        // 回车
+        check(){
+            this.addSubmit()
+        },
+        // 取消
         clean(){
             this.$refs['addForm'].resetFields()
             this.$emit('close',true)
         },
+        // 保存
         addSubmit(){
             let _this = this
              
@@ -153,30 +159,24 @@ export default {
                         para.pics = JSON.stringify(para.pics)
                     }
                    if(this.type=='add'){
-                       console.log('add',para)
                          addClass(para).then((res) => {
-                            // console.log(para)
-                            // console.log(res.data.content)
                             this.addLoading = true;
                               this.$emit('close',true)
                         })
                    }else if(this.type=='edit'){
                         para.classId = this.addForm.classId
-                        console.log('edit',para)
                         editData(para).then((res) => {
                             this.editFormLoading = true;
                             this.$emit('close',true)
                         })
                    }else if(this.type=="addChild"){
                        para.parentClassId = this.addForm.parentClassId
-                       console.log('addChild',para)
                        addClass(para).then((res) => {
                             this.addChildLoading = true;
                              this.$emit('close',true)
                         })
                    }else if(this.type=="editChild"){
                         para.classId = this.addForm.classId
-                        console.log('editChild',para)
                         editData(para).then((res) => {
                             this.editFormLoading = true;
                              this.$emit('close',true)

@@ -17,7 +17,7 @@ Vue.filter('currency',(value) => {
   })
  
 Vue.filter('formatDate',function(value) {
-        if(value == 0 || value == '' || value =='undefined'){
+        if(value == 0 ||value == '0'|| value == '' || value =='undefined'){
           return null
         }
         return tool.formatDate.format((value),'yyyy-MM-dd')
@@ -98,15 +98,15 @@ Vue.filter('floorType',function(value) {
 }) 
 // 代金券状态
 Vue.filter('voucherType',function(value) {
-  if(value=='VOUCHER_STATE_ON_CHECKING'){
-    return '待审核'
-  }else if(value=='VOUCHER_STATE_CHECK_ON'){
-    return '审核通过'
-  }else if(value=='VOUCHER_STATE_CHECK_OFF'){
-    return '审核不通过'
-  }else if(value='VOUCHER_STATE_OV_ERDUE'){
-    return '代金券过期'
-  }else if(value='VOUCHER_STATE_USED'){
-    return '代金券已使用'
-  }
-})   
+    if(value=='VOUCHER_STATE_ON_CHECKING'){
+      return '待审核'
+    }else if(value=='VOUCHER_STATE_CHECK_ON'){
+      return '审核通过'
+    }else if(value=='VOUCHER_STATE_CHECK_OFF'){
+      return '审核不通过'
+    }else if(value='VOUCHER_STATE_OV_ERDUE'){
+      return '代金券过期'
+    }else if(value='VOUCHER_STATE_USED'){
+      return '代金券已使用'
+    }
+  })   

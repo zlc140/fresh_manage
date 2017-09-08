@@ -1,3 +1,4 @@
+
 <template>
   <div>
     <el-table :data="getData" style="width: 98%">
@@ -106,3 +107,6 @@ export default {
 <style>
   
 </style>
+
+   
+

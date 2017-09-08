@@ -1,21 +1,20 @@
  <template>
   <!-- 顶部表单 -->
   <div class="adv">
-      <!-- form -->
       <div class="search_pro">
-        <el-form ref="form" class="" :model="form" label-width="80px">
-          <el-form-item label="订单编号">
-            <el-input v-model="form.ordersId "></el-input>
-          </el-form-item>       
-      <el-form-item label="下单时间" >
-        <el-date-picker  type="date"  placeholder="选择开始日期时间" v-model="form.startTime"></el-date-picker>
-        <el-date-picker  type="date"  placeholder="选择结束日期时间" v-model="form.endTime"> </el-date-picker>
-      </el-form-item>     
-      <el-form-item>
-        <el-button type="primary" @click="onSubmit('search')">查询</el-button>
-      </el-form-item>
-    </el-form>
-  </div>
+            <el-form ref="form" class="" :model="form" label-width="80px">
+            <el-form-item label="订单编号">
+                <el-input v-model="form.ordersId "></el-input>
+            </el-form-item>       
+            <el-form-item label="下单时间" >
+                <el-date-picker  type="date"  placeholder="选择开始日期时间" v-model="form.startTime"></el-date-picker>
+                <el-date-picker  type="date"  placeholder="选择结束日期时间" v-model="form.endTime"> </el-date-picker>
+            </el-form-item>     
+            <el-form-item>
+                <el-button type="primary" @click="onSubmit('search')">查询</el-button>
+            </el-form-item>
+            </el-form>
+        </div>
   <el-table  :data="getData" style="width: 98%">
     <!-- 子级 -->
     <el-table-column type="expand" prop="goodsList">
@@ -91,7 +90,7 @@ import {findadvOrder} from '@/service/getData'
 export default {
   data(){
     return{ 
-        form: {
+         form: {
           ordersId : '',
           storeName:'',
           startTime : '',
@@ -99,11 +98,11 @@ export default {
         },
         // 分页
         currentPage1:1,
-            pageSize: 10,
-            page: 1,
-            total: 0,
-            lists: [],
-            sels: [],//列表选中列
+        pageSize: 1,
+        page: 1,
+        total: 0,
+        lists: [],
+        sels: [],//列表选中列
         getData:[],
     }
   },
@@ -134,16 +133,13 @@ export default {
           this.getData=[]
           this.total = 0
               findadvOrder(para).then((res) => {
-                console.log(para)
-                if(res.data.state == 200){
-                  this.getData=res.data.content.content
-                  this.total = res.data.content.totalElements
-                 }
-            
+                  if(res.data.state == 200){
+                    this.getData=res.data.content.content
+                    this.total = res.data.content.totalElements
+                  }
               })
        },
-      
-        // 查询
+          // 查询
       onSubmit(data){
         if(data=='search'){
           this.page = 1

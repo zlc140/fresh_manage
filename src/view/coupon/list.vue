@@ -66,7 +66,7 @@
   </div>
 </template>
 <script>
-import dialogTem from './couponchild/dialog'
+import dialogTem from './child/dialog'
 import { voucherlist, addvoucher, editvoucher,delvoucher } from '@/service/getData'
 export default {
   data() {
@@ -135,6 +135,8 @@ export default {
         state:this.form.state,
         userName:this.form.userName
       }
+      _this.getData=[]
+      _this.total =0
       voucherlist(para).then((res) => {    
           if(res.data.state == 200){
             _this.getData = res.data.content.content
@@ -211,5 +213,4 @@ export default {
   float: right;
   margin-right: 39px
 }
-
 </style>

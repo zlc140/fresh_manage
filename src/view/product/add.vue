@@ -3,7 +3,9 @@
     <h3 class="title">{{title}} <span v-if="title == '编辑商品'" class="tip">注意：商品修改完成需等待平台审核之后才会生效！</span><el-button class="fr"  size="small" type="danger" :plain="true" @click.native="clean">取消</el-button></h3>
      
       <el-form :model="addForm" :rules="rules" ref="addForm" label-width="150px" class="demo-addForm">
-        
+        <el-form-item v-show="classData.length<1">
+          <p class="tip">发布商品之前请先 创建店铺，分类以及品牌！</p>
+        </el-form-item>
         <el-form-item label="店铺名称" prop="storeId">
           <el-select v-model="addForm.storeId" v-on:change="changeStore()" placeholder="请选择店铺">
             <el-option v-for="(item,index) in  storeData" :key="index" :value="item.storeId" :label="item.storeName"> </el-option>
@@ -37,14 +39,14 @@
         <el-form-item label="商品库存" required prop="repositoryNum">
           <el-input v-model="addForm.repositoryNum" type="number" min="0"></el-input>
         </el-form-item>
-        <el-form-item label="商品单位sku" prop="sku">
+        <el-form-item label="商品单位" prop="sku">
           <el-input v-model="addForm.sku"  ></el-input >
         </el-form-item>
         <el-form-item label=" 商品提取佣金" required prop="commission">
           <el-input v-model="addForm.commission" type="number" min="0"></el-input>
         </el-form-item>
 
-         <el-form-item label="上架时间">
+         <el-form-item label="上架时间" required>
               <el-col :span="6">
                 <el-form-item required prop="soldInTime" >
                   <el-date-picker v-model="addForm.soldInTime" type="date" placeholder="上架开始时间"> </el-date-picker>
@@ -93,41 +95,29 @@
 <script>
 import vueCoreImageUpload from '@/components/uploadImg'
 import vueEditor from '@/components/vueEditor'
-import { addgoods, addbrandlist, classlist, selectStore,findSku,editgoods } from '@/service/getData'
+import { addgoods, addbrandlist, classlist, selectStore,findgoods,editgoods } from '@/service/getData'
 export default {
   
   data() {
     var validateaddDate = (rule, value, callback) => {
-                if(this.addForm.onlyShow == false){
-                    if(value === ''){
-                        callback(new Error('请选择开始时间'))
-                    }else {
-                        this.$refs.addForm.validateField('soldOutTime');
-                    }
-                    callback()
-                } else {
-                callback()
-                }
+      if(value === ''){
+         callback(new Error('请选择开始时间'))
+      }else{
+         callback()
+      }
             }; 
-    var compareaddDate = (rule,value,callback) => {
-            if(this.addForm.onlyShow == false){
+    var compareaddDate = (rule,value,callback) => {     
                 if(value === ''){
                     callback(new Error('请选择结束时间'))
                 }
-                else if(this.addForm.startTime !=='' && this.addForm.startTime.getTime() > value.getTime()-1){
-                        callback(new Error('结束时间应该大于开始时间'))
-                        
-                }
-                else if(this.addForm.startTime === ''){
-                            this.$refs.addForm.validateField('soldInTime');
+                else if(this.addForm.soldInTime !=='' && this.addForm.soldInTime.getTime() > value.getTime()-1){
+                        callback(new Error('结束时间应该大于开始时间'))                      
                 }else{
                         callback()
                 }
-            }else {
-            callback()
-            }
     };
     return {
+      tip:true,
       modShow:false,
       title:'发布商品',
       // 添加商品的字段名
@@ -147,8 +137,7 @@ export default {
         commission: '',//商品提取佣金
         goodsShow: true,//商品展示elementui的开关
         soldInTime: '',//商品开始时间
-        soldOutTime: '',//商品结束时间  
-         
+        soldOutTime: '',//商品结束时间          
       },
       // 品牌
       brandData: [],
@@ -174,12 +163,6 @@ export default {
         goodsSubTitle: [
           { required: true, message: '请对商品进行描述', trigger: 'blur,change' },
         ],
-        // marketPrice: [
-        //   { required: true, message: '请输入商品的市场价', trigger: 'blur,change' },
-        // ],
-        // costPrice: [
-        //   { required: true, message: '请输入商品的成本价', trigger: 'blur,change' },
-        // ],
         storeId: [
           { required: true, message: '请输入店铺编号', trigger: 'blur,change' },
         ],
@@ -189,20 +172,18 @@ export default {
         goodsBody: [
           { required: true, message: '请输入商品详情', trigger: 'blur,change' },
         ],
-        // repositoryNum: [
-        //   { required: true, message: '请输入商品库存', trigger: 'blur,change' },
-        // ],
         sku: [
           { required: true, message: '请输入商品库存单元', trigger: 'blur,change' },
+        ],
+        commission:[
+          { required: true, message: '请输入商品佣金', trigger: 'blur,change' }
         ],
         soldInTime:[
           {validator:validateaddDate, trigger: 'change'}
         ],
-        soldoUTTime:[
+        soldOutTime:[
           {validator:compareaddDate, trigger: 'change'}
-        ]
-       
-       
+        ],
       }
 
     };
@@ -228,32 +209,32 @@ export default {
     getDetail(val){
         let para =  { goodsId:val }
         let _this = this
-        findSku(para).then(res => {
-          if(res.data.state == 200){
-            console.log(res.data)
+        findgoods(para).then(res => {
+          if(res.data.state == 200){          
             let datas = res.data.content
                _this.addForm = {
-                  goodsTitle: datas.goods.goodsTitle,//商品名称
-                  goodsSubTitle: datas.goods.goodsSubTitle,//商品描述
-                  marketPrice: datas.goods.price.GOODS_MARKET_PRICE,//市场价
-                  costPrice: datas.goods.price.GOODS_COST_PRICE,//成本价
-                  storeId: datas.goods.store.storeId,//'店铺Id，平台可选，商家固定'
-                  classId: datas.goods.goodsClass.classId,//'分类Id'
+                  goodsTitle: datas.goodsTitle,//商品名称
+                  goodsSubTitle: datas.goodsSubTitle,//商品描述
+                  marketPrice: datas.price.GOODS_MARKET_PRICE,//市场价
+                  costPrice: datas.price.GOODS_COST_PRICE,//成本价
+                  storeId: datas.store.storeId,//'店铺Id，平台可选，商家固定'
+                  classId: datas.goodsClass.classId,//'分类Id'
                   brandId: '',//'品牌Id'
-                  imgs: datas.goods.goodsPic,//商品图片
-                  goodsBody: datas.goods.goodsBody,//商品详情
-                  keywords: datas.goods.keywords,//商品关键字
-                  repositoryNum: datas.stockNum,//商品的库存有多少
-                  sku: datas.sku,//库存单元
-                  commission: datas.goods.commission,//佣金
-                  goodsShow: datas.goods.goodsShow,//商品展示elementui的开关
-                  soldInTime: datas.goods.soldInTime,//商品开始时间
-                  soldOutTime: datas.goods.soldOutTime,//商品结束时间  
+                  imgs: datas.goodsPic,//商品图片
+                  goodsBody: datas.goodsBody,//商品详情
+                  keywords: datas.keywords,//商品关键字
+                  repositoryNum: datas.goodsStock.stockNum,//商品的库存有多少
+                  sku: datas.goodsStock.sku,//库存单元
+                  commission: datas.commission,//佣金
+                  goodsShow: datas.goodsShow,//商品展示elementui的开关
+                  soldInTime: datas.soldInTime,//商品开始时间
+                  soldOutTime: datas.soldOutTime,//商品结束时间  
                  
                 }
+                _this.addForm.commission=_this.addForm.commission.toString()
                 _this.modShow = true
                 _this.selectPic.picList =[]
-                 datas.goods.goodsPic.forEach(v=> {
+                 datas.goodsPic.forEach(v=> {
                     _this.selectPic.picList.push(v.path)
                 })
                  _this.addForm.soldInTime = new Date(_this.addForm.soldInTime)
@@ -281,6 +262,9 @@ export default {
         if(res.data.state == 200 ){
                 let datas = res.data.content
                 this.classData = []
+                if(!datas){
+                    return false
+                }
                 datas.forEach((child) => {
                     _this.classData.push({
                         classId: child.classId,
@@ -328,9 +312,16 @@ export default {
               return false
             }
             para.imgs = JSON.stringify(para.imgs)
-            para.soldInTime = para.soldInTime.getTime() + '';
-            para.soldOutTime = para.soldOutTime.getTime() + '';
-            console.log(para)
+            if(para.soldInTime == ''){
+              para.soldInTime = ''
+            }else{
+                 para.soldInTime = para.soldInTime.getTime() + '';
+            }
+            if(para.soldOutTime == ''){
+              para.soldOutTime = ''
+            }else{
+              para.soldOutTime = para.soldOutTime.getTime() + '';
+            }
             if(!this.$route.query.id){
                  addgoods(para).then((res) => {
                     if(res.data.state == 200){

@@ -8,7 +8,7 @@
 				<el-form-item label="链接地址" prop="url">
 					<el-input v-model="addForm.image.url" auto-complete="off"></el-input>
 				</el-form-item>
-                <el-form-item label="上传图片" prop="image.path" class="addPicBox">
+                <el-form-item label="上传图片" prop="image.path" required class="addPicBox">
                     <template scope="scope">
                         <!-- 上传图片  -->
                             <vue-core-image-upload  
@@ -152,6 +152,17 @@ export default {
     },
     mounted(){
         this.addForm = this.FormData
+         if(this.FormData.startTime != '0' &&　this.FormData.startTime != 0 && this.FormData.startTime!='undefined'){
+                this.addForm.startTime = new Date(this.addForm.startTime)
+        }else{
+            this.addForm.startTime=''
+        }
+        if(this.FormData.endTime != '0' &&　this.FormData.endTime != 0 && this.FormData.endTime!='undefined'){
+                this.addForm.endTime = new Date(this.addForm.endTime)
+        }else{
+            this.addForm.endTime=''
+        }
+        console.log(this.addForm)
         this.selectPic.picList=[]
         this.picShow = true
         if(this.addForm.image.path != ''){
@@ -202,7 +213,7 @@ export default {
                         editBrand(para).then((res) => {
                              this.loginLoading = false
                             if(res.data.state == 200){
-                                // console.log(res.data)
+                                console.log(res.data)
                                 this.$emit('close',false)
                                 this.$message('编辑成功')
                                  

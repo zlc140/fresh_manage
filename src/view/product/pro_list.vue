@@ -4,32 +4,25 @@
     <div class="search_pro">
       <el-form ref="form" :model="form" label-width="80px">
         <el-row :gutter="10" class="margin-top">
+            <el-form-item label="商品名称">
+            <el-input v-model="form.goodsTitle"></el-input>
+          </el-form-item>
+           <el-form-item label="商品货号">
+            <el-input v-model="form.goodsId"></el-input>
+          </el-form-item>
           <el-form-item label="商品状态">
             <el-select v-model="form.state">
               <el-option v-for="(item,index) in  options" :key="index" :label="item.label" :value="item.value"> </el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="商品货号">
-            <el-input v-model="form.goodsId"></el-input>
-          </el-form-item>
-            <el-form-item label="一级分类">
+            <el-form-item label="分类名称">
               <el-select v-model="form.gclist">
                 <el-option v-for="(item,index) in  gcData" :key="index" :label="item.classTitle" :value="item.classId"> </el-option>
               </el-select>
             </el-form-item>
-          <!-- <el-col :span="5">
-            <el-form-item label="二级分类">
-              <el-select v-model="form.gclistt">
-                <el-option v-for="(item,index) in  gcDatatt"   :key="index"  :label="item.classTitle" :value="item.classId"></el-option>
-              </el-select>
-            </el-form-item>
-            </el-col> -->
-          <el-form-item label="商品名称">
-            <el-input v-model="form.goodstitle"></el-input>
-          </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="onSubmit('search')">查询</el-button>
-            <el-button class="fr"  :plain="true" ><router-link to="/viwe/proAdd">发布商品</router-link></el-button>
+            <el-button class="fr"  :plain="true" ><router-link to="/view/proAdd">发布商品</router-link></el-button>
           </el-form-item>
            
         </el-row>
@@ -61,7 +54,7 @@
       </el-table-column>
       <el-table-column label="商品单价" prop="price" width="100px;">
         <template scope="scope">
-          <span>{{ scope.row.price.GOODS_MARKET_PRICE | currency }}</span>
+          <span class="edit-box" @click="edtiPrice(scope.row)">{{ scope.row.price.GOODS_MARKET_PRICE | currency }}<i class="el-icon-edit"></i></span>
         </template>
       </el-table-column>
       <el-table-column label="关键字" prop="keywords" width="110px">
@@ -103,13 +96,23 @@
     <el-col :span="24" class="toolbar">
       <el-pagination layout="total,prev,pager,next" :current-page.sync="currentPage1" :page-size='pageSize' :total="totalElements" @current-change="handleCurrentChange"> </el-pagination>
     </el-col>
-
+    <el-dialog title="快速改价" size="mini" v-model="editFormVisible" :close-on-click-modal="false">
+      <el-form :model="editForm" label-width="80px">
+        <el-form-item label="编辑价格" prop="marketPrice">
+          <el-input type="number" v-model="editForm.marketPrice" auto-complete="off"></el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click.native="editSubmit">提交</el-button>
+      </div>
+    </el-dialog>
+       
   </div>
 </template>
 
 <script>
 import dialogTem from './add'
-import { prolist, classlist, delGoods } from '@/service/getData'
+import { prolist, classlist, delGoods,editgoods } from '@/service/getData'
 export default {
   data() {
     return {
@@ -117,9 +120,13 @@ export default {
       form: {
         state: '', //商品状态
         goodsId: '',//货号
-        goodstitle: '',//商品名称
-        gclist: '',//一级菜单
-        gclistt: '',//二级菜单
+        goodsTitle: '',//商品名称
+        gclist: '',//一级分类
+      },
+      editFormVisible:false,
+      editForm:{
+          goodsId:'',
+          marketPrice:0,
       },
       // 分页
       currentPage1: 1,
@@ -146,10 +153,8 @@ export default {
       ],
       // 表格数据
       getData: [],
-      // 一级数据
-      gcData: [],
-      //二级数据
-      gcDatatt: [],
+      // 分类数据
+      gcData:[]
     }
   },
    components: {
@@ -162,22 +167,27 @@ export default {
     classlist().then((res) => {
       if (res.data.state == 200 ) {
         let datas = res.data.content
-        // console.log(datas)
         _this.gcData = []
-        datas.forEach((child) => {
-          _this.gcData.push({
-            classId: child.classId,
-            classTitle: child.classTitle
+        if(datas){
+          datas.forEach((child) => {
+            _this.gcData.push({
+              classId: child.classId,
+              classTitle: child.classTitle
+            })
+            if (child.childClass && child.childClass.length > 0) {
+              child.childClass.forEach((item) => [
+                _this.gcData.push({
+                  classId: item.classId,
+                  classTitle: '　　' + item.classTitle
+                })
+              ])
+            }
           })
-          if (child.childClass && child.childClass.length > 0) {
-            child.childClass.forEach((item) => [
-              _this.gcData.push({
-                classId: item.classId,
-                classTitle: '　　' + item.classTitle
-              })
-            ])
-          }
-        })
+           _this.gcData.push({
+              classId: '',
+              classTitle: '全部分类'
+          })
+        }
       }
     })
   },
@@ -188,7 +198,7 @@ export default {
         pageSize: this.pageSize,
         state: this.form.state,
         goodsId: this.form.goodsId,
-        goodstitle: this.form.goodstitle,
+        goodsTitle: this.form.goodsTitle,
         classId: this.form.gclist,
       }
       // 表格数据
@@ -238,20 +248,34 @@ export default {
       this.pageNum = val
       this.getList()
     },
+    // 快速改价
+    edtiPrice(row){
+      this.editFormVisible = true
+      this.editForm = {
+        goodsId:row.goodsId,
+        marketPrice:row.price.GOODS_MARKET_PRICE
+      }
+    },
+    editSubmit(){
+      let _this = this
+      let para = Object.assign({},this.editForm)
+      para.price = JSON.stringify(para.price)
+
+      editgoods(para).then((res) => {
+         this.editFormVisible = false
+        if(res.data.state == 200) {
+          _this.getList()
+        }
+      })
+
+    }
   }
 }
 </script>
 <style>
-
-/* .prolist .el-col-5 {
-  width: 15%;
+.prolist .el-button+.el-button {
+    margin-left: 495px;
 }
-.prolist .el-dialog--small {
-  height: 500px;
-}
-.prolist .el-col-6 {
-    width: 15%;
-} */
 </style>
 
  

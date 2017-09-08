@@ -19,9 +19,8 @@
           <el-date-picker type="date" placeholder="选择结束日期时间" v-model="form.endTime"> </el-date-picker>
         </el-form-item>
 
-        <el-form-item>
           <el-button type="primary" @click="onSubmit('search')">查询</el-button>
-        </el-form-item>
+         
       </el-form>
     </div>
     <el-table border :data="getData" style="width: 98%">
@@ -115,7 +114,6 @@ export default {
       lists: [],
       sels: [],//列表选中列
       getData: [],
-
       options: [
         {
           value: '20',
@@ -158,7 +156,6 @@ export default {
       } else {
         para.endTime = para.endTime.getTime()
       }
-
       this.getData = []
       this.total = 0
       orderlist(para).then((res) => {

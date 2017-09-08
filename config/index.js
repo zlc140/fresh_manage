@@ -28,11 +28,8 @@ module.exports = {
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
     proxyTable: {
-      '/upload':'http://192.168.0.9:8080//imageBase',
-
       '/findcart':'http://192.168.0.17:8080/fresh-order/cart',//购物车
       '/order':'http://192.168.0.17:8080/fresh-order',//订单
-
       '/gc':'http://192.168.0.12:8080',//商品分类
       '/goods':'http://192.168.0.12:8080',//商品
       '/store':'http://192.168.0.12:8080',//商铺
@@ -40,13 +37,12 @@ module.exports = {
       '/comment':'http://192.168.0.12:8080',//商品评论
       '/goodsStock':'http://192.168.0.12:8080',//库存
       '/attrGoods':'http://192.168.0.12:8080',//编辑待审核
-
-      '/adv':'http://192.168.0.9:8080',//首页banner广告
-      '/floor':'http://192.168.0.9:8080',//首页楼层
       '/goodsStock':'http://192.168.0.12:8080',//库存
-      '/voucher':'http://192.168.0.12:8080/v'//库存
+      '/adv':'http://192.168.0.9:8080/fresh-front',//首页banner广告
+      '/floor':'http://192.168.0.9:8080/fresh-front',//首页楼层
+      '/upload':'http://192.168.0.9:8080/image-base',
+       '/voucher':'http://192.168.0.12:8080/v'//代金券
 
-      
   },
     // CSS Sourcemaps off by default because relative paths are "buggy"
     // with this option, according to the CSS-Loader README

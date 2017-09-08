@@ -26,7 +26,7 @@
             <el-form-item label="店铺简介" prop="about">
                 <el-input v-model="addForm.about" auto-complete="off"></el-input>
             </el-form-item>
-            <el-form-item label="上传图片" prop="imgs.path">
+            <el-form-item required label="上传图片" prop="imgs.path">
                 <template scope="scope">
                     <!-- 上传图片  -->
                     <vue-core-image-upload 
@@ -132,7 +132,8 @@ export default {
         if (this.addForm.imgs.path != '' && this.addForm.imgs.path != 'undefined') {
             this.selectPic.picList.push(this.addForm.imgs.path)
         }
-        this.picShow = true
+        // console.log(this.addForm.imgs.path)
+         this.picShow = true
     },
     methods: {
         // 保存
