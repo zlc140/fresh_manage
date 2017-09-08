@@ -134,19 +134,23 @@ export default {
   },
   methods: {
     getList() {
+      let _this=this
       let para = {
-        pageNum: this.pageNum - 1,
+        pageNum : this.pageNum  - 1,
         pageSize: this.pageSize,
         storeName: this.form.storeName,
         storeId: this.form.storeId,
         state: this.form.state
       }
+       _this.storeData=[]
+       _this.totalElements=0
       selectStore(para).then((res) => {
-        this.storeData = res.data.content.content
-        this.totalElements = res.data.content.totalElements
+        if(res.data.state==200){
+         _this.storeData = res.data.content.content
+         _this.totalElements = res.data.content.totalElements
+        }
       })
     },
-    // 新增
     //   弹框
     handle: function(row) {
       let _this = this
@@ -206,14 +210,14 @@ export default {
     // 查询
     onSubmit(data) {
       if (data == 'search') {
-        this.page = 1
+        this.pageNum  = 1
         this.currentPage1 = 1
       }
       this.getList()
     },
     //  点击分页
     handleCurrentChange(val) {
-      this.pageNum = val
+      this.pageNum  = val
       this.getList()
     },
   }

@@ -96,7 +96,6 @@ export default {
   mounted() {
     this.getStore()
     this.addForm = Object.assign({},this.FormData)
-    console.log('edit',this.addForm)
     this.selectPic.picList = []
     if (this.type == 'edit' && this.addForm.pics[0].path) {
       this.selectPic.picList.push(
@@ -138,8 +137,7 @@ export default {
               }
               para.pics = JSON.stringify(para.pics)
           if (this.type == 'add') {
-            // this.$confirm('确定添加该品牌？', '提示', {}).then(() => {
-             
+            // this.$confirm('确定添加该品牌？', '提示', {}).then(() => {             
               addbrand(para).then((res) => {
                 console.log("ts",res)
                 if (res.data.state == 200) {
@@ -155,6 +153,8 @@ export default {
             // this.$confirm('确定改变该分类？', '提示', {}).then(() => {
               para.brandId = this.addForm.brandId
               brandupdate(para).then((res) => {
+                console.log(para)
+                console.log(res)
                 this.addLoading = true;
                  
                 if (res.data.state == 200) {

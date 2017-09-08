@@ -135,6 +135,8 @@ export default {
         state:this.form.state,
         userName:this.form.userName
       }
+      _this.getData=[]
+      _this.total =0
       voucherlist(para).then((res) => {    
           if(res.data.state == 200){
             _this.getData = res.data.content.content
@@ -144,7 +146,6 @@ export default {
     },
     //   弹框
     handle: function(row) {
-      console.log(row.member.username )
       this.addFormVisible = true;
       if (row == 'add') {
         this.type = 'add'

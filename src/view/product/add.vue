@@ -39,7 +39,7 @@
         <el-form-item label="商品库存" required prop="repositoryNum">
           <el-input v-model="addForm.repositoryNum" type="number" min="0"></el-input>
         </el-form-item>
-        <el-form-item label="商品单位sku" prop="sku">
+        <el-form-item label="商品单位" prop="sku">
           <el-input v-model="addForm.sku"  ></el-input >
         </el-form-item>
         <el-form-item label=" 商品提取佣金" required prop="commission">
@@ -100,34 +100,21 @@ export default {
   
   data() {
     var validateaddDate = (rule, value, callback) => {
-                if(this.addForm.onlyShow == false){
-                    if(value === ''){
-                        callback(new Error('请选择开始时间'))
-                    }else {
-                        this.$refs.addForm.validateField('soldOutTime');
-                    }
-                    callback()
-                } else {
-                callback()
-                }
+      if(value === ''){
+         callback(new Error('请选择开始时间'))
+      }else{
+         callback()
+      }
             }; 
-    var compareaddDate = (rule,value,callback) => {
-            if(this.addForm.onlyShow == false){
+    var compareaddDate = (rule,value,callback) => {     
                 if(value === ''){
                     callback(new Error('请选择结束时间'))
                 }
-                else if(this.addForm.startTime !=='' && this.addForm.startTime.getTime() > value.getTime()-1){
-                        callback(new Error('结束时间应该大于开始时间'))
-                        
-                }
-                else if(this.addForm.startTime === ''){
-                            this.$refs.addForm.validateField('soldInTime');
+                else if(this.addForm.soldInTime !=='' && this.addForm.soldInTime.getTime() > value.getTime()-1){
+                        callback(new Error('结束时间应该大于开始时间'))                      
                 }else{
                         callback()
                 }
-            }else {
-            callback()
-            }
     };
     return {
       tip:true,
@@ -150,8 +137,7 @@ export default {
         commission: '',//商品提取佣金
         goodsShow: true,//商品展示elementui的开关
         soldInTime: '',//商品开始时间
-        soldOutTime: '',//商品结束时间  
-         
+        soldOutTime: '',//商品结束时间          
       },
       // 品牌
       brandData: [],
@@ -177,12 +163,6 @@ export default {
         goodsSubTitle: [
           { required: true, message: '请对商品进行描述', trigger: 'blur,change' },
         ],
-        // marketPrice: [
-        //   { required: true, message: '请输入商品的市场价', trigger: 'blur,change' },
-        // ],
-        // costPrice: [
-        //   { required: true, message: '请输入商品的成本价', trigger: 'blur,change' },
-        // ],
         storeId: [
           { required: true, message: '请输入店铺编号', trigger: 'blur,change' },
         ],
@@ -192,20 +172,18 @@ export default {
         goodsBody: [
           { required: true, message: '请输入商品详情', trigger: 'blur,change' },
         ],
-        // repositoryNum: [
-        //   { required: true, message: '请输入商品库存', trigger: 'blur,change' },
-        // ],
         sku: [
           { required: true, message: '请输入商品库存单元', trigger: 'blur,change' },
+        ],
+        commission:[
+          { required: true, message: '请输入商品佣金', trigger: 'blur,change' }
         ],
         soldInTime:[
           {validator:validateaddDate, trigger: 'change'}
         ],
-        soldoUTTime:[
+        soldOutTime:[
           {validator:compareaddDate, trigger: 'change'}
-        ]
-       
-       
+        ],
       }
 
     };
@@ -232,10 +210,8 @@ export default {
         let para =  { goodsId:val }
         let _this = this
         findgoods(para).then(res => {
-          if(res.data.state == 200){
-           
+          if(res.data.state == 200){          
             let datas = res.data.content
-             console.log(datas)
                _this.addForm = {
                   goodsTitle: datas.goodsTitle,//商品名称
                   goodsSubTitle: datas.goodsSubTitle,//商品描述
@@ -255,6 +231,7 @@ export default {
                   soldOutTime: datas.soldOutTime,//商品结束时间  
                  
                 }
+                _this.addForm.commission=_this.addForm.commission.toString()
                 _this.modShow = true
                 _this.selectPic.picList =[]
                  datas.goodsPic.forEach(v=> {
@@ -335,9 +312,16 @@ export default {
               return false
             }
             para.imgs = JSON.stringify(para.imgs)
-            para.soldInTime = para.soldInTime.getTime() + '';
-            para.soldOutTime = para.soldOutTime.getTime() + '';
-            console.log(para)
+            if(para.soldInTime == ''){
+              para.soldInTime = ''
+            }else{
+                 para.soldInTime = para.soldInTime.getTime() + '';
+            }
+            if(para.soldOutTime == ''){
+              para.soldOutTime = ''
+            }else{
+              para.soldOutTime = para.soldOutTime.getTime() + '';
+            }
             if(!this.$route.query.id){
                  addgoods(para).then((res) => {
                     if(res.data.state == 200){
