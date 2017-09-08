@@ -23,7 +23,7 @@
             </div>
        </template>
       </el-form-item>
-      <el-form-item label="代金券使用期限" required prop="indate">
+      <el-form-item label="代金券到期时间" required prop="indate">
            <template>
             <div class="block">
                 <el-date-picker
@@ -55,7 +55,7 @@ export default {
       // 新增
       addLoading: false,
       addForm: {
-        money: '',
+        money: 0,
         memberId: '',
         description: '',//品牌名称
         effectiveTime: '',
@@ -65,9 +65,6 @@ export default {
        rules: {
                userName: [
                     { required: true, message: '请输入用户名', trigger: 'blur' },
-                ],
-                money: [
-                    { required: true, message: '代金券金额', trigger: 'blur' },
                 ],
                 description: [
                     { required: true, message: '请描述代金券', trigger: 'blur' },
@@ -91,6 +88,8 @@ export default {
   },
   mounted() {
     this.addForm = Object.assign({},this.FormData)
+    this.addForm.effectiveTime = new Date(this.addForm.effectiveTime)
+    this.addForm.indate = new Date(this.addForm.indate)
     this.picShow = true  
   },
   methods: {

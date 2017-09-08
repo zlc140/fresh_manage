@@ -139,7 +139,7 @@ export default {
 //    
 .play_box {
   width: 100px;
-  padding: 10px 0;
+  padding: 2px 0;
   text-align: center;
   margin-left: -20px;
 }

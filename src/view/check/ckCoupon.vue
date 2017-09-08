@@ -52,7 +52,7 @@ export default {
     return {
       // 分页
       currentPage1: 1,
-      pageSize: 10,
+      pageSize: 15,
       pageNum : 1,
       total: 0,
       lists: [],

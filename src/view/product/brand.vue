@@ -13,7 +13,7 @@
       </el-form-item>
     </el-form>
     <!-- 表格 -->
-    <el-table :data="getData" border style="width: 100%" v-if="!addFormVisible">
+    <el-table :data="getData" border style="width: 98%" v-if="!addFormVisible">
       <el-table-column type="selection" width="55">
       </el-table-column>
       <el-table-column prop="brandTitle" label="品牌名称"></el-table-column>
@@ -22,11 +22,6 @@
           <span class="price">{{ scope.row.store.storeName }}</span>
         </template>
       </el-table-column>
-      <!-- <el-table-column prop="storeId" label="所属分类">
-        <template scope="scope">
-          <span class="price">{{ scope.row.store.storeName }}</span>
-        </template>
-      </el-table-column> -->
       <el-table-column prop="brandPic" type="expand" label="品牌LOGO" width="150" >
         <template scope="scope" >
           <div class="logo_box" v-if="scope.row.brandPic"> 
@@ -128,7 +123,6 @@ export default {
         brandId: this.form.brandId
       }
       brandlist(para).then((res) => {
-        console.log(res.data)
         if(res.data.state == 200){
           if(res.data.content.content){
             _this.getData = res.data.content.content;
@@ -157,6 +151,7 @@ export default {
           brandTitle: row.brandTitle,
           brandId: row.brandId,
           pics: row.brandPic
+          
         };
       }
 

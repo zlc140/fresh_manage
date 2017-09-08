@@ -50,7 +50,7 @@ export default {
       },
       // 分页
       currentPage1: 1,
-      pageSize: 3,
+      pageSize: 15,
       pageNum: 1,
       totalElements: 0,
       lists: [],

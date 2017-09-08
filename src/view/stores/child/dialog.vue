@@ -26,17 +26,12 @@
             <el-form-item label="店铺简介" prop="about">
                 <el-input v-model="addForm.about" auto-complete="off"></el-input>
             </el-form-item>
-            <el-form-item required label="上传执照图片" prop="imgs.path">
+            <el-form-item required label="上传执照" prop="imgs.path">
                 <template scope="scope">
                     <!-- 上传图片  -->
                     <vue-core-image-upload 
                      v-if="picShow"
-                     @getImg="getImg" 
-                     :cropRatio="selectPic.radio" 
-                     :picList="selectPic.picList" 
-                     :sizeBox='selectPic.size' 
-                     :multiple="selectPic.multiple" 
-                     :cropShow="selectPic.cropShow">
+                     @getImg="getImg" :cropRatio="selectPic.radio"  :picList="selectPic.picList" :multiple="selectPic.multiple" :cropShow="selectPic.cropShow">
                     </vue-core-image-upload>
                     <p class="tip">提示：请上传真实的执照图片，我们会有专人审核！</p>
                 </template>
@@ -65,7 +60,6 @@ export default {
             picShow: true,
             selectPic: {
                 radio: '1200:350',
-                size: ['1200', '350'],
                 cropShow: false,
                 multiple: false,
                 picList: []
@@ -128,11 +122,12 @@ export default {
     },
     mounted() {
         this.addForm = Object.assign({}, this.addForm, this.FormData)
-         console.log(this.FormData)
+        
         this.selectPic.picList = []
         if (this.addForm.imgs.path != '' && this.addForm.imgs.path != 'undefined') {
             this.selectPic.picList.push(this.addForm.imgs.path)
         }
+        
         this.picShow = true
     },
     methods: {

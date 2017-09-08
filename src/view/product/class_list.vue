@@ -5,7 +5,7 @@
     </div>
     <el-table :data="lists" style="98%" v-loading="listLoading" @selection-change="selsChange" v-show="!addFormVisible">
       <!-- 子级 -->
-      <el-table-column type="expand">
+      <el-table-column type="expand" label="子类">
         <template scope="scope">
           <el-table :data="scope.row.childClass" style="100%" :show-header="false">
             <el-table-column label="分类名称" prop="classTitle"> </el-table-column>
@@ -227,7 +227,7 @@ export default {
   }
   img {
     width: 60px;
-    height: 60px;
+    max-height: 60px;
     display: inline-block
   }
   .el-tree-node__children .del {
