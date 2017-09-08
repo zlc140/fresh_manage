@@ -51,14 +51,12 @@ export default {
             parentClass:true,
             selectPic: {
                 radio: '1:1',
-                size: ['60', '60'],
                 cropShow: false,
                 multiple: false,
                 picList: []
             },
             selectPic2: {
                 radio: '1:1',
-                size: ['60', '60'],
                 cropShow: false,
                 multiple: false,
                 picList: []
@@ -119,8 +117,8 @@ export default {
                     }],
                 
             }
-            this.selectPic.picList=[]
-            this.selectPic2.picList
+            this.selectPic.picList = []
+            this.selectPic2.picList = []
             this.selectPic.picList.push(this.formData.classPic[0].path)
             this.selectPic2.picList.push(this.formData.classPic[1].path)
         }
@@ -152,7 +150,7 @@ export default {
                     }
                     if(this.type == 'add' || this.type == "edit"){
                         if(this.addForm.pics[0].path == '' || this.addForm.pics[1].path==''){
-                            this.$message('请上传banner图片')
+                            this.$message('请上传分类图片')
                             return false
                         }
                         para.pics = this.addForm.pics

@@ -1,7 +1,7 @@
 <template>
   <div class="ckStore">
      <!-- 表格 -->
-    <el-table :data="storeData" style="width: 100%">
+    <el-table :data="storeData" border style="width: 100%">
       <el-table-column prop="storeName" label="店铺名称"> </el-table-column>
        <el-table-column type="expand" prop="businessLicense" label="图片展示">
               <template scope="scope">

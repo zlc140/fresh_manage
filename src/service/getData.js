@@ -367,3 +367,17 @@ export const editFloor = (prop) => {
         url:BASE_URL+'/floor/update'
     })
 }
+
+// 得到二维码
+export const getErWeiMa = ()  => {
+    let para = {
+        orderId : 'O20170908114850345'
+    }
+    axios({
+        url:'/order/MatrixToImage',
+        method:'post',
+        params:para
+    }).then(res => {
+        console.log(res)
+    })
+}

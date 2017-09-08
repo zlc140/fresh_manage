@@ -46,6 +46,25 @@
 import {voucherlist,addvoucher,editvoucher} from '@/service/getData'
 export default {
   data() {
+     // 请输入用户名,请描述代金券
+           var  validaddress= (rule, value, callback) => {
+             if (value.trim() == '') {
+                callback(new Error('不能输入一串空字符'))
+            } else {
+                callback()
+            }
+         };
+          //  代金券金额
+          var validmoney = (rule, value, callback) => {
+            var par=/^[0-9]*$/;
+            if (!par.test(value) && value.trim() != '') {
+                callback(new Error('请输入正确格式'));
+            } else if (value.trim() == '') {
+                callback(new Error('不能输入一串空字符'))
+            } else {
+                callback()
+            }
+         };
     return {
         pickerOptions0: {
           disabledDate(time) {
@@ -63,11 +82,17 @@ export default {
         userName:''
       },
        rules: {
-               userName: [
+              userName: [
                     { required: true, message: '请输入用户名', trigger: 'blur' },
+                    { validator: validaddress, trigger: 'blur' }
+                ],
+                money: [
+                    { required: true, message: '代金券金额', trigger: 'blur' },
+                    { validator: validmoney, trigger: 'blur' }
                 ],
                 description: [
                     { required: true, message: '请描述代金券', trigger: 'blur' },
+                    { validator: validaddress, trigger: 'blur' }
                 ],
        }
     }

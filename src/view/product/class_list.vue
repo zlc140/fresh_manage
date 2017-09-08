@@ -38,12 +38,12 @@
       </el-table-column>
       <el-table-column prop="classPic" label="鼠标移入">
         <template scope="scope">
-          <img :src="scope.row.classPic[0].path" />
+          <img :src="scope.row.classPic[0].path" v-if="scope.row.classPic[0]" />
         </template>
       </el-table-column>
       <el-table-column prop="classPic" label="鼠标移出">
         <template scope="scope">
-          <img :src="scope.row.classPic[1].path" />
+          <img :src="scope.row.classPic[1].path" v-if="scope.row.classPic[1]"/>
         </template>
       </el-table-column>
       <el-table-column label="创建时间" prop="createTime">

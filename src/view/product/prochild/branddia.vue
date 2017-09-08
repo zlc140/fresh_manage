@@ -47,6 +47,16 @@ import vueCoreImageUpload from '@/components/uploadImg'
 import { selectStore, addbrand, brandupdate,classlist } from '@/service/getData'
 export default {
   data() {
+     var nospace = (rule, value, callback) => {
+            var par = /^[a-zA-Z\u4E00-\u9FA5\_]{2,10}$/
+            if (!par.test(value) && value.trim() != '') {
+                callback(new Error('品牌名称为中英文,下划线，长度2~10位'));
+            } else if (value.trim() == '') {
+                callback(new Error('品牌名称不能为空'))
+            } else {
+                callback()
+            }
+         };
     return {
       //图片
       picShow: false,
@@ -73,7 +83,8 @@ export default {
           { required: true, message: '店铺不能为空', trigger: 'change' }
         ],
         brandTitle: [
-          { required: true, message: '品牌名称不能为空', trigger: 'change' }
+          { required: true, message: '品牌名称不能为空', trigger: 'change' },
+           {validator: nospace, trigger: 'blur' }
         ],
       }
     }
