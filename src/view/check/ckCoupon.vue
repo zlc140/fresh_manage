@@ -10,6 +10,9 @@
       </el-table-column>
       <el-table-column label="代金券编号" prop="voucherId"> </el-table-column>
       <el-table-column label=" 代金券金额" prop="money">
+         <template scope="scope">
+            {{scope.row.money | currency}}
+          </template>
       </el-table-column>
       <el-table-column label="代金券描述" prop="description" min-width="100px">
       </el-table-column>

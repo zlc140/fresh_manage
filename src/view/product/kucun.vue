@@ -18,7 +18,7 @@
       </el-form>
     </div>
     <!-- 表格 -->
-    <el-table border  :data="getData" style="width: 100%">
+    <el-table border  :data="getData" style="width: 100%"  v-loading="listLoading">
       <el-table-column label="商品名称" prop="goodsTitle ">
         <template scope="scope">
           <span>{{ scope.row.goodsTitle}}</span>
@@ -79,6 +79,7 @@ export default {
         gclist: '',//菜单
       },
       // 分页
+      listLoading:false,
       currentPage1: 1,
       pageSize:10,
       pageNum: 1,
@@ -103,6 +104,7 @@ export default {
   },
   methods: {
     getList() {
+      this.listLoading = true
       let para = {
         pageNum: this.pageNum - 1,
         pageSize: this.pageSize,
@@ -112,10 +114,13 @@ export default {
       }
       // 表格数据
       prolist(para).then((res) => {  
+        this.listLoading = false
         if (res.data.state == 200) {
           this.getData = res.data.content.content;
           this.totalElements = res.data.content.totalElements;
         }
+      }).catch(() => {
+        this.listLoading = false
       })
     },
     // 编辑

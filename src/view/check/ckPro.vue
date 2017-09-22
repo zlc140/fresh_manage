@@ -8,7 +8,7 @@
     </el-radio-group>
     </div>
     <!-- 表格 -->
-    <el-table :data="getData" border style="width: 98%" >
+    <el-table :data="getData" border style="width: 98%" v-loading="listLoading" >
       <!-- <el-table-column type="selection" width="55">
       </el-table-column> -->
       <el-table-column label="商品货号" prop="goods.goodsId" width="180px"> </el-table-column>
@@ -81,6 +81,7 @@ export default {
       radio:'add',
       checked: true,
       // 分页
+      listLoading:false,
       currentPage1: 1,
       pageSize: 10,
       pageNum: 1,
@@ -99,6 +100,7 @@ export default {
         pageNum: this.pageNum - 1,
         pageSize: this.pageSize
       }
+      this.listLoading = true
       // 表格数据
       if(this.radio == 'add'){
         para.state = 'GOODS_STATE_ON_CHECKING'
@@ -106,6 +108,7 @@ export default {
         let _this = this
         prolist(para).then((res) => {
           console.log(res)
+          this.listLoading = false
           if (res.data.state == 200 &&　res.data.content.content) {
               res.data.content.content.forEach(v=>{
                 let prop = { goods:v }
@@ -119,6 +122,7 @@ export default {
         this.getData = []
           checkPro(para).then((res) => {
               console.log(res)
+               this.listLoading = false
               if (res.data.state == 200 &&　res.data.message !='暂无数据') {
                 this.getData = res.data.content.content;
                 this.totalElements = res.data.content.totalElements;

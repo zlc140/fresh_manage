@@ -1,7 +1,7 @@
 <template>
   <div class="ckbrand">
    <!-- 表格 -->
-    <el-table border :data="getData" style="width: 100%">
+    <el-table border :data="getData" style="width: 100%"  v-loading="listLoading">
       <el-table-column prop="brandTitle" label="品牌名称"></el-table-column>
       <el-table-column prop="storeId" label="店铺编号">
         <template scope="scope">
@@ -48,6 +48,7 @@ export default {
         state: '',
         brandId: ''
       },
+      listLoading:false,
       // 分页
       currentPage1: 1,
       pageSize: 15,
@@ -65,14 +66,18 @@ export default {
   methods: {
     getbrandlist() {
       let _this = this
+      this.listLoading = true
       let para = {
         pageNum: this.pageNum - 1,
         pageSize: this.pageSize,
         state:'BRAND_STATE_ON_CHECKING'
       }
       brandlist(para).then((res) => { 
+        this.listLoading = false
         _this.getData = res.data.content.content;
         _this.totalElements = res.data.content.totalElements;
+      }).catch(() => {
+         this.listLoading = false
       })
     },
     handle(a,row){

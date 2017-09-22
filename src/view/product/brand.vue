@@ -13,16 +13,8 @@
       </el-form-item>
     </el-form>
     <!-- 表格 -->
-    <el-table :data="getData" border style="width: 98%" v-if="!addFormVisible">
-      <!-- <el-table-column type="selection" width="55">
-      </el-table-column> -->
-      <el-table-column prop="brandTitle" label="品牌名称"></el-table-column>
-      <el-table-column prop="storeId" label="店铺名称">
-        <template scope="scope">
-          <span class="price">{{ scope.row.store.storeName }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column prop="brandPic" type="expand" label="品牌LOGO" width="150" >
+    <el-table :data="getData" border style="width: 98%" v-if="!addFormVisible"  v-loading="listLoading" >
+       <el-table-column prop="brandPic" type="expand" label="品牌LOGO" width="150" >
         <template scope="scope" >
           <div class="logo_box" v-if="scope.row.brandPic"> 
             <ul class="imgList ">
@@ -33,6 +25,15 @@
           </div>
         </template>
       </el-table-column>
+      <!-- <el-table-column type="selection" width="55">
+      </el-table-column> -->
+      <el-table-column prop="brandTitle" label="品牌名称"></el-table-column>
+      <el-table-column prop="storeId" label="店铺名称">
+        <template scope="scope">
+          <span class="price">{{ scope.row.store.storeName }}</span>
+        </template>
+      </el-table-column>
+     
       <el-table-column prop="state" label="品牌审核状态">
         <template scope="scope">
           <span>
@@ -81,6 +82,7 @@ export default {
         state: '',
         brandId: ''
       },
+      listLoading:false,
       // 新增编辑
       title: '新增',
       type: 'add',
@@ -118,6 +120,7 @@ export default {
   methods: {
 
     getbrandlist() {
+      this.listLoading = true
       let _this = this
       let para = {
         pageNum: this.pageNum - 1,
@@ -127,10 +130,13 @@ export default {
         brandId: this.form.brandId
       }
       brandlist(para).then((res) => {
+        _this.listLoading = false
         if(res.data.state == 200){
             _this.getData = res.data.content.content;
              _this.totalElements = res.data.content.totalElements;      
         }
+      }).catch(() => {
+         _this.listLoading = false
       })
     },
     //   弹框

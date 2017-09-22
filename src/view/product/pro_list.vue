@@ -1,8 +1,8 @@
 <template>
   <div class="prolist">
     <!-- form表单 -->
-    <div class="search_pro">
-      <el-form ref="form" :model="form" label-width="80px">
+    <div class="search_pro toolbar">
+      <el-form ref="form"  :model="form" label-width="80px">
         <el-row :gutter="10" class="margin-top">
             <el-form-item label="商品名称">
             <el-input v-model="form.goodsTitle"></el-input>
@@ -22,14 +22,15 @@
             </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="onSubmit('search')">查询</el-button>
-            <el-button class="fr"  :plain="true" ><router-link to="/view/proAdd">发布商品</router-link></el-button>
           </el-form-item>
-           
+            <el-form-item>
+            <el-button  :plain="true" ><router-link to="/view/proAdd">发布商品</router-link></el-button>
+          </el-form-item>
         </el-row>
       </el-form>
     </div>
     <!-- 表格 -->
-    <el-table :data="getData" border style="width: 98%">
+    <el-table :data="getData" border style="width: 98%"  v-loading="listLoading">
       <el-table-column type="selection" width="55">
       </el-table-column>
       <el-table-column label="商品货号" prop="goodsId" width="180px"> </el-table-column>
@@ -81,7 +82,7 @@
           {{scope.row.goodsShow == true?'显示':'不显示'}}
         </template>
       </el-table-column>
-      <el-table-column label="操作" width="120">
+      <el-table-column label="操作" width="120" fixed="right">
         <template scope="scope">
           <div class="play_box">
             <el-button type="text">查看详情</el-button>
@@ -116,6 +117,7 @@ import { prolist, classlist, delGoods,editgoods } from '@/service/getData'
 export default {
   data() {
     return {
+      listLoading:false,
       checked: true,
       form: {
         state: '', //商品状态
@@ -201,12 +203,16 @@ export default {
         goodsTitle: this.form.goodsTitle,
         classId: this.form.gclist,
       }
+      this.listLoading = true
       // 表格数据
       prolist(para).then((res) => {
+        this.listLoading = false
         if (res.data.state == 200 &&　res.data.message !='暂无数据') {
           this.getData = res.data.content.content;
           this.totalElements = res.data.content.totalElements;
         }
+      }).catch(() => {
+        this.listLoading = false
       })
     },
     // 编辑

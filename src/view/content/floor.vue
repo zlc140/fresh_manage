@@ -14,7 +14,7 @@
                     <floor-body :lists="scope.row.body" :title="scope.row.title" :titleImage="scope.row.titleImage" :type="scope.row.type"></floor-body>
                 </template>
             </el-table-column>
-            <el-table-column prop="sort" label="排序" min-width="70" sortable>
+            <el-table-column prop="sort" label="排序" min-width="80" sortable>
             </el-table-column>
             <el-table-column prop="type" label="楼层类型" width="150" sortable>
                 <template scope="scope">
@@ -39,10 +39,12 @@
                     <span style="margin-left: 10px">{{ scope.row.endTime | formatDate }}</span>
                 </template>
             </el-table-column>
-            <el-table-column label="操作" width="200">
+            <el-table-column label="操作" width="130">
                 <template scope="scope">
-                    <el-button size="small" @click="handle( scope.row)">编辑</el-button>
-                    <el-button type="danger" size="small" @click="handleDel( scope.row)">删除</el-button>
+                    <div class="play_box">
+                    <el-button size="small"  type="text" @click="handle( scope.row)">编辑</el-button>
+                    <el-button type="text" size="small" @click="handleDel( scope.row)">删除</el-button>
+                    </div>
                 </template>
             </el-table-column>
         </el-table>

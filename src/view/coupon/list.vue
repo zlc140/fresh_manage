@@ -20,7 +20,7 @@
         <el-button type="primary" :plain="true" @click="handle('add')">新增</el-button>
       </el-form-item>
     </el-form>
-    <el-table :data="getData" style="width: 98%" v-if="!addFormVisible">
+    <el-table :data="getData" border style="width: 98%" v-if="!addFormVisible">
       <!-- 表格-->
         <el-table-column  label="用户名" prop="username ">
         <template scope="scope">
@@ -52,10 +52,10 @@
       </el-table-column>
        <el-table-column  label="操作" width="120" align="center" >
           <template scope="scope">
-            
+             <div class="play_box">
                 <el-button type="text" @click="handle( scope.row)">编辑</el-button>
                 <el-button type="text" @click="handleDel(scope.row)">删除</el-button>
-           
+           </div>
         </template>
       </el-table-column>
     </el-table>
@@ -118,6 +118,9 @@ export default {
         },{
            value: 'VOUCHER_STATE_USED',
           label: '代金券已使用'
+        },{
+          value:'',
+          label:'全部'
         }
       ],
     }

@@ -17,9 +17,10 @@
           </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="onSubmit('search')">查询</el-button>
+             <el-button type="primary" :plain="true"  @click="handleDialog('add')">新增</el-button>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" @click="handleDialog('add')">新增</el-button>
+           
           </el-form-item>
         </el-row>
       </el-form>
@@ -28,17 +29,14 @@
     <el-table :data="storeData" style="width: 100%" v-if="!addFormVisible" >
        <el-table-column type="expand" prop="businessLicense" label="图片展示">
         <template scope="scope">
-           <ul class="imgList ">
-             <li>
-                <p><span>店铺电话</span>{{scope.row.officeTel?scope.row.officeTel[0]:''}}</p>
-                <p><span>店铺传真</span>{{scope.row.officeAddress?scope.row.officeAddress[0]:''}}</p>
-                <p><span>店铺地址</span>{{scope.row.faxes?scope.row.faxes[0]:''}}</p>
-             </li>
+           <ul class="imgList ">             
               <li >
                   <img :src="scope.row.businessLicense.path" />
               </li>
             </ul>
-           
+            <p><span>店铺电话</span>{{scope.row.officeTel?scope.row.officeTel[0]:''}}</p>
+            <p><span>店铺传真</span>{{scope.row.officeAddress?scope.row.officeAddress[0]:''}}</p>
+            <p><span>店铺地址</span>{{scope.row.faxes?scope.row.faxes[0]:''}}</p>
         </template>
       </el-table-column>
       <el-table-column prop="storeId " label="店铺编号">
@@ -127,6 +125,10 @@ export default {
       // 商品状态
       options: [
         {
+          value:'',
+          label:'全部'
+        },
+        {
           value: 'STORE_STATE_ON_CHECKING',
           label: '审核中'
         }, {
@@ -146,6 +148,7 @@ export default {
   },
   components: { dialogTem },
   mounted() {
+    console.log(new Date().getTime())
     this.getList()
   },
   methods: {

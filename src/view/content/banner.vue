@@ -38,10 +38,12 @@
                 </template>
             </el-table-column>
            
-            <el-table-column label="操作" width="200">
+            <el-table-column label="操作" width="130" fixed="right">
                 <template scope="scope">
-                    <el-button size="small" @click="handle( scope.row)">编辑</el-button>
-                    <el-button type="danger" size="small" @click="handleDel(scope.$index, scope.row)">删除</el-button>
+                    <div class="play_box">
+                    <el-button type="text" size="small"   @click="handle( scope.row)">编辑</el-button>
+                    <el-button type="text"  size="small" @click="handleDel(scope.$index, scope.row)">删除</el-button>
+                    </div>
                 </template>
             </el-table-column>
         </el-table>

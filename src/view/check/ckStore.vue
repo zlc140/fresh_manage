@@ -1,7 +1,7 @@
 <template>
   <div class="ckStore">
      <!-- 表格 -->
-    <el-table :data="storeData" border style="width: 100%">
+    <el-table :data="storeData" border style="width: 100%"  v-loading="listLoading" >
       <el-table-column prop="storeName" label="店铺名称"> </el-table-column>
        <el-table-column type="expand" prop="businessLicense" label="图片展示">
               <template scope="scope">
@@ -56,6 +56,7 @@ export default {
         state: ''
       },
       // 分页
+      listLoading:false,
       currentPage1: 1,
       pageSize: 15,
       pageNum: 1,
@@ -71,17 +72,20 @@ export default {
   },
   methods: {
     getList() {
+      this.listLoading = true
       let para = {
         pageNum: this.pageNum - 1,
         pageSize: this.pageSize,
         state:'STORE_STATE_ON_CHECKING'
       }
       selectStore(para).then((res) => {
+         this.listLoading = false
         this.storeData = res.data.content.content
         this.totalElements = res.data.content.totalElements
       })
     },
      handle(a,row){
+        this.listLoading = true
       if (a == 'pass') {
         let para = {        
           storeId: row.storeId,
@@ -89,6 +93,7 @@ export default {
         }
         console.log(para)
         updateStore(para).then((res)=>{
+           this.listLoading = false
           console.log(res.data)
           this.getList()
          })
@@ -98,6 +103,7 @@ export default {
           state:'STORE_STATE_CHECK_OFF'
         }
          updateStore(para).then((res)=>{
+           this.listLoading = false
           this.getList()
          })
       }

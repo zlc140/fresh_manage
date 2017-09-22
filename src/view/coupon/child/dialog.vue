@@ -113,8 +113,14 @@ export default {
   },
   mounted() {
     this.addForm = Object.assign({},this.FormData)
-    this.addForm.effectiveTime = new Date(this.addForm.effectiveTime)
-    this.addForm.indate = new Date(this.addForm.indate)
+    console.log(this.addForm)
+    if(this.addForm.effectiveTime != ''){
+         this.addForm.effectiveTime = new Date(this.addForm.effectiveTime)
+    }
+    if(this.addForm.indate != ''){
+        this.addForm.indate = new Date(this.addForm.indate)
+    }
+     
     this.picShow = true  
   },
   methods: {
@@ -151,6 +157,7 @@ export default {
                }
           if (this.type == 'add') {
               addvoucher(para).then((res) => {
+                  console.log(res)
                   this.addLoading = true;
                   this.clean()
               })

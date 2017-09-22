@@ -20,7 +20,7 @@
                 <el-input v-model="addForm.fax" auto-complete="off"></el-input>
             </el-form-item>
             <el-form-item label="成立时间" prop="regTime">
-                <el-date-picker v-model="addForm.regTime" type="date" placeholder="选择时间" :picker-options="pickerOptions0">
+                <el-date-picker v-model="addForm.regTime" type="date" placeholder="选择时间" >
                 </el-date-picker>
             </el-form-item>
             <el-form-item label="店铺简介" prop="about">
@@ -101,7 +101,7 @@ export default {
                 imgs: {
                     path: ''
                 },
-                storeId: '',//店铺id
+                // storeId: '',//店铺id
                 storeName: '',// 店铺名称
                 memberId: '',// 店主id
                 businessLicenseNo: '',//公司执照编号
@@ -185,6 +185,7 @@ export default {
                     para.imgs = JSON.stringify(para.imgs)
                     if (this.type == 'add') {
                         saveStore(para).then((res) => {
+                            console.log(res)
                             this.loginLoading = false;
                             this.$emit('close', false)
                         })
