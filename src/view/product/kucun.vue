@@ -4,16 +4,11 @@
     <div class="search_pro">
       <el-form ref="form" :model="form" label-width="80px">
         <el-row :gutter="10" class="margin-top">
-          <el-form-item label="商品货号">
-            <el-input v-model="form.goodsId"></el-input>
-          </el-form-item>
-            <el-form-item label="分类名称">
-              <el-select v-model="form.gclist">
-                <el-option v-for="(item,index) in  gcData" :key="index" :label="item.classTitle" :value="item.classId"> </el-option>
-              </el-select>
-            </el-form-item>
           <el-form-item label="商品名称">
-            <el-input v-model="form.goodstitle"></el-input>
+            <el-input v-model="form.goodsTitle"></el-input>
+          </el-form-item>
+          <el-form-item label="商品编号">
+            <el-input v-model="form.goodsId"></el-input>
           </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="onSubmit('search')">查询</el-button>
@@ -23,7 +18,7 @@
       </el-form>
     </div>
     <!-- 表格 -->
-    <el-table border  :data="getData" style="width: 100%">
+    <el-table border  :data="getData" style="width: 100%"  v-loading="listLoading">
       <el-table-column label="商品名称" prop="goodsTitle ">
         <template scope="scope">
           <span>{{ scope.row.goodsTitle}}</span>
@@ -84,6 +79,7 @@ export default {
         gclist: '',//菜单
       },
       // 分页
+      listLoading:false,
       currentPage1: 1,
       pageSize:10,
       pageNum: 1,
@@ -105,51 +101,30 @@ export default {
   },
   mounted() {
     this.getList()
-     let _this = this
-    classlist().then((res) => {
-      if (res.data.state == 200 ) {
-        let datas = res.data.content
-        // console.log(datas)
-        console.log('t',datas)
-        _this.gcData = []
-        if(datas){
-          datas.forEach((child) => {
-            _this.gcData.push({
-              classId: child.classId,
-              classTitle: child.classTitle
-            })
-            if (child.childClass && child.childClass.length > 0) {
-              child.childClass.forEach((item) => [
-                _this.gcData.push({
-                  classId: item.classId,
-                  classTitle: '　　' + item.classTitle
-                })
-              ])
-            }
-          })
-        }
-      }
-    })
   },
   methods: {
     getList() {
+      this.listLoading = true
       let para = {
         pageNum: this.pageNum - 1,
         pageSize: this.pageSize,
         goodsId: this.form.goodsId,
-        gclist:this.form.gclist
+        gclist:this.form.gclist,
+        goodsTitle:this.form.goodsTitle
       }
       // 表格数据
       prolist(para).then((res) => {  
+        this.listLoading = false
         if (res.data.state == 200) {
           this.getData = res.data.content.content;
           this.totalElements = res.data.content.totalElements;
         }
+      }).catch(() => {
+        this.listLoading = false
       })
     },
     // 编辑
     changNum(index, row) {
-      console.log(row)
       this.editFormVisible = true;
       this.editForm = {
           stockId: row.goodsStock.stockId,

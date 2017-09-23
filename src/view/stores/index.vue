@@ -10,16 +10,17 @@
           <el-form-item label="店铺编号">
             <el-input v-model="form.storeId"></el-input>
           </el-form-item>
-          <el-form-item label="商品状态">
+          <el-form-item label="店铺状态">
             <el-select v-model="form.state">
               <el-option v-for="(item,index) in  options" :key="index" :label="item.label" :value="item.value"> </el-option>
             </el-select>
           </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="onSubmit('search')">查询</el-button>
+             <el-button type="primary" :plain="true"  @click="handleDialog('add')">新增</el-button>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" @click="handle('add')">新增</el-button>
+           
           </el-form-item>
         </el-row>
       </el-form>
@@ -28,7 +29,14 @@
     <el-table :data="storeData" style="width: 100%" v-if="!addFormVisible" >
        <el-table-column type="expand" prop="businessLicense" label="图片展示">
         <template scope="scope">
-          <img :src="scope.row.businessLicense.path" />
+           <ul class="imgList ">             
+              <li >
+                  <img :src="scope.row.businessLicense.path" />
+              </li>
+            </ul>
+            <p><span>店铺电话</span>{{scope.row.officeTel?scope.row.officeTel[0]:''}}</p>
+            <p><span>店铺传真</span>{{scope.row.officeAddress?scope.row.officeAddress[0]:''}}</p>
+            <p><span>店铺地址</span>{{scope.row.faxes?scope.row.faxes[0]:''}}</p>
         </template>
       </el-table-column>
       <el-table-column prop="storeId " label="店铺编号">
@@ -37,9 +45,9 @@
         </template>
       </el-table-column>
        <el-table-column prop="storeName" label="店铺名称"> </el-table-column>
-      <el-table-column prop="memberId " label="店主编号">
+      <el-table-column prop="memberId " label="店主姓名">
         <template scope="scope">
-          <span>{{ scope.row.member.memberId }}</span>
+          <span>{{ scope.row.member.username }}</span>
         </template>
       </el-table-column>
       <el-table-column prop="state " label="店铺状态">
@@ -55,14 +63,20 @@
       </el-table-column>
       <el-table-column label="操作" width="100">
         <template scope="scope">
-          <a @click="handle(scope.row)">编辑</a>
+          <a @click="handleDialog(scope.row)">编辑</a>
           <a @click="handleDel(scope.$index, scope.row)">删除</a>
         </template>
       </el-table-column>
     </el-table>
     <!-- 分页 -->
     <el-col :span="24" class="toolbar" v-if="!addFormVisible" >
-      <el-pagination layout="total,prev,pager,next" :current-page.sync="currentPage1" :page-size='pageSize' :total="totalElements" @current-change="handleCurrentChange"> </el-pagination>
+      <el-pagination 
+        layout="total,prev,pager,next" 
+        :current-page.sync="currentPage1" 
+        :page-size='pageSize' 
+        :total="totalElements" 
+        @current-change="handleCurrentChange"> 
+      </el-pagination>
     </el-col>
     <!--弹出界面 新增or编辑-->
     <dialog-tem :title="title" v-if="addFormVisible" :FormData="FormData" :type="type" @close="close"></dialog-tem>
@@ -103,13 +117,17 @@ export default {
       },
       // 分页
       currentPage1: 1,
-      pageSize: 3,
+      pageSize: 10,
       pageNum: 1,
       totalElements: 0,
       lists: [],
       sels: [],//列表选中列
       // 商品状态
       options: [
+        {
+          value:'',
+          label:'全部'
+        },
         {
           value: 'STORE_STATE_ON_CHECKING',
           label: '审核中'
@@ -130,25 +148,35 @@ export default {
   },
   components: { dialogTem },
   mounted() {
+    console.log(new Date().getTime())
     this.getList()
   },
   methods: {
     getList() {
+      let _this=this
+      this.listLoading = true
       let para = {
-        pageNum: this.pageNum - 1,
+        pageNum : this.pageNum  - 1,
         pageSize: this.pageSize,
         storeName: this.form.storeName,
         storeId: this.form.storeId,
         state: this.form.state
       }
+      console.log(para)
       selectStore(para).then((res) => {
-        this.storeData = res.data.content.content
-        this.totalElements = res.data.content.totalElements
+        console.log(res.data)
+        this.listLoading = false
+        if(res.data.state==200){
+         _this.storeData = res.data.content.content
+         _this.totalElements = res.data.content.totalElements
+        }else{
+          _this.storeData=[]
+          _this.totalElements = 0
+        }
       })
     },
-    // 新增
     //   弹框
-    handle: function(row) {
+    handleDialog: function(row) {
       let _this = this
       let length = this.lists.length + 1
       this.addFormVisible = true;
@@ -206,14 +234,15 @@ export default {
     // 查询
     onSubmit(data) {
       if (data == 'search') {
-        this.page = 1
+        this.pageNum  = 1
         this.currentPage1 = 1
       }
       this.getList()
     },
     //  点击分页
     handleCurrentChange(val) {
-      this.pageNum = val
+      this.pageNum  = val
+      console.log(val)
       this.getList()
     },
   }

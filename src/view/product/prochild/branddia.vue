@@ -8,11 +8,12 @@
             <el-option v-for="(item,index) in  storeData" :key="index" :value="item.storeId" :label="item.storeName"> </el-option>
           </el-select>
         </el-form-item>
-        <!-- <el-form-item label="分类名称" prop="classId">
-          <el-select v-model="addForm.classId"  placeholder="请选择分类">
+        <el-form-item label="关联分类" prop="classId">
+          <el-select v-model="classValues" class="sel_more" multiple placeholder="请选择分类">
             <el-option v-for="(item,index) in  classData" :key="index" :value="item.classId" :label="item.classTitle"> </el-option>
           </el-select>
-        </el-form-item> -->
+          <p class="tip">提示：品牌可以关联多个商品分类</p>
+        </el-form-item>
       <!-- <el-form-item label="品牌编号" prop="brandId">
         <el-input v-model="addForm.brandId" auto-complete="off">
         </el-input>
@@ -43,9 +44,19 @@
 
 <script>
 import vueCoreImageUpload from '@/components/uploadImg'
-import { selectStore, addbrand, brandupdate } from '@/service/getData'
+import { selectStore, addbrand, brandupdate,classlist } from '@/service/getData'
 export default {
   data() {
+     var nospace = (rule, value, callback) => {
+            var par = /^[a-zA-Z\u4E00-\u9FA5\_]{2,10}$/
+            if (!par.test(value) && value.trim() != '') {
+                callback(new Error('品牌名称为中英文,下划线，长度2~10位'));
+            } else if (value.trim() == '') {
+                callback(new Error('品牌名称不能为空'))
+            } else {
+                callback()
+            }
+         };
     return {
       //图片
       picShow: false,
@@ -58,19 +69,22 @@ export default {
         multiple: false,
         picList: []
       },
+      classValues:[],
       // 新增
       addLoading: false,
       addForm: {
         storeId: '',
         brandTitle: '',//品牌名称
         pics: [],
+        classId:''
       },
       addFormRules:{
         storeId: [
           { required: true, message: '店铺不能为空', trigger: 'change' }
         ],
         brandTitle: [
-          { required: true, message: '品牌名称不能为空', trigger: 'change' }
+          { required: true, message: '品牌名称不能为空', trigger: 'change' },
+           {validator: nospace, trigger: 'blur' }
         ],
       }
     }
@@ -95,8 +109,8 @@ export default {
   },
   mounted() {
     this.getStore()
+    this.getclass()
     this.addForm = Object.assign({},this.FormData)
-    console.log('edit',this.addForm)
     this.selectPic.picList = []
     if (this.type == 'edit' && this.addForm.pics[0].path) {
       this.selectPic.picList.push(
@@ -109,12 +123,54 @@ export default {
   methods: {
     // 店铺
     getStore() {
-      selectStore().then((res) => {
-        console.log(res)
-        this.storeData = res.data.content.content;
+      let para = {
+        state:'STORE_STATE_CHECK_ON'
+      }
+      selectStore(para).then((res) => {
+        if(res.data.state == 200){
+            this.storeData = res.data.content.content;
+        }
+        
       })
     },
-   
+    getclass() {
+      classlist().then((res) => {
+        let _this = this
+        if(res.data.state == 200 ){
+                let datas = res.data.content
+                console.log(datas)
+                this.classData = []
+                if(!datas){
+                    return false
+                }
+                // _this.classValues = []
+                console.log(_this.FormData.brandId)
+                datas.forEach((child) => {
+                    if(_this.type == 'edit'&& child.brandList && JSON.stringify(child.brandList).indexOf(_this.FormData.brandId)>0){
+                        _this.classValues.push(child.classId)
+                    }
+
+                    _this.classData.push({
+                        classId: child.classId,
+                        classTitle: child.classTitle
+                    })
+                    if (child.childClass && child.childClass.length > 0) {
+                        child.childClass.forEach((item) => {
+                           if(_this.type == 'edit'&& item.brandList && JSON.stringify(item.brandList).indexOf(_this.FormData.brandId)>0){
+                              _this.classValues.push(item.classId)
+                          }
+                            _this.classData.push({
+                                classId: item.classId,
+                                classTitle: '　　' + item.classTitle
+                            })
+                        })
+                    }
+                })
+                console.log( _this.classValues)
+          }
+
+      })
+    },
     clean() {
       this.$emit('close', false)
       this.$refs['addForm'].resetFields()
@@ -128,18 +184,19 @@ export default {
                   this.$message('请上传品牌图标！')
                   return false
              }
-             
-              this.addLoading = false;
+             this.addLoading = false;
+             if(this.classValues.length>0){
+               this.addForm.classId = this.classValues.join(',')
+             }
              let para = {
-                brandTitle: this.addForm.brandTitle,
-                pics: this.addForm.pics,
-                storeId: this.addForm.storeId,
-                classId:this.addForm.classId
+                brandTitle : this.addForm.brandTitle,
+                pics : this.addForm.pics,
+                storeId : this.addForm.storeId,
+                classIds :this.addForm.classId
               }
               para.pics = JSON.stringify(para.pics)
           if (this.type == 'add') {
-            // this.$confirm('确定添加该品牌？', '提示', {}).then(() => {
-             
+            // this.$confirm('确定添加该品牌？', '提示', {}).then(() => {             
               addbrand(para).then((res) => {
                 console.log("ts",res)
                 if (res.data.state == 200) {
@@ -155,6 +212,8 @@ export default {
             // this.$confirm('确定改变该分类？', '提示', {}).then(() => {
               para.brandId = this.addForm.brandId
               brandupdate(para).then((res) => {
+                console.log(para)
+                console.log(res)
                 this.addLoading = true;
                  
                 if (res.data.state == 200) {
@@ -191,7 +250,9 @@ export default {
   width: 100%;
   height: 100%;
 }
-
+.el-select.sel_more{
+  width: 600px;
+}
 .dialog-footer {
   text-align: center;
 }

@@ -17,7 +17,7 @@ s<template>
                             :multiple="titlePic.multiple"
                             :cropShow="titlePic.cropShow">
                         </vue-core-image-upload>
-                        <p class="tip">提示：用于楼层标题展示的图片最后都会被拉成宽1200px的图片，请注意比例和大小</p> 
+                        <p class="tip">提示：用于楼层标题展示的图片最后都会被拉成宽1200px的图片,推荐大小1200px*70px，请注意比例和大小</p> 
 				</el-form-item>
 				<el-form-item label="楼层标题" prop="title">
 					<el-input v-model="addForm.title" auto-complete="off" required></el-input>

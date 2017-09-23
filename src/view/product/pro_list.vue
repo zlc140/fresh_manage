@@ -1,35 +1,36 @@
 <template>
   <div class="prolist">
     <!-- form表单 -->
-    <div class="search_pro">
-      <el-form ref="form" :model="form" label-width="80px">
+    <div class="search_pro toolbar">
+      <el-form ref="form"  :model="form" label-width="80px">
         <el-row :gutter="10" class="margin-top">
+            <el-form-item label="商品名称">
+            <el-input v-model="form.goodsTitle"></el-input>
+          </el-form-item>
+           <el-form-item label="商品货号">
+            <el-input v-model="form.goodsId"></el-input>
+          </el-form-item>
           <el-form-item label="商品状态">
             <el-select v-model="form.state">
               <el-option v-for="(item,index) in  options" :key="index" :label="item.label" :value="item.value"> </el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="商品货号">
-            <el-input v-model="form.goodsId"></el-input>
-          </el-form-item>
-            <el-form-item label="一级分类">
+            <el-form-item label="分类名称">
               <el-select v-model="form.gclist">
                 <el-option v-for="(item,index) in  gcData" :key="index" :label="item.classTitle" :value="item.classId"> </el-option>
               </el-select>
             </el-form-item>
-          <el-form-item label="商品名称">
-            <el-input v-model="form.goodstitle"></el-input>
-          </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="onSubmit('search')">查询</el-button>
-            <el-button class="fr"  :plain="true" ><router-link to="/view/proAdd">发布商品</router-link></el-button>
           </el-form-item>
-           
+            <el-form-item>
+            <el-button  :plain="true" ><router-link to="/view/proAdd">发布商品</router-link></el-button>
+          </el-form-item>
         </el-row>
       </el-form>
     </div>
     <!-- 表格 -->
-    <el-table :data="getData" border style="width: 98%">
+    <el-table :data="getData" border style="width: 98%"  v-loading="listLoading">
       <el-table-column type="selection" width="55">
       </el-table-column>
       <el-table-column label="商品货号" prop="goodsId" width="180px"> </el-table-column>
@@ -81,7 +82,7 @@
           {{scope.row.goodsShow == true?'显示':'不显示'}}
         </template>
       </el-table-column>
-      <el-table-column label="操作" width="120">
+      <el-table-column label="操作" width="120" fixed="right">
         <template scope="scope">
           <div class="play_box">
             <el-button type="text">查看详情</el-button>
@@ -116,11 +117,12 @@ import { prolist, classlist, delGoods,editgoods } from '@/service/getData'
 export default {
   data() {
     return {
+      listLoading:false,
       checked: true,
       form: {
         state: '', //商品状态
         goodsId: '',//货号
-        goodstitle: '',//商品名称
+        goodsTitle: '',//商品名称
         gclist: '',//一级分类
       },
       editFormVisible:false,
@@ -153,10 +155,8 @@ export default {
       ],
       // 表格数据
       getData: [],
-      // 一级数据
-      gcData: [],
-      //二级数据
-      gcDatatt: [],
+      // 分类数据
+      gcData:[]
     }
   },
    components: {
@@ -169,8 +169,6 @@ export default {
     classlist().then((res) => {
       if (res.data.state == 200 ) {
         let datas = res.data.content
-        // console.log(datas)
-        console.log('t',datas)
         _this.gcData = []
         if(datas){
           datas.forEach((child) => {
@@ -187,6 +185,10 @@ export default {
               ])
             }
           })
+           _this.gcData.push({
+              classId: '',
+              classTitle: '全部分类'
+          })
         }
       }
     })
@@ -198,15 +200,19 @@ export default {
         pageSize: this.pageSize,
         state: this.form.state,
         goodsId: this.form.goodsId,
-        goodstitle: this.form.goodstitle,
+        goodsTitle: this.form.goodsTitle,
         classId: this.form.gclist,
       }
+      this.listLoading = true
       // 表格数据
       prolist(para).then((res) => {
+        this.listLoading = false
         if (res.data.state == 200 &&　res.data.message !='暂无数据') {
           this.getData = res.data.content.content;
           this.totalElements = res.data.content.totalElements;
         }
+      }).catch(() => {
+        this.listLoading = false
       })
     },
     // 编辑
@@ -273,15 +279,8 @@ export default {
 }
 </script>
 <style>
-
-/* .prolist .el-col-5 {
-  width: 15%;
-}
-.prolist .el-dialog--small {
-  height: 500px;
-}
-.prolist .el-col-6 {
-    width: 15%;
+/* .prolist .el-button+.el-button {
+    margin-left: 495px;
 } */
 </style>
 

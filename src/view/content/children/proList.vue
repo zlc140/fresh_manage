@@ -61,6 +61,7 @@
             <ul>
                 <li v-for="(item,index) in selPro" :key ="index">
                     <span class="close" @click="del(item,index)"><i class="el-icon-close"></i></span>
+                    <img :src="item.goodsPic[0].path"/>
                     {{item.goodsTitle}}
                 </li>
                 <br/> <el-button @click="ok">确认关联商品</el-button>

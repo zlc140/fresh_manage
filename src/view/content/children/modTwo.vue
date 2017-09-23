@@ -23,7 +23,8 @@
                       <el-input v-model="item.image.title" placeholder="图片标题"></el-input>
                       <dl v-if="item.goods.length>0">
                         <dd v-for="(child,index) in item.goods" :key="index">
-                         <p> {{child.goodsTitle}}</p>
+                          <img :src="child.goodsPic[0].path"/>
+                          <p> {{child.goodsTitle}}</p>
                         </dd>
                       </dl>
                 </li>

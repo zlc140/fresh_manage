@@ -5,7 +5,7 @@
     </div>
     <el-table :data="lists" style="98%" v-loading="listLoading" @selection-change="selsChange" v-show="!addFormVisible">
       <!-- 子级 -->
-      <el-table-column type="expand">
+      <el-table-column type="expand" label="子类">
         <template scope="scope">
           <el-table :data="scope.row.childClass" style="100%" :show-header="false">
             <el-table-column label="分类名称" prop="classTitle"> </el-table-column>
@@ -36,14 +36,14 @@
       </el-table-column>
       <el-table-column label="关键字" prop="keywords">
       </el-table-column>
-      <el-table-column prop="classPic" label="hover前图片">
+      <el-table-column prop="classPic" label="鼠标移入">
         <template scope="scope">
-          <img :src="scope.row.classPic[0].path" />
+          <img :src="scope.row.classPic[0].path" v-if="scope.row.classPic[0]" />
         </template>
       </el-table-column>
-      <el-table-column prop="classPic" label="hover后图片">
+      <el-table-column prop="classPic" label="鼠标移出">
         <template scope="scope">
-          <img :src="scope.row.classPic[1].path" />
+          <img :src="scope.row.classPic[1].path" v-if="scope.row.classPic[1]"/>
         </template>
       </el-table-column>
       <el-table-column label="创建时间" prop="createTime">
@@ -149,8 +149,8 @@ export default {
               type: 'success'
             })
             _this.getList()
-          } else if (res.data == '') {
-            this.$message('登录超时，请重新登录')
+          } else if (res.data.state == '400') {
+            this.$message('分类有子类，请删除子类后再删除!')
           } else {
             this.$message('系统出错')
           }
@@ -227,7 +227,7 @@ export default {
   }
   img {
     width: 60px;
-    height: 60px;
+    max-height: 60px;
     display: inline-block
   }
   .el-tree-node__children .del {

@@ -1,7 +1,7 @@
 <template>
   <div class="brand">
     <!-- form -->
-    <el-form :inline="true" :model="form" class="demo-form-inline toolbar" v-if="!addFormVisible">
+    <el-form :inline="true" :model="form" class="demo-form-inline" v-if="!addFormVisible">
       <el-form-item label="品牌名称">
         <el-input v-model="form.brandTitle" placeholder="品牌名称"></el-input>
       </el-form-item>
@@ -13,27 +13,27 @@
       </el-form-item>
     </el-form>
     <!-- 表格 -->
-    <el-table :data="getData" border style="width: 100%" v-if="!addFormVisible">
-      <el-table-column type="selection" width="55">
+    <el-table :data="getData" border style="width: 98%" v-if="!addFormVisible"  v-loading="listLoading" >
+       <el-table-column prop="brandPic" type="expand" label="品牌LOGO" width="150" >
+        <template scope="scope" >
+          <div class="logo_box" v-if="scope.row.brandPic"> 
+            <ul class="imgList ">
+              <li >
+                  <img :src="scope.row.brandPic[0].path">
+              </li>
+            </ul>
+          </div>
+        </template>
       </el-table-column>
+      <!-- <el-table-column type="selection" width="55">
+      </el-table-column> -->
       <el-table-column prop="brandTitle" label="品牌名称"></el-table-column>
       <el-table-column prop="storeId" label="店铺名称">
         <template scope="scope">
           <span class="price">{{ scope.row.store.storeName }}</span>
         </template>
       </el-table-column>
-      <!-- <el-table-column prop="storeId" label="所属分类">
-        <template scope="scope">
-          <span class="price">{{ scope.row.store.storeName }}</span>
-        </template>
-      </el-table-column> -->
-      <el-table-column prop="brandPic" type="expand" label="品牌LOGO" width="150" >
-        <template scope="scope" >
-          <div class="logo_box" v-if="scope.row.brandPic"> 
-            <img :src="scope.row.brandPic[0].path" />
-          </div>
-        </template>
-      </el-table-column>
+     
       <el-table-column prop="state" label="品牌审核状态">
         <template scope="scope">
           <span>
@@ -82,6 +82,7 @@ export default {
         state: '',
         brandId: ''
       },
+      listLoading:false,
       // 新增编辑
       title: '新增',
       type: 'add',
@@ -119,6 +120,7 @@ export default {
   methods: {
 
     getbrandlist() {
+      this.listLoading = true
       let _this = this
       let para = {
         pageNum: this.pageNum - 1,
@@ -128,13 +130,13 @@ export default {
         brandId: this.form.brandId
       }
       brandlist(para).then((res) => {
-        console.log(res.data)
+        _this.listLoading = false
         if(res.data.state == 200){
-          if(res.data.content.content){
             _this.getData = res.data.content.content;
-          }            
-            _this.totalElements = res.data.content.totalElements;
+             _this.totalElements = res.data.content.totalElements;      
         }
+      }).catch(() => {
+         _this.listLoading = false
       })
     },
     //   弹框
@@ -157,6 +159,7 @@ export default {
           brandTitle: row.brandTitle,
           brandId: row.brandId,
           pics: row.brandPic
+          
         };
       }
 

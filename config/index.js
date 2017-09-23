@@ -37,6 +37,22 @@ module.exports = {
       '/user-center':'http://192.168.0.111:9090',//用户中心
       
   },
+    // '/findcart':'http://192.168.0.17:8080/fresh-order/cart',//购物车
+    //   '/order':'http://192.168.0.17:8080/fresh-order',//订单
+    //   '/gc':'http://192.168.0.12:8080',//商品分类
+    //   '/goods':'http://192.168.0.12:8080',//商品
+    //   '/store':'http://192.168.0.12:8080',//商铺
+    //   '/brand':'http://192.168.0.12:8080',//品牌
+    //   '/comment':'http://192.168.0.12:8080',//商品评论
+    //   '/goodsStock':'http://192.168.0.12:8080',//库存
+    //   '/attrGoods':'http://192.168.0.12:8080',//编辑待审核
+    //   '/goodsStock':'http://192.168.0.12:8080',//库存
+    //   '/adv':'http://192.168.0.9:8080/fresh-front',//首页banner广告
+    //   '/floor':'http://192.168.0.9:8080/fresh-front',//首页楼层
+    //   '/upload':'http://192.168.0.9:8080/image-base',
+    //    '/voucher':'http://192.168.0.12:8080/',//代金券
+    //    '/bills':'http://192.168.0.9:8080/fresh-bills',//首页楼层
+
     // CSS Sourcemaps off by default because relative paths are "buggy"
     // with this option, according to the CSS-Loader README
     // (https://github.com/webpack/css-loader#sourcemaps)

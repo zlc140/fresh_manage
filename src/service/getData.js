@@ -1,12 +1,11 @@
 import axios from 'axios'
 
-
-const orderUrl = "/fresh-order"
+var BASE_URL = ''
 // 用户订单
 export const orderlist = (prop) => {
     return axios({
         method:'post',
-        url:orderUrl+'/order/findAllOrders',
+        url:BASE_URL+'/order/findAllOrders',
         params:prop
     })
 }
@@ -14,7 +13,7 @@ export const orderlist = (prop) => {
 export const findadvOrder = (prop) => {
     return axios({
         method:'post',
-        url:orderUrl+'/order/findOrdersByStoreAndOrderStart',
+        url:BASE_URL+'/order/findOrdersByStoreAndOrderStart',
         params:prop
     })
 }
@@ -22,7 +21,7 @@ export const findadvOrder = (prop) => {
 export const shipments = (prop) => {
     return axios({
         method:'post',
-        url:orderUrl+'/order/shipments',
+        url:BASE_URL+'/order/shipments',
         params:prop
     })
 }
@@ -30,13 +29,11 @@ export const shipments = (prop) => {
 export const returnCheck = (prop) => {
     return axios({
         method:'post',
-        url:orderUrl+'/order/returnCheckOrder',
+        url:BASE_URL+'/order/returnCheckOrder',
         params:prop
     })
 }
 
-// 商品模块
-const BASE_URL = '/fresh-goods'
 // 商品
 export const addgoods = (prop) => {
     return axios({
@@ -203,7 +200,70 @@ export const addbrandlist = (para) => {
         url:BASE_URL+'/brand/findByGcAndStore'
     })
 }
-
+/////////---------------- banner start --------------//////////
+export const bannerList = () => {
+    return axios({
+        method:'post',
+        url:BASE_URL+'/adv/find'
+    })
+}
+export const removeBanner = (para) => {
+    return axios({
+        method:'post',
+        params:para,
+        url:BASE_URL+'/adv/delete'
+    })
+}
+export const editBanner = (para) => {
+    return axios({
+        method:'post',
+        params:para,
+        url:BASE_URL+'/adv/update'
+    })
+}
+export const addBanner = (para) => {
+    return axios({
+        method:'post',
+        params:para,
+        url:BASE_URL+'/adv/save'
+    })
+}
+// 代金券
+export const voucherlist = (para) => {
+    return axios({
+        method:'post',
+        params:para,
+        url:BASE_URL+'/voucher/findVouchers'
+    })
+}
+export const addvoucher = (para) => {
+    return axios({
+        method:'post',
+        params:para,
+        url:BASE_URL+'/voucher/add'
+    })
+}
+export const editvoucher = (para) => {
+    return axios({
+        method:'post',
+        params:para,
+        url:BASE_URL+'/voucher/edit'
+    })
+}
+export const delvoucher = (para) => {
+    return axios({
+        method:'post',
+        params:para,
+        url:BASE_URL+'/voucher/delete'
+    })
+}
+export const checkvoucher = (para) => {
+    return axios({
+        method:'post',
+        params:para,
+        url:BASE_URL+'/voucher/check'
+    })
+}
 // 得到的店铺
 export const selectStore = (para) => {
      // 店铺审核通过的参数
@@ -252,49 +312,18 @@ export const kucunedit=(para)=>{
         url:BASE_URL+'/goodsStock/update'
     })
 }
-// 首页
-/////////---------------- banner start --------------//////////
-const onePageUrl = "/fresh-front"
-export const bannerList = () => {
-    return axios({
-        method:'post',
-        url:onePageUrl+'/adv/find'
-    })
-}
-export const removeBanner = (para) => {
-    return axios({
-        method:'post',
-        params:para,
-        url:onePageUrl+'/adv/delete'
-    })
-}
-export const editBanner = (para) => {
-    return axios({
-        method:'post',
-        params:para,
-        url:onePageUrl+'/adv/update'
-    })
-}
-export const addBanner = (para) => {
-    return axios({
-        method:'post',
-        params:para,
-        url:onePageUrl+'/adv/save'
-    })
-}
-
-// 楼层
+// 首页楼层
 export const floorList = () => {
     return axios({
         method:'post',
-        url:onePageUrl+'/floor/find'
+        url:BASE_URL+'/floor/find'
     })
 }
 
 export const delFloor = (prop) => {
     return axios({
         method:'post',
-        url:onePageUrl+'/floor/delete',
+        url:BASE_URL+'/floor/delete',
         params:prop
     })
 }
@@ -315,7 +344,7 @@ export const saveFloor = (prop) => {
             ret = ret.substring(0,ret.length-1)
             return ret
         }],
-        url:onePageUrl+'/floor/save'
+        url:BASE_URL+'/floor/save'
     })
 }
 export const editFloor = (prop) => {
@@ -335,6 +364,20 @@ export const editFloor = (prop) => {
             ret = ret.substring(0,ret.length-1)
             return ret
         }],
-        url:onePageUrl+'/floor/update'
+        url:BASE_URL+'/floor/update'
+    })
+}
+
+// 得到二维码
+export const getErWeiMa = ()  => {
+    let para = {
+        orderId : 'O20170908114850345'
+    }
+    axios({
+        url:'/order/MatrixToImage',
+        method:'post',
+        params:para
+    }).then(res => {
+        console.log(res)
     })
 }

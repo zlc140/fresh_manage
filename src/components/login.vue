@@ -28,6 +28,7 @@
         </div>
 </template>
 <script>
+ 
 import {Login} from '@/service/config_router.js'
 import { getStore } from '@/config/storage'
 import starFlow from "./startFlow"
@@ -53,6 +54,9 @@ import starFlow from "./startFlow"
         },
         components:{
             starFlow
+        },
+        mounted(){
+           
         },
          computed: {
             // 验证手机号
