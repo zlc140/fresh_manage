@@ -59,7 +59,7 @@ export default {
   },
   props:{
     twoData:{
-      type:Object,
+      type:Array,
       default:null
     }
   },

@@ -22,9 +22,7 @@
             </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="onSubmit('search')">查询</el-button>
-          </el-form-item>
-            <el-form-item>
-            <el-button  :plain="true" ><router-link to="/view/proAdd">发布商品</router-link></el-button>
+             <el-button  :plain="true" ><router-link to="/view/proAdd">发布商品</router-link></el-button>
           </el-form-item>
         </el-row>
       </el-form>
@@ -265,8 +263,6 @@ export default {
     editSubmit(){
       let _this = this
       let para = Object.assign({},this.editForm)
-      para.price = JSON.stringify(para.price)
-
       editgoods(para).then((res) => {
          this.editFormVisible = false
         if(res.data.state == 200) {

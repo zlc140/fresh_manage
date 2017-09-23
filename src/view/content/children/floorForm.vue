@@ -230,7 +230,10 @@ export default {
                     _this.Onelist.push(v)
             })
         }else if(this.type=="edit" && this.addForm.type == "FLOOR_GOODS"){
-            _this.twoData = Object.assign({},this.addForm.body)
+            _this.twoData = []
+            this.addForm.body.forEach(v => {
+                 _this.twoData.push(v)
+            })
         }
         this.picShow = true
     },
@@ -247,6 +250,7 @@ export default {
                         return false
                     }
                     if(this.addForm.body == null || this.addForm.body.length!=4 ){
+                        console.log(this.addForm.body)
                         this.$message('请编辑子楼层,每个楼层包含四个子楼层')
                         return false
                     }

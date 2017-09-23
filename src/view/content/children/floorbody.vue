@@ -10,6 +10,7 @@
                 <img :src="item.image.path" />
                  <dl v-if="item.goods.length>0">
                     <dd v-for="(child,index) in item.goods" :key="index">
+                        <img :src="child.goodsPic[0].path"/>
                        <p> {{child.goodsTitle}}</p>
                     </dd>
                 </dl>

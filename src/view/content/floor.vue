@@ -162,8 +162,8 @@ export default {
 <style lang="scss">
  .floor_box{
        width:700px;
-       padding: 20px;
-       border: 1px solid #f0f0f0;
+    //    padding: 20px;
+    //    border: 1px solid #f0f0f0;
        ul{
            width:100%;
            li{

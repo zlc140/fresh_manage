@@ -1,11 +1,16 @@
 import axios from 'axios'
 
-var BASE_URL = ''
+const BASE_URL = '/fresh-front'
+const BASE_GOODS = '/fresh-goods'
+const BASE_ORDER = '/fresh-order'
+const BASE_V = '/fresh-voucher'
+const BASE_BILL = '/fresh-bills'
+const BASE_CEN = '/user-center'
 // 用户订单
 export const orderlist = (prop) => {
     return axios({
         method:'post',
-        url:BASE_URL+'/order/findAllOrders',
+        url:BASE_ORDER+'/order/findAllOrders',
         params:prop
     })
 }
@@ -13,7 +18,7 @@ export const orderlist = (prop) => {
 export const findadvOrder = (prop) => {
     return axios({
         method:'post',
-        url:BASE_URL+'/order/findOrdersByStoreAndOrderStart',
+        url:BASE_ORDER+'/order/findOrdersByStoreAndOrderStart',
         params:prop
     })
 }
@@ -21,7 +26,7 @@ export const findadvOrder = (prop) => {
 export const shipments = (prop) => {
     return axios({
         method:'post',
-        url:BASE_URL+'/order/shipments',
+        url:BASE_ORDER+'/order/shipments',
         params:prop
     })
 }
@@ -29,7 +34,7 @@ export const shipments = (prop) => {
 export const returnCheck = (prop) => {
     return axios({
         method:'post',
-        url:BASE_URL+'/order/returnCheckOrder',
+        url:BASE_ORDER+'/order/returnCheckOrder',
         params:prop
     })
 }
@@ -52,13 +57,13 @@ export const addgoods = (prop) => {
             ret = ret.substring(0,ret.length-1)
             return ret
         }],
-        url:BASE_URL+'/goods/save',
+        url:BASE_GOODS+'/goods/save',
     })
 }
 export const prolist = (prop) => {
     return axios({
         method:'post',
-        url:BASE_URL+'/goods/findGoods',
+        url:BASE_GOODS+'/goods/findGoods',
         params:prop
     })
 }
@@ -66,21 +71,21 @@ export const prolist = (prop) => {
 export const checkPro = (prop) => {
     return axios({
         method:'post',
-        url:BASE_URL+'/attrGoods/findAttrGoods',
+        url:BASE_GOODS+'/attrGoods/findAttrGoods',
         params:prop
     })
 }
 export const delGoods = (prop) => {
     return axios({
         method:'post',
-        url:BASE_URL+'/goods/deleteByGoodsId',
+        url:BASE_GOODS+'/goods/deleteByGoodsId',
         params:prop
     })
 }
 export const checkAdd = (prop) => {
     return axios({
         method:'post',
-        url:BASE_URL+'/goods/checkAdd',
+        url:BASE_GOODS+'/goods/checkAdd',
         params:prop
     })
 }
@@ -101,7 +106,7 @@ export const editgoods = (prop) => {
             ret = ret.substring(0,ret.length-1)
             return ret
         }],
-        url:BASE_URL+'/goods/edit',
+        url:BASE_GOODS+'/goods/edit',
        
     })
 }
@@ -109,14 +114,14 @@ export const editgoods = (prop) => {
 export const checkEdit = (prop) => {
     return axios({
         method:'post',
-        url:BASE_URL+'/goods/checkEdit',
+        url:BASE_GOODS+'/goods/checkEdit',
         params:prop
     })
 }
 export const findgoods = (prop) => {
     return axios({
         method:'post',
-        url:BASE_URL+'/goods/findById',
+        url:BASE_GOODS+'/goods/findById',
         params:prop
     })
 }
@@ -124,7 +129,7 @@ export const findgoods = (prop) => {
 export const findSku = (prop) => {
     return axios({
         method:'post',
-        url:BASE_URL+'/goodsStock/findByGoods',
+        url:BASE_GOODS+'/goodsStock/findByGoods',
         params:prop
     })
 }
@@ -132,14 +137,14 @@ export const findSku = (prop) => {
 export const gclist = ( ) => {
     return axios({
         method:'post',
-        url:BASE_URL+'/gc/findGcList',
+        url:BASE_GOODS+'/gc/findGcList',
         
     })
 }
 export const classlist = () => {
     return axios({
         method:'post',
-        url:BASE_URL+'/gc/findShowGcList',
+        url:BASE_GOODS+'/gc/findShowGcList',
         
     })
 }
@@ -147,21 +152,21 @@ export const addClass = (para) => {
     return axios({
         method:'post',
         params:para,
-        url:BASE_URL+'/gc/save'
+        url:BASE_GOODS+'/gc/save'
     })
 }
 export const editData = (para) => {
     return axios({
         method:'post',
         params:para,
-        url:BASE_URL+'/gc/update'
+        url:BASE_GOODS+'/gc/update'
     })
 }
 export const removeClass = (para) => {
     return axios({
         method:'post',
         params:para,
-        url:BASE_URL+'/gc/delete'
+        url:BASE_GOODS+'/gc/delete'
     })
 }
 // 品牌列表
@@ -169,35 +174,35 @@ export const brandlist = (para) => {
     return axios({
         method:'post',
         params:para,
-        url:BASE_URL+'/brand/findBrands'
+        url:BASE_GOODS+'/brand/findBrands'
     })
 }
 export const addbrand = (para) => {
     return axios({
         method:'post',
         params:para,
-        url:BASE_URL+'/brand/save'
+        url:BASE_GOODS+'/brand/save'
     })
 }
 export const brandupdate = (para) => {
     return axios({
         method:'post',
         params:para,
-        url:BASE_URL+'/brand/update'
+        url:BASE_GOODS+'/brand/update'
     })
 }
 export const branddelete = (para) => {
     return axios({
         method:'post',
         params:para,
-        url:BASE_URL+'/brand/delete'
+        url:BASE_GOODS+'/brand/delete'
     })
 }
 export const addbrandlist = (para) => {
     return axios({
         method:'post',
         params:para,
-        url:BASE_URL+'/brand/findByGcAndStore'
+        url:BASE_GOODS+'/brand/findByGcAndStore'
     })
 }
 /////////---------------- banner start --------------//////////
@@ -233,35 +238,35 @@ export const voucherlist = (para) => {
     return axios({
         method:'post',
         params:para,
-        url:BASE_URL+'/voucher/findVouchers'
+        url:BASE_V+'/voucher/findVouchers'
     })
 }
 export const addvoucher = (para) => {
     return axios({
         method:'post',
         params:para,
-        url:BASE_URL+'/voucher/add'
+        url:BASE_V+'/voucher/add'
     })
 }
 export const editvoucher = (para) => {
     return axios({
         method:'post',
         params:para,
-        url:BASE_URL+'/voucher/edit'
+        url:BASE_V+'/voucher/edit'
     })
 }
 export const delvoucher = (para) => {
     return axios({
         method:'post',
         params:para,
-        url:BASE_URL+'/voucher/delete'
+        url:BASE_V+'/voucher/delete'
     })
 }
 export const checkvoucher = (para) => {
     return axios({
         method:'post',
         params:para,
-        url:BASE_URL+'/voucher/check'
+        url:BASE_V+'/voucher/check'
     })
 }
 // 得到的店铺
@@ -270,14 +275,14 @@ export const selectStore = (para) => {
     return axios({
         method:'post',
         params:para,
-        url:BASE_URL+'/store/selectStore'
+        url:BASE_GOODS+'/store/selectStore'
     })
 }
 export const updateStore = (para) => {
     return axios({
         method:'post',
         params:para,
-        url:BASE_URL+'/store/update'
+        url:BASE_GOODS+'/store/update'
     })
 }
  
@@ -285,7 +290,7 @@ export const deleteStore = (para) => {
     return axios({
         method:'post',
         params:para,
-        url:BASE_URL+'/store/delete'
+        url:BASE_GOODS+'/store/delete'
     })
 }
 
@@ -293,7 +298,7 @@ export const saveStore = (para) => {
     return axios({
         method:'post',
         params:para,
-        url:BASE_URL+'/store/save'
+        url:BASE_GOODS+'/store/save'
     })
 }
 /////////---------------- end --------------//////////
@@ -302,14 +307,14 @@ export const kucunlist=(para)=>{
     return axios({
         method:'post',
         params:para,
-        url:BASE_URL+'/goodsStock/findByCondition'
+        url:BASE_GOODS+'/goodsStock/findByCondition'
     })
 }
 export const kucunedit=(para)=>{
     return axios({
         method:'post',
         params:para,
-        url:BASE_URL+'/goodsStock/update'
+        url:BASE_GOODS+'/goodsStock/update'
     })
 }
 // 首页楼层
@@ -374,7 +379,7 @@ export const getErWeiMa = ()  => {
         orderId : 'O20170908114850345'
     }
     axios({
-        url:'/order/MatrixToImage',
+        url:BASE_ORDER+'/order/MatrixToImage',
         method:'post',
         params:para
     }).then(res => {
