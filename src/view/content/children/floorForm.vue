@@ -2,7 +2,7 @@ s<template>
   <div class="dialog banner">
     <h3 class="title">{{title}} <el-button class="fr"  size="small" type="danger" :plain="true" @click.native="clean">取消</el-button></h3>
       <el-form :model="addForm" label-position="right" label-width="160px" size="small" :rules="addFormRules" v-loading="loginLoading" ref="addForm">
-                <el-form-item label="请先选择楼层类型" prop="type">
+                <el-form-item label="请先选择楼层类型" required prop="type">
 					 <el-select v-model="addForm.type">
                         <el-option v-for="(item,index) in  selType"  :key="index" :label="item.label" :value="item.value">  </el-option> 
                         </el-select>
@@ -38,7 +38,7 @@ s<template>
                     <el-form-item  prop="startTime" v-if="!addForm.onlyShow">
                         <el-date-picker
                             v-model="addForm.startTime"
-                            type="date"
+                            type="datetime"
                             placeholder="选择开始日期"
                             :picker-options="pickerOptions0" >
                         </el-date-picker>
@@ -49,7 +49,7 @@ s<template>
                     <el-form-item  prop="endTime">
                         <el-date-picker
                             v-model="addForm.endTime"
-                            type="date"
+                            type="datetime"
                             placeholder="选择结束日期"
                             :picker-options="pickerOptions0">
                         </el-date-picker>

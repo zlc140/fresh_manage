@@ -20,7 +20,7 @@ Vue.filter('formatDate',function(value) {
         if(value == 0 ||value == '0'|| value == '' || value =='undefined'){
           return null
         }
-        return tool.formatDate.format((value),'yyyy-MM-dd')
+        return tool.formatDate.format((value),'yyyy-MM-dd hh:mm:ss')
      
 })
 

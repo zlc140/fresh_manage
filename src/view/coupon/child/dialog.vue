@@ -16,7 +16,7 @@
             <div class="block">
                 <el-date-picker
                 v-model="addForm.effectiveTime"
-                type="date"
+                type="datetime"
                 placeholder="选择日期"
                 :picker-options="pickerOptions0">
                 </el-date-picker>
@@ -28,7 +28,7 @@
             <div class="block">
                 <el-date-picker
                 v-model="addForm.indate"
-                type="date"
+                type="datetime"
                 placeholder="选择日期"
                 :picker-options="pickerOptions0">
                 </el-date-picker>
@@ -157,7 +157,9 @@ export default {
                }
           if (this.type == 'add') {
               addvoucher(para).then((res) => {
-                  console.log(res)
+                 if(res.data.state == 400){
+                    this.$message('用户不存在')
+                 }
                   this.addLoading = true;
                   this.clean()
               })

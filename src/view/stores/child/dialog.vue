@@ -5,13 +5,13 @@
         </h3>
         <el-form :model="addForm" :rules="rules" label-width="80px" size="small" v-loading="loginLoading" ref="addForm">
             <el-form-item label="店铺名称" prop="storeName">
-                <el-input v-model="addForm.storeName" auto-complete="off"></el-input>
+                <el-input v-model="addForm.storeName" auto-complete="off" placeholder="店铺名称为中英文,下划线，长度2~20位"></el-input>
             </el-form-item>
             <el-form-item label="执照编号" prop="businessLicenseNo">
-                <el-input v-model="addForm.businessLicenseNo" auto-complete="off"></el-input>
+                <el-input v-model="addForm.businessLicenseNo" auto-complete="off" placeholder="请填写有效的执照编号"></el-input>
             </el-form-item>
             <el-form-item label="店铺地址" prop="address">
-                <el-input v-model="addForm.address" auto-complete="off"></el-input>
+                <el-input v-model="addForm.address" auto-complete="off" ></el-input>
             </el-form-item>
             <el-form-item label="店铺电话" prop="tel">
                 <el-input v-model="addForm.tel" auto-complete="off"></el-input>
@@ -51,9 +51,9 @@ export default {
     data() {
           // 店铺名称
         var nospace = (rule, value, callback) => {
-            var par = /^[a-zA-Z\u4E00-\u9FA5\_]{2,10}$/
+            var par = /^[a-zA-Z\u4E00-\u9FA5\_]{2,20}$/
             if (!par.test(value) && value.trim() != '') {
-                callback(new Error('店铺名称为中英文,下划线，长度2~10位'));
+                callback(new Error('店铺名称为中英文,下划线，长度2~20位'));
             } else if (value.trim() == '') {
                 callback(new Error('店铺名称不能为空'))
             } else {
@@ -70,8 +70,9 @@ export default {
          };
         //  店铺电话
           var notel = (rule, value, callback) => {
-            var par=/^0\d{2,3}-?\d{7,8}$/;
-            if (!par.test(value) && value.trim() != '') {
+            var par=/^(\(\d{3,4}\)|\d{3,4}-|\s)?\d{8}$/;
+            var phone = /^1[34578]\d{9}$/ ;
+            if (!phone.test(value) && !par.test(value) && value.trim() != '' ) {
                 callback(new Error('请输入电话号码的正确格式'));//09557777777
             } else if (value.trim() == '') {
                 callback(new Error('电话号码不能为空'))
@@ -114,7 +115,7 @@ export default {
             rules: {
                 storeName: [
                     { required: true, message: '请输入店铺名称', trigger: 'blur' },
-                      { validator: nospace, trigger: 'blur' }
+                    { validator: nospace, trigger: 'blur' }
                 ],
                 memberId: [
                     { required: true, message: '请输入店主编号', trigger: 'blur' },

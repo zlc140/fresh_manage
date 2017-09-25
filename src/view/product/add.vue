@@ -25,10 +25,10 @@
           <el-input v-model="addForm.goodsTitle"></el-input>
         </el-form-item>
         <el-form-item label="市场价" required prop="marketPrice">
-          <el-input v-model="addForm.marketPrice" type="number" min="0"></el-input>
+          <el-input v-model="addForm.marketPrice" type="number" min="0.01"></el-input>
         </el-form-item>
         <el-form-item label="成本价" required prop="costPrice">
-          <el-input v-model="addForm.costPrice" type="number" min="0"></el-input>
+          <el-input v-model="addForm.costPrice" type="number" min="0.01"></el-input>
         </el-form-item>
         <el-form-item label="商品描述" prop="goodsSubTitle">
           <el-input v-model="addForm.goodsSubTitle"></el-input>
@@ -37,7 +37,7 @@
           <el-input v-model="addForm.keywords"></el-input>
         </el-form-item>
         <el-form-item label="商品库存" required prop="repositoryNum">
-          <el-input v-model="addForm.repositoryNum" type="number" min="0"></el-input>
+          <el-input v-model="addForm.repositoryNum" type="number" min="1"></el-input>
         </el-form-item>
         <el-form-item label="商品单位" prop="sku">
           <el-input v-model="addForm.sku"  ></el-input >
@@ -48,13 +48,13 @@
          <el-form-item label="上架时间" required>
               <el-col :span="6">
                 <el-form-item required prop="soldInTime" >
-                  <el-date-picker v-model="addForm.soldInTime" type="date" placeholder="上架开始时间"> </el-date-picker>
+                  <el-date-picker v-model="addForm.soldInTime" type="datetime" placeholder="上架开始时间"> </el-date-picker>
                 </el-form-item>
               </el-col>
               <el-col :span="3">至</el-col>
               <el-col :span="6">
                 <el-form-item  prop="soldOutTime">
-                        <el-date-picker v-model="addForm.soldOutTime" type="date" placeholder="上架结束时间"></el-date-picker>
+                        <el-date-picker v-model="addForm.soldOutTime" type="datetime" placeholder="上架结束时间"></el-date-picker>
                 </el-form-item>
                 </el-col>
         </el-form-item>
@@ -120,6 +120,23 @@ export default {
                 callback()
             }
     };
+    var minNum = (rule, value, callback) => { 
+       if(parseFloat(value)<0.01){
+         callback(new Error('价格不能少于0.01'))
+       } else {
+         callback()
+       }
+    }
+     var kcNum = (rule, value, callback) => { 
+       let str = value+''
+       if(parseFloat(value)<1){
+          callback(new Error('库存不少于1'))
+       }else if(str.indexOf('.')+1>1){
+          callback(new Error('库存应为整数'))
+       } else {
+          callback()
+       }
+    }
     return {
       tip:true,
       modShow:false,
@@ -161,6 +178,15 @@ export default {
         picList: []
       },
       rules: {
+        repositoryNum:[
+          {validator:kcNum,trigger:'blur'}
+        ],
+        marketPrice:[
+          {validator:minNum,trigger:'blur'}
+        ],
+         costPrice:[
+          {validator:minNum,trigger:'blur'}
+        ],
         goodsTitle: [
           { required: true, message: '请输入商品名称', trigger: 'blur,change' },
           { validator: nospace, trigger: 'blur' }

@@ -33,7 +33,7 @@
 				<el-form-item label="开始时间" prop="startTime" v-if="!addForm.onlyShow">
 					<el-date-picker
                         v-model="addForm.startTime"
-                        type="date"
+                        type="datetime"
                         placeholder="选择日期"
                          >
                     </el-date-picker>
@@ -41,7 +41,7 @@
                 <el-form-item label="结束时间" prop="endTime" v-if="!addForm.onlyShow">
 					<el-date-picker
                         v-model="addForm.endTime"
-                        type="date"
+                        type="datetime"
                         placeholder="选择日期"
                         :picker-options="pickerOptions0">
                       </el-date-picker>

@@ -28,13 +28,15 @@ module.exports = {
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
     proxyTable: {
-      '/image-base':'http://192.168.0.9:8080',//图片
-      '/fresh-order' : 'http://192.168.0.9:8080',//订单
-      '/fresh-goods':'http://192.168.0.9:8080',//商品
-      '/fresh-front':'http://192.168.0.9:8080',//首页
-      '/fresh-voucher':'http://192.168.0.9:8080',//优惠券
-      '/fresh-bills':'http://192.168.0.9:8080',//账单
-      '/user-center':'http://192.168.0.9:8080',//用户中心
+      '/image-base':'http://192.168.0.111:9090',//图片
+      '/fresh-order' : 'http://192.168.0.111:9090',//订单
+      '/fresh-goods':'http://192.168.0.12:8080',//商品
+      '/fresh-front':'http://192.168.0.111:9090',//首页
+      '/fresh-voucher':'http://192.168.0.111:9090',//优惠券
+      '/fresh-bills':'http://192.168.0.111:9090',//账单
+      '/user-center':'http://192.168.0.111:9090',//用户中心
+      '/test1':'http://192.168.0.9:8080',
+      '/test2':'http://192.168.0.9:8080'
       
   },
     // '/findcart':'http://192.168.0.17:8080/fresh-order/cart',//购物车

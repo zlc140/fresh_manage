@@ -224,4 +224,6 @@ export default {
   border-color: #20a0ff;
   margin-left: 40px;
 }
+
+
 </style>

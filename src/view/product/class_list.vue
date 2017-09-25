@@ -3,7 +3,7 @@
     <div class="title toolbar">
       <el-button @click="addOne" :plain="true" v-show="!addFormVisible">添加分类</el-button>
     </div>
-    <el-table :data="lists" style="98%" v-loading="listLoading" @selection-change="selsChange" v-show="!addFormVisible">
+    <el-table :data="lists" border style="98%" v-loading="listLoading" @selection-change="selsChange" v-show="!addFormVisible">
       <!-- 子级 -->
       <el-table-column type="expand" label="子类">
         <template scope="scope">

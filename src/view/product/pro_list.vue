@@ -29,8 +29,8 @@
     </div>
     <!-- 表格 -->
     <el-table :data="getData" border style="width: 98%"  v-loading="listLoading">
-      <el-table-column type="selection" width="55">
-      </el-table-column>
+      <!-- <el-table-column type="selection" width="55">
+      </el-table-column> -->
       <el-table-column label="商品货号" prop="goodsId" width="180px"> </el-table-column>
       <el-table-column type="expand" prop="goodsPic" label="图片展示">
          <template scope="scope">
@@ -65,12 +65,12 @@
           <span>{{ scope.row.state | goodsstate}}</span>
         </template>
       </el-table-column>
-      <el-table-column label="上架时间" prop="soldInTime" width="110px">
+      <el-table-column label="上架时间" prop="soldInTime" width="160px">
         <template scope="scope">
           <span class="createTime">{{ scope.row.soldInTime | formatDate }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="下架时间" prop="soldOutTime" width="110px">
+      <el-table-column label="下架时间" prop="soldOutTime" width="160px">
         <template scope="scope">
           <span class="createTime">{{ scope.row.soldOutTime | formatDate }}</span>
         </template>  
@@ -149,6 +149,9 @@ export default {
         },{
           value: 'GOODS_STATE_ON_CLOSE',
           label: '店铺倒闭'
+        },{
+          value:'',
+          label:'全部状态'
         }
       ],
       // 表格数据
@@ -263,6 +266,7 @@ export default {
     editSubmit(){
       let _this = this
       let para = Object.assign({},this.editForm)
+      // para.price = JSON.stringify(para.price)
       editgoods(para).then((res) => {
          this.editFormVisible = false
         if(res.data.state == 200) {

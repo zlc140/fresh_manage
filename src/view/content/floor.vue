@@ -29,12 +29,12 @@
                     <!-- <el-switch v-model="scope.row.onlyShow" on-text="是" @change="handleShow(scope.row)" off-text="否" size="mini"></el-switch> -->
                 </template>
             </el-table-column>
-            <el-table-column prop="startTime" label="开始时间" width="140" sortable>
+            <el-table-column prop="startTime" label="开始时间" width="180" sortable>
                 <template scope="scope">
                     <span style="margin-left: 10px">{{ scope.row.startTime | formatDate }}</span>
                 </template>
             </el-table-column>
-            <el-table-column prop="endTime" label="结束时间" width="140" sortable>
+            <el-table-column prop="endTime" label="结束时间" width="180" sortable>
                 <template scope="scope">
                     <span style="margin-left: 10px">{{ scope.row.endTime | formatDate }}</span>
                 </template>

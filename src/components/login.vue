@@ -29,7 +29,7 @@
 </template>
 <script>
  
-import {Login} from '@/service/config_router.js'
+import {Login,getAdd} from '@/service/config_router.js'
 import { getStore } from '@/config/storage'
 import starFlow from "./startFlow"
     export default {
@@ -56,7 +56,7 @@ import starFlow from "./startFlow"
             starFlow
         },
         mounted(){
-           
+            
         },
          computed: {
             // 验证手机号
@@ -84,14 +84,17 @@ import starFlow from "./startFlow"
                          return false
                     }
                     let prop={
+                        // username:'admin',
+                        // password:'123456'
                         name:this.user.username
                     }
-
+                   
                     Login(prop).then((res) => {
-                        this.$router.push('/view/prolist')
-                           
+                        if(res){
+                         _this.$router.push('/view/prolist')
+                        }
+                            
                     })
-                     
                  
                     // this.loginLoading=true
                     // this.$store.dispatch('checkUser',this.user).then((res) => {

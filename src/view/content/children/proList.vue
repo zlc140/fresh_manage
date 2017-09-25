@@ -18,20 +18,23 @@
                 </el-form-item>
         </el-form>
         <!-- 父级 -->
-        <el-table :data="getData" style="width: 98%" >
+        <el-table :data="getData" border style="width: 98%" >
             <!-- <el-table-column label="商品货号" prop="goodsId" width="180px"> </el-table-column> -->
             <el-table-column label="商品名称" prop="goodsTitle" min-width="150px"> </el-table-column>
-            <!-- <el-table-column label="所属分类" prop="classTitle" width="140px">
+            <el-table-column label="所属分类" prop="classTitle" width="140px">
                 <template scope="scope">
                     <span>{{ scope.row.goodsClass.classTitle }}</span>
                 </template>
-            </el-table-column> -->
+            </el-table-column>
             <el-table-column label="商品单价" prop="goodsId" width="120px;">
                 <template scope="scope">
                     <span class="price">{{ scope.row.price.GOODS_MARKET_PRICE | currency }}</span>
                 </template>
             </el-table-column>
-            <el-table-column label="库存" prop="repositoryNum" width="120px">
+            <el-table-column  align="center" label="库存数量" prop="stockNum">
+                <template scope="scope">
+                <span> {{ scope.row.goodsStock.stockNum}}  </span>
+                </template>
             </el-table-column>
              
             <el-table-column label="商品状态" prop="repositoryNum" width="120px">
@@ -39,12 +42,11 @@
                     <span>{{ scope.row.goodsShow | goods}}</span>
                 </template>
             </el-table-column>
-            
-            <el-table-column label="创建时间" prop="createTime" width="150px">
+            <!-- <el-table-column label="创建时间" prop="createTime" width="150px">
                 <template scope="scope">
                     <span class="createTime">{{ scope.row.createTime | formatDate }}</span>
                 </template>
-            </el-table-column>
+            </el-table-column> -->
               <el-table-column label="操作"  width="100px">
                 <template scope="scope">
                    <el-button type="text" @click="addPro(scope.row)">添加</el-button>
@@ -157,7 +159,7 @@ export default {
                 goodsId: this.form.goodsId,
                 goodstitle: this.form.goodstitle,
                 classId: this.form.classId,
-                goodsShow:2
+                reqFrom:'front'
             }
             // 表格数据
             prolist(para).then((res) => {

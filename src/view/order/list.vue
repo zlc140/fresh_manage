@@ -18,16 +18,16 @@
           <el-date-picker type="date" placeholder="选择开始日期时间" v-model="form.startTime"></el-date-picker>
           <el-date-picker type="date" placeholder="选择结束日期时间" v-model="form.endTime"> </el-date-picker>
         </el-form-item>
-
           <el-button type="primary" @click="onSubmit('search')">查询</el-button>
-         
       </el-form>
     </div>
-    <el-table border :data="getData" style="width: 98%">
+    <el-table border :data="getData" style="width: 98%"  @selection-change="handleSelectionChange">
       <!-- 子级 -->
+      <el-table-column type="selection" width="55"> </el-table-column>
       <el-table-column type="expand" prop="goodsList">
         <template scope="scope">
           <el-table border :data="scope.row.goodsList" style="width: 90%">
+
             <el-table-column prop="goods.goodsTitle" label="商品名称" min-width="200px"> </el-table-column>
             <el-table-column prop="goodsId" label="商品编号" width="200px"> </el-table-column>
             <el-table-column prop="goods.price.GOODS_MARKET_PRICE" label="商品单价" width="100px">
@@ -43,6 +43,7 @@
             </el-table-column>
           </el-table>
           <ul class="getAddr">
+           
             <li>
               <span>收货人:</span> {{scope.row.orderDaddress.name}}</li>
             <li>
@@ -78,27 +79,58 @@
         <template scope="scope">
           <div>
             <el-button type="text" @click="handleDel( scope.row)">删除</el-button>
-            <el-button type="text" v-if="show" @click="handle( scope.row)">发货</el-button>
+            <a @click="createPdf(scope.row)">打印</a>
+            <el-button type="text" @click="handle( scope.row)">发货</el-button>
           </div>
         </template>
       </el-table-column>
     </el-table>
     <!-- 分页 -->
     <el-col :span="24" class="toolbar">
+      <el-button :plain="true" class="fl" @click="allPrint">批量打印</el-button>
       <el-pagination layout="total,prev,pager,next" :current-page.sync="currentPage1" :page-size='pageSize' :total="total" @current-change="handleCurrentChange">
       </el-pagination>
     </el-col>
-
+    <!-- 打印的内容start -->
+    <div ref="print_box" class="print_box" >
+       <div class="print" v-for="(row,index) in printT" 
+       style="page-break-before:always;width:370px;height:620px;background:#f0f0f0;position:relative;" 
+       :key="index" 
+       >
+       <div style="height:415px;overflow:hidden;">
+            <img src="http://192.168.0.111:9090/image/201709/674ae228-23c1-4593-8ed0-c0ae12979481.JPEG" 
+                style="width:230px;height:230px;margin-left:0;"/>
+            <table style="width:100%;margin:0;" border="0" cellpadding="0" cellspacing="5">
+              <tr> <td width="80px">订单编号：</td> <td>{{row.ordersId}}</td> </tr>
+              <tr>　<td >　收货人：</td>　<td>{{row.orderDaddress.name}}</td>　</tr>
+              <tr>　<td>　　电话：</td>　<td>{{row.orderDaddress.phone}}</td> </tr>
+              <tr> <td>收货地址：</td>　<td> {{row.orderDaddress.address}}</td> </tr>
+            </table>
+        </div>
+        <div style="height:200px;overflow:hidden">
+        <table style="width:100%;margin-top:30px;" border="0" cellpadding="0" cellspacing="5">
+            <tr> <td width="80px">订单编号：</td> <td>{{row.ordersId}}</td> </tr>
+            <tr>　<td >　收货人：</td>　<td>{{row.orderDaddress.name}}</td>　</tr>
+            <tr>　<td>　　电话：</td>　<td>{{row.orderDaddress.phone}}</td> </tr>
+            <tr> <td>收货地址：</td>　<td> {{row.orderDaddress.address}}</td> </tr>
+        </table>
+         </div> 
+     </div>
+    </div>
+    <!-- 打印的内容end -->
   </div>
 </template>
 
 
 <script>
+ 
 import { orderlist, shipments } from '@/service/getData'
 export default {
   data() {
     return {
+      erWeiMa:'http://192.168.0.111:9090/image/201709/674ae228-23c1-4593-8ed0-c0ae12979481.JPEG',
       show: true,
+      printT:[],
       form: {
         ordersId: '',
         orderState: '',
@@ -203,22 +235,43 @@ export default {
       this.page = val
       this.getorderlist()
     },
+    handleSelectionChange(val){
+       this.printT = []
+       this.printT = val
+    },
+    // 单条打印
+    createPdf (val){
+      let _this = this
+          this.printT = []
+          this.printT.push(val)
+          setTimeout(function(){
+              _this.Printing()
+          },500)
+    },
+    // 批量打印
+    allPrint(){
+      if(this.printT.length>0){
+         this.Printing()
+      }
+    },
+    Printing(){
+        this.$nextTick(function(){
+          var newWindow = window.open('/print')
+          var docStr = this.$refs['print_box'].innerHTML
+          newWindow.document.write(docStr)
+          console.log('test',docStr)
+          newWindow.print();
+          newWindow.close();  
+        }) 
+    }
   }
 }
 </script>
 
  
 <style lang="scss">
-.getAddr {
-  padding: 20px;
-  line-height: 30px;
-  li {
-    span {
-      display: inline-block;
-      width: 60px;
-      text-align: right;
-      padding-right: 20px;
-    }
-  }
+.print_box{
+  display: none;
 }
+ 
 </style>

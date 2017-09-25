@@ -5,6 +5,7 @@ import {Login} from './component'
 
 
 import main from '../components/main'
+import Print from '../components/print'
 // 首页管理
 import {floor,banner} from './component'
 // 前台用户
@@ -148,6 +149,11 @@ export const router = new Router({
           {path:'managelist',component:manageList,name:'基本设定'}
       ]
     },
+    {
+      path:'/print',
+      name:'打印',
+      component:Print
+    }
     ]
 })
   
