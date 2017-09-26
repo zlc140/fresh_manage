@@ -13,6 +13,20 @@ import 'element-ui/lib/index.js'
 
 Vue.config.productionTip = false
 
+import axios from 'axios'
+axios.interceptors.response.use(function (response) {
+  // 对响应数据做点什么
+  return response;
+}, function (error) {
+  // 对响应错误做点什么
+  let str = error+''
+  console.log(str.indexOf('403')>0)
+  if(str.indexOf('403')>0){//登录失效
+    // window.location = 'http://localhost:8023'
+  }
+   
+  return Promise.reject(error);
+});
 // 全局引入组件
 // import coreImage from '@/components/uploadImg'
 // Vue.component('core-image',coreImage)

@@ -47,8 +47,14 @@ export default {
        
     },
     Logout( { commit } ) {
+        return axios({
+            method:'post',
+            url:'/user-center/logout'
+        }).then((res) => {
             commit('LOGOUT')
             return true
+        })
+           
     }
 
 

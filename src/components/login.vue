@@ -84,18 +84,17 @@ import starFlow from "./startFlow"
                          return false
                     }
                     let prop={
-                        // username:'admin',
-                        // password:'123456'
-                        name:this.user.username
+                        username:_this.user.username,
+                        password:_this.user.password
                     }
-                   
                     Login(prop).then((res) => {
                         if(res){
                          _this.$router.push('/view/prolist')
+                        }else{
+                            _this.$message('用户名或密码错误')
                         }
                             
                     })
-                 
                     // this.loginLoading=true
                     // this.$store.dispatch('checkUser',this.user).then((res) => {
                     //     this.loginLoading=false

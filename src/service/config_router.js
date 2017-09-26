@@ -3,27 +3,33 @@ import { setStore,getStore } from '@/config/storage'
 
 export const Login = (prop) => {
      
-    setStore('username',prop)
-    return new Promise((resolve,reject) => {
-        resolve([200])
-    })
+    
+    // return new Promise((resolve,reject) => {
+    //     resolve([200])
+    // })
     // console.log(prop)
-    // return  axios({
-    //                 method:'POST',
-    //                 url:'/test1/login',
-    //                 params:prop
-    //         }).then((res) => {
-    //             console.log(res)
-    //             return true
-    //             // if(res.data != '权限不够'){
-    //             //     setStore('username',prop)
-    //             //     return true
-    //             // }else{
-    //             //     return false
-    //             // }
-    //         }).catch((res) => {
-    //             console.log(res)
-    //         })
+    return  axios({
+                    method:'POST',
+                    url:'/user-center/login',
+                    params:prop
+            }).then((res) => {
+                if(res.data.state == 'SUCCESS'){
+                    setStore('username',prop)
+                    return true
+                }else{
+                    return false
+                }
+                 
+                // return true
+                // if(res.data != '权限不够'){
+                //     setStore('username',prop)
+                //     return true
+                // }else{
+                //     return false
+                // }
+            }).catch((res) => {
+                console.log(res)
+            })
 }
 export const getAdd = () => {
     return axios({

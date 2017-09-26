@@ -21,7 +21,7 @@
           <el-button type="primary" @click="onSubmit('search')">查询</el-button>
       </el-form>
     </div>
-    <el-table border :data="getData" style="width: 98%"  @selection-change="handleSelectionChange">
+    <el-table border :data="getData" style="width: 98%" @select="handleSelOne" @selection-change="handleSelectionChange">
       <!-- 子级 -->
       <el-table-column type="selection" width="55"> </el-table-column>
       <el-table-column type="expand" prop="goodsList">
@@ -98,7 +98,7 @@
        :key="index" 
        >
        <div style="height:415px;overflow:hidden;">
-            <img src="http://192.168.0.111:9090/image/201709/674ae228-23c1-4593-8ed0-c0ae12979481.JPEG" 
+            <img :src="row.downUrl" 
                 style="width:230px;height:230px;margin-left:0;"/>
             <table style="width:100%;margin:0;" border="0" cellpadding="0" cellspacing="5">
               <tr> <td width="80px">订单编号：</td> <td>{{row.ordersId}}</td> </tr>
@@ -124,7 +124,7 @@
 
 <script>
  
-import { orderlist, shipments } from '@/service/getData'
+import { orderlist, shipments,getErWeiMa } from '@/service/getData'
 export default {
   data() {
     return {
@@ -238,20 +238,47 @@ export default {
     handleSelectionChange(val){
        this.printT = []
        this.printT = val
+       
+    },
+    handleSelOne(val,row){
+      if(!row.downUrl){
+        let prop = {
+            orderId:row.ordersId
+          }
+           getErWeiMa(prop).then((res) => {
+            if(res.state == 200){
+              row.downUrl = res.content.downUrl
+            }
+          })
+      }
+      // console.log(row)
     },
     // 单条打印
     createPdf (val){
       let _this = this
-          this.printT = []
-          this.printT.push(val)
+      // 获得订单二维码
+          let prop = {
+            orderId:val.ordersId
+          }
+          getErWeiMa(prop).then((res) => {
+            console.log(res)
+            if(res.state == 200){
+              val.downUrl = res.content.downUrl
+              _this.printT = []
+              _this.printT.push(val)
+              
+            }
+          })
+          // 调用打印机
           setTimeout(function(){
-              _this.Printing()
+                  _this.Printing()
           },500)
     },
     // 批量打印
     allPrint(){
       if(this.printT.length>0){
-         this.Printing()
+console.log(this.printT)
+        //  this.Printing()
       }
     },
     Printing(){
@@ -259,7 +286,6 @@ export default {
           var newWindow = window.open('/print')
           var docStr = this.$refs['print_box'].innerHTML
           newWindow.document.write(docStr)
-          console.log('test',docStr)
           newWindow.print();
           newWindow.close();  
         }) 

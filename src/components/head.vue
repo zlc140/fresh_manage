@@ -7,7 +7,7 @@
                 <el-col :span="10">
                     <div class="tools">
                         <i class="el-icon-menu "  @click="collapse"></i>
-                        欢迎 {{ userName.name }} 登录生鲜馆后台管理系统
+                        欢迎 {{ userName.username }} 登录生鲜馆后台管理系统
                     </div>
                 </el-col>
                 <el-col :span = "8" class="userinfo">
@@ -30,11 +30,21 @@
 export default {
     data() {
         return {
-            userName:getStore('username'),
+            userName:{
+                username:getStore('username')?getStore('username').username:''
+            },
             collapsed:false,
         }
     },
+    mounted(){
+        // 判断是否登录成功
+        if(getStore('username') == null){
+            this.$message('请先登录！')
+            this.$router.push('/login')
+        } 
+    },
     methods:{
+
         collapse() {
             this.collapsed = !this.collapsed
             this.$emit('changeCollapsed',this.collapsed)

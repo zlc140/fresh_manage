@@ -3,7 +3,7 @@
     <el-col :span="4">
       <vue-core-image-upload  
               @getImg = "bodyImg"  
-              title="添加自楼层展示图"
+              title="添加子楼层展示图"
               :showPic = 'titlePic.showPic'
               :cropRatio = "titlePic.radio" 
               :picList=" titlePic.picList"

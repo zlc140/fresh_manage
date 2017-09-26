@@ -130,7 +130,7 @@ export default {
       },
       // 分页
       currentPage1: 1,
-      pageSize: 10,
+      pageSize: 8,
       pageNum: 1,
       totalElements: 0,
       lists: [],

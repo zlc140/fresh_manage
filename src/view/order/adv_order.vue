@@ -15,9 +15,9 @@
             </el-form-item>
             </el-form>
         </div>
-  <el-table  :data="getData" style="width: 98%">
+  <el-table  :data="getData" border style="width: 98%">
     <!-- 子级 -->
-    <el-table-column type="expand" prop="goodsList">
+    <el-table-column type="expand"  prop="goodsList">
       <template scope="scope">
             <el-table    :data="scope.row.goodsList"  style="width: 90%">  
                 <el-table-column   prop="goods.goodsTitle"  label="商品名称" min-width="120px"> </el-table-column>
@@ -44,11 +44,11 @@
     </el-table-column>
     <!-- 父级 -->
     <el-table-column label="订单号" prop="ordersId">  </el-table-column>
-     <el-table-column label="店铺名称" prop="storeName">
+     <!-- <el-table-column label="店铺名称" prop="storeName">
        <template scope="scope">
             {{scope.row.store.storeName}}
          </template>
-    </el-table-column>
+    </el-table-column> -->
     <el-table-column label="下单时间"  prop="createTime" min-width="100px">
       <template scope="scope">   
             <span>{{ scope.row.createTime | formatDate }}</span>
@@ -134,6 +134,7 @@ export default {
           this.total = 0
               findadvOrder(para).then((res) => {
                   if(res.data.state == 200){
+                      console.log(res.data)
                     this.getData=res.data.content.content
                     this.total = res.data.content.totalElements
                   }

@@ -6,6 +6,7 @@ const BASE_ORDER = '/fresh-order'
 const BASE_V = '/fresh-voucher'
 const BASE_BILL = '/fresh-bills'
 const BASE_CEN = '/user-center'
+const BASE_mer = '/fresh-member'
 // 用户订单
 export const orderlist = (prop) => {
     return axios({
@@ -14,6 +15,81 @@ export const orderlist = (prop) => {
         params:prop
     })
 }
+
+// 用户管理
+export const memberlist = (prop) => {
+    return axios({
+        method:'post',
+        url:BASE_mer+'/memberInfo/find',
+        params:prop
+    })
+}
+export const memberadd = (prop) => {
+    return axios({
+        method:'post',
+        url:BASE_mer+'/memberInfo/save',
+        params:prop
+    })
+}
+// 权限管理
+export const permissionlist = (prop) => {
+    return axios({
+        method:'post',
+        url:BASE_mer+'/permission/find',
+        params:prop
+    })
+}
+export const permissionadd = (prop) => {
+    return axios({
+        method:'post',
+        url:BASE_mer+'/permission/save',
+        params:prop
+    })
+}
+export const permissionedit = (prop) => {
+    return axios({
+        method:'post',
+        url:BASE_mer+'/permission/update',
+        params:prop
+    })
+}
+export const permissiondel = (prop) => {
+    return axios({
+        method:'post',
+        url:BASE_mer+'/permission/delete',
+        params:prop
+    })
+}
+// 角色管理
+export const rolelist = (prop) => {
+    return axios({
+        method:'post',
+        url:BASE_mer+'/role/find',
+        params:prop
+    })
+}
+export const roleadd = (prop) => {
+    return axios({
+        method:'post',
+        url:BASE_mer+'/role/save',
+        params:prop
+    })
+}
+export const roleedit = (prop) => {
+    return axios({
+        method:'post',
+        url:BASE_mer+'/role/update',
+        params:prop
+    })
+}
+export const roledel = (prop) => {
+    return axios({
+        method:'post',
+        url:BASE_mer+'/role/delete',
+        params:prop
+    })
+}
+
 // 预计配送订单
 export const findadvOrder = (prop) => {
     return axios({
@@ -374,15 +450,12 @@ export const editFloor = (prop) => {
 }
 
 // 得到二维码
-export const getErWeiMa = ()  => {
-    let para = {
-        orderId : 'O20170908114850345'
-    }
-    axios({
+export const getErWeiMa = (para)  => {
+    return axios({
         url:BASE_ORDER+'/order/MatrixToImage',
         method:'post',
         params:para
     }).then(res => {
-        console.log(res)
+        return res.data
     })
 }
