@@ -26,7 +26,7 @@
       </el-form>
     </div>
     <!-- 表格 -->
-    <el-table :data="storeData" style="width: 100%" v-if="!addFormVisible" >
+    <el-table border :data="storeData" style="width: 100%" v-if="!addFormVisible" >
        <el-table-column type="expand" prop="businessLicense" label="图片展示">
         <template scope="scope">
            <ul class="imgList ">             
@@ -45,9 +45,9 @@
         </template>
       </el-table-column>
        <el-table-column prop="storeName" label="店铺名称"> </el-table-column>
-      <el-table-column prop="memberId " label="店主姓名">
+      <el-table-column prop=" " label="店主姓名">
         <template scope="scope">
-          <span>{{ scope.row.member.username }}</span>
+          <span>{{ scope.row.member?scope.row.member.username:'' }}</span>
         </template>
       </el-table-column>
       <el-table-column prop="state " label="店铺状态">
@@ -63,8 +63,11 @@
       </el-table-column>
       <el-table-column label="操作" width="100">
         <template scope="scope">
-          <a @click="handleDialog(scope.row)">编辑</a>
-          <a @click="handleDel(scope.$index, scope.row)">删除</a>
+          <div class="play_box">
+          <el-button type="text" @click="closeS(scope.row)">关闭店铺</el-button>
+          <el-button type="text" @click="handleDialog(scope.row)">编辑</el-button>
+          <el-button type="text" @click="handleDel(scope.$index, scope.row)">删除</el-button>
+          </div>
         </template>
       </el-table-column>
     </el-table>
@@ -84,7 +87,7 @@
 </template>
 <script>
 import dialogTem from './child/dialog'
-import { selectStore, deleteStore, updateStore, saveStore } from '@/service/getData'
+import { selectStore, deleteStore, updateStore, saveStore,closeStore } from '@/service/getData'
 export default {
   data() {
     return {
@@ -245,6 +248,18 @@ export default {
       console.log(val)
       this.getList()
     },
+    closeS(row){
+      let prop ={
+        storeId:row.storeId
+      }
+      this.$confirm('店铺关闭后店铺的商品品牌订单将被删除').then(() => {
+        closeStore(prop).then(res => {
+          cosnole.log(res)
+        })
+      }).catch(() => {
+        console.log('取消')
+      })
+    }
   }
 }
 </script>

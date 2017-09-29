@@ -96,9 +96,9 @@
       <el-pagination layout="total,prev,pager,next" :current-page.sync="currentPage1" :page-size='pageSize' :total="totalElements" @current-change="handleCurrentChange"> </el-pagination>
     </el-col>
     <el-dialog title="快速改价" size="mini" v-model="editFormVisible" :close-on-click-modal="false">
-      <el-form :model="editForm" label-width="80px">
+      <el-form :model="editForm"  :rules="rules"  label-width="80px">
         <el-form-item label="编辑价格" prop="marketPrice">
-          <el-input type="number" v-model="editForm.marketPrice" auto-complete="off"></el-input>
+          <el-input type="number" v-model="editForm.marketPrice" min="0.01" auto-complete="off"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -114,6 +114,13 @@ import dialogTem from './add'
 import { prolist, classlist, delGoods,editgoods } from '@/service/getData'
 export default {
   data() {
+     var checkPrice = (rule, value, callback) => {
+       if (parseFloat(value) < 0.01) {
+        callback(new Error('价格不能少于0.01'))
+      } else {
+        callback()
+      }
+    }
     return {
       listLoading:false,
       checked: true,
@@ -127,6 +134,11 @@ export default {
       editForm:{
           goodsId:'',
           marketPrice:0,
+      },
+      rules:{
+          marketPrice:[
+            { validator: checkPrice, trigger: 'blur' }
+          ]
       },
       // 分页
       currentPage1: 1,

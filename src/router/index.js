@@ -11,7 +11,7 @@ import {floor,banner} from './component'
 // 前台用户
 import {userList,newuser,role} from './component'
 // 订单管理
-import {orderList,advorder} from './component'
+import {orderList,advorder,CheckOrder} from './component'
 // 商品
 import {proList,classList,brand,proAdd,review,kucunList} from './component'
 // 商铺管理
@@ -21,7 +21,7 @@ import { checkBrand,checkPro,checkUser,checkStore,checkCoupon  } from './compone
 // 优惠券
 import { couponList,history }  from './component'
 // 账单
-import {bill } from './component'
+import {bill,checkBill } from './component'
 // 财务
 import {finance} from './component'
 // 系统管理
@@ -93,7 +93,8 @@ export const router = new Router({
       name:'账单模块',
       component:main,
       children:[
-          {path:'orderBill',component:bill,name:'账单查询'}
+          {path:'orderBill',component:bill,name:'账单查询'},
+          {path:'checkBill',component:checkBill,name:'财务核对'}
       ]
     },
     {
@@ -114,6 +115,7 @@ export const router = new Router({
           {path:'checkUser',component:checkUser,name:'用户审核'},
           {path:'checkStore',component:checkStore,name:'店铺审核'},
           {path:'checkCoupon',component:checkCoupon,name:'代金券审核'},
+          // {path:'checkOrder',component:CheckOrder,name:'退货审核'}
       ]
     },
     {

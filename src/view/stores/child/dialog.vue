@@ -117,10 +117,6 @@ export default {
                     { required: true, message: '请输入店铺名称', trigger: 'blur' },
                     { validator: nospace, trigger: 'blur' }
                 ],
-                memberId: [
-                    { required: true, message: '请输入店主编号', trigger: 'blur' },
-                    { validator: validaddress, trigger: 'blur' }
-                ],
                 businessLicenseNo: [
                     { required: true, message: '请输入公司执照编号', trigger: 'blur' },
                     { validator: validaddress, trigger: 'blur' }

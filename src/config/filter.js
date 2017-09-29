@@ -101,7 +101,7 @@ Vue.filter('voucherType',function(value) {
     if(value=='VOUCHER_STATE_ON_CHECKING'){
       return '待审核'
     }else if(value=='VOUCHER_STATE_CHECK_ON'){
-      return '审核通过'
+      return '可使用'
     }else if(value=='VOUCHER_STATE_CHECK_OFF'){
       return '审核不通过'
     }else if(value='VOUCHER_STATE_OV_ERDUE'){
@@ -110,3 +110,18 @@ Vue.filter('voucherType',function(value) {
       return '代金券已使用'
     }
   })   
+// 账单状态
+Vue.filter('filterBill',(value)=>{
+  value = parseInt(value)
+  if(value==0){
+      return '未出账'
+  }else if(value==100){
+      return '未付款'
+  }else if(value==200){
+      return '已付款'
+  }else if(value==300){
+    return '账单关闭'
+  }else if(value==400){
+    return '账单完成'
+  }
+})

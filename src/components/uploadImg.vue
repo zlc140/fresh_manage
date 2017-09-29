@@ -44,7 +44,8 @@ export default {
             bigImgShow:false,
             styles:{
                 width:'auto',
-                Height:'auto'
+                height:'auto',
+                minWidth:'200px'
             }
         }
     },
@@ -96,7 +97,8 @@ export default {
         // console.log(this.srcs)
         if (this.sizeBox != null) {
                 this.styles.width = this.sizeBox[0]+'px'
-                this.styles.Height = this.sizeBox[0]+'px'
+                // this.styles.Height = this.sizeBox[0]+'px'
+                
         }
         if (this.cropShow == true) {
             this.crops = 'local'

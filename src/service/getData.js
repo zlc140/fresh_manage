@@ -15,7 +15,38 @@ export const orderlist = (prop) => {
         params:prop
     })
 }
-
+// 删除订单
+export const delOrder = (prop) => {
+    return axios({
+        method:'post',
+        url:BASE_ORDER+'/order/deleteOrderByordersId',
+        params:prop
+    })
+}
+// 预计配送订单
+export const findadvOrder = (prop) => {
+    return axios({
+        method:'post',
+        url:BASE_ORDER+'/order/findOrdersByStoreAndOrderStart',
+        params:prop
+    })
+}
+// 发货
+export const shipments = (prop) => {
+    return axios({
+        method:'post',
+        url:BASE_ORDER+'/order/shipments',
+        params:prop
+    })
+}
+// 商家对退货订单进行审核
+export const returnCheck = (prop) => {
+    return axios({
+        method:'post',
+        url:BASE_ORDER+'/order/returnCheckOrder',
+        params:prop
+    })
+}
 // 用户管理
 export const memberlist = (prop) => {
     return axios({
@@ -28,6 +59,22 @@ export const memberadd = (prop) => {
     return axios({
         method:'post',
         url:BASE_mer+'/memberInfo/save',
+        params:prop
+    })
+}
+// 用户审核状态列表
+export const memberState = (prop) => {
+    return axios({
+        method:'post',
+        url:BASE_mer+'/memberInfo/findByState',
+        params:prop
+    })
+}
+// 用户审核
+export const checkMember  = (prop) => {
+    return axios({
+        method:'post',
+        url:BASE_mer+'/memberInfo/check',
         params:prop
     })
 }
@@ -68,6 +115,14 @@ export const rolelist = (prop) => {
         params:prop
     })
 }
+// 设为默认角色
+export const roleDefault = (prop) => {
+    return axios({
+        method:'post',
+        url:BASE_mer+'/role/setTheDefault',
+        params:prop
+    })
+}
 export const roleadd = (prop) => {
     return axios({
         method:'post',
@@ -90,30 +145,7 @@ export const roledel = (prop) => {
     })
 }
 
-// 预计配送订单
-export const findadvOrder = (prop) => {
-    return axios({
-        method:'post',
-        url:BASE_ORDER+'/order/findOrdersByStoreAndOrderStart',
-        params:prop
-    })
-}
-// 发货
-export const shipments = (prop) => {
-    return axios({
-        method:'post',
-        url:BASE_ORDER+'/order/shipments',
-        params:prop
-    })
-}
-// 商家对退货订单进行审核
-export const returnCheck = (prop) => {
-    return axios({
-        method:'post',
-        url:BASE_ORDER+'/order/returnCheckOrder',
-        params:prop
-    })
-}
+
 
 // 商品
 export const addgoods = (prop) => {
@@ -253,6 +285,14 @@ export const brandlist = (para) => {
         url:BASE_GOODS+'/brand/findBrands'
     })
 }
+// 关闭品牌
+export const closeBrand = (para) => {
+    return axios({
+        method:'post',
+        params:para,
+        url:BASE_GOODS+'/brand/close'
+    })
+}
 export const addbrand = (para) => {
     return axios({
         method:'post',
@@ -354,6 +394,15 @@ export const selectStore = (para) => {
         url:BASE_GOODS+'/store/selectStore'
     })
 }
+// 关闭店铺
+export const closeStore = (para) => {
+    return axios({
+        method:'post',
+        params:para,
+        url:BASE_GOODS+'/store/close'
+    })
+}
+
 export const updateStore = (para) => {
     return axios({
         method:'post',
@@ -457,5 +506,30 @@ export const getErWeiMa = (para)  => {
         params:para
     }).then(res => {
         return res.data
+    })
+}
+
+// 账单管理
+export const billLists = (para) => {
+    return axios({
+        method:'post',
+        params:para,
+        url:BASE_BILL+'/bills/find',
+    })
+}
+// 改变账单状态（手动收账）
+export const handBill = (para) => {
+    return axios({
+        method:'post',
+        params:para,
+        url:BASE_BILL+'/bills/collect',
+    })
+}
+// 财务核对账单
+export const checkBill = (para) => {
+    return axios({
+        method:'post',
+        params:para,
+        url:BASE_BILL+'/bills/check',
     })
 }

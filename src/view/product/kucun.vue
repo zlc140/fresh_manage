@@ -51,10 +51,10 @@
       </el-table-column>
     </el-table>
     <!--添加分类-->
-    <el-dialog title="修改库存" size="mini" v-model="editFormVisible" :close-on-click-modal="false">
-      <el-form :model="editForm" label-width="80px" ref="editForm">
+    <el-dialog title="修改库存" size="mini"  :rules="rules" v-model="editFormVisible" :close-on-click-modal="false">
+      <el-form :model="editForm" :rules="rules" label-width="80px" ref="editForm">
         <el-form-item label="库存数量" prop="stockNum">
-          <el-input type="number" v-model="editForm.stockNum" auto-complete="off"></el-input>
+          <el-input type="number" v-model="editForm.stockNum" min="1" auto-complete="off"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -72,6 +72,16 @@
 import { prolist,classlist, kucunedit} from '@/service/getData'
 export default {
   data() {
+    var kcNum = (rule, value, callback) => {
+      let str = value + ''
+      if (parseFloat(value) < 1) {
+        callback(new Error('库存不少于1'))
+      } else if (str.indexOf('.') + 1 > 1) {
+        callback(new Error('库存应为整数'))
+      } else {
+        callback()
+      }
+    }
     return {
       form: {
         goodsId: '',//货号
@@ -97,6 +107,11 @@ export default {
         stockId: '',
         stockNum: ''
       },
+      rules:{
+        stockNum:[
+         { validator: kcNum, trigger: 'blur' }
+        ]
+      }
     }
   },
   mounted() {

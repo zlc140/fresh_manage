@@ -4,29 +4,12 @@
       <el-button @click="addOne" :plain="true" v-show="!addFormVisible">添加角色</el-button>
     </div>
     <el-table :data="lists" style="98%" v-loading="listLoading" @selection-change="selsChange" v-show="!addFormVisible">
-      <!-- 子级 -->
-      <!-- <el-table-column type="expand" label="子类">
-          <template scope="scope">
-            <el-table :data="scope.row.permissionList[0].children" style="100%" :show-header="false">
-              <el-table-column label="权限编号" prop="id"></el-table-column>
-              <el-table-column label="链接地址" prop="url"></el-table-column>
-              <el-table-column label="链接方式" prop="method"></el-table-column>
-              <el-table-column label="组件名称" prop="name"></el-table-column>
-              <el-table-column label="组件地址" prop="path"></el-table-column>    
-              <el-table-column label="操作" width="100">
-                <template scope="scope">
-                  <div class="play_box">
-                    <a @click="editChild(scope.$index, scope.row)">编辑</a>
-                     <a @click="delChild(scope.$index, scope.row)">删除</a>
-                  </div>
-                </template>
-              </el-table-column>
-            </el-table>
-          </template>
-        </el-table-column> -->
-      <!-- 父级 -->
       <el-table-column label="权限编号" prop="id"></el-table-column>
-      <el-table-column label="角色名称" prop="name"></el-table-column>
+      <el-table-column label="角色名称" prop="name">
+        <template scope="scope">
+          <span @mouseover="Default(scope.$index, scope.row)">{{scope.row.name}}</span>
+        </template>
+      </el-table-column>
       <el-table-column label="身份标识" prop="roleCode"></el-table-column>
       <el-table-column label="操作" width="100">
         <template scope="scope">
@@ -37,12 +20,15 @@
         </template>
       </el-table-column>
     </el-table>
-    <!-- 分类的编辑添加 -->
+      <el-dialog  size="mini" v-model="editFormVisible" :close-on-click-modal="false">
+       <el-button type="primary" @click.native="editSubmit">设为默认</el-button>
+    </el-dialog>
+    <!-- 编辑添加 -->
     <dialog-tem v-if="addFormVisible" :type="type" :title="title" :formData="addForm" @close="close"></dialog-tem>
   </div>
 </template>
 <script>
-import { rolelist, roledel } from '@/service/getData'
+import { rolelist, roledel,roleDefault } from '@/service/getData'
 import dialogTem from './child/roledialog'
 export default {
   data() {
@@ -55,7 +41,12 @@ export default {
         roleCode: '',
         name: '',
       },
+      editFormVisible:false,
+      editForm:{
+        theDefault:''
+      },
       lists: [],
+      new:''
     };
   },
   components: {
@@ -76,19 +67,33 @@ export default {
       rolelist().then((res) => {
         if (res.data.state == 200) {
           this.lists = res.data.content
-          // console.log(this.lists)
-          this.lists.forEach(function(child) {
-            // console.log(child.permissionList[0].children)
-          }, this);
         }
       })
     },
     // 编辑
     editd(index, row) {
+      console.log(row)
       this.type = "edit"
       this.title = "编辑角色"
       this.addFormVisible = true;
-      this.addForm = Object.assign({}, row)
+      let ids = ''
+      if(row.permissionList){
+        row.permissionList.forEach(v => {
+          ids += v.id+','
+          if(v.children && v.children.length>0){
+            v.children.forEach(child => {
+              ids += child.id+','
+            })
+          }
+        })
+      }
+      this.addForm = {
+        pIds: ids,
+        roleCode: row.roleCode,
+        name: row.name,
+        id:row.id,
+        theDefault :row.theDefault 
+      }
     },
     // 添加角色
     addOne() {
@@ -96,10 +101,24 @@ export default {
       this.title = "添加角色"
       this.addFormVisible = true;
       this.addForm = {
-        ipermissionIds: '',
+        pIds: '',
         roleCode: '',
         name: '',
       }
+    },
+    // 设为默认
+     Default(index,row){
+      this.editFormVisible = true
+       let para={
+            id:row.id
+      }
+      this.new=para
+    },
+     editSubmit:function(){
+      roleDefault(this.new).then((res)=>{
+         this.editFormVisible = false
+         this.getList()
+      })
     },
     // 删除
     delChild(index, row) {

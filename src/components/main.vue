@@ -224,6 +224,11 @@ export default {
   border-color: #20a0ff;
   margin-left: 40px;
 }
-
+.greens{
+    color:green;
+}
+.reds{
+    color:red;
+}
 
 </style>

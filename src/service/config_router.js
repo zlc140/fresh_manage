@@ -14,6 +14,7 @@ export const Login = (prop) => {
                     params:prop
             }).then((res) => {
                 if(res.data.state == 'SUCCESS'){
+                    prop.password = ''
                     setStore('username',prop)
                     return true
                 }else{

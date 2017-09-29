@@ -37,7 +37,7 @@ export default {
             } else {
                 callback()
             }
-    };
+         };
         return{
             parentClass:true,
             addLoading:false,

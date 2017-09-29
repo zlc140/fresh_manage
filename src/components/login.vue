@@ -13,12 +13,25 @@
                 </el-input>
                  </el-form-item>
                   <el-form-item prop="password">
-                <el-input placeholder="请输入密码" type="password" v-model="user.password" @keyup.enter.native="check">
-                     <template slot="prepend">
-                       <i class="el-icon-message"></i>
-                    </template>  
-                </el-input> 
-                </el-form-item>   
+                    <el-input placeholder="请输入密码" type="password" v-model="user.password" @keyup.enter.native="check">
+                        <template slot="prepend">
+                            <i class="el-icon-message"></i>
+                        </template>  
+                    </el-input> 
+                </el-form-item>
+                 <el-form-item prop="checkCode">
+                    <el-input placeholder="请输入验证码" type="text" class="checkCode_box" v-model="user.checkCode" @keyup.enter.native="check" >
+                        <template slot="prepend">
+                            <i class="el-icon-message"></i>
+                        </template>  
+
+                    </el-input> 
+                         <div class="validation fr">
+					    <!-- <el-button>发送验证码</el-button> -->
+                        <img :src="codePic" @click="getCode"/>
+				    </div>
+                </el-form-item>
+                     
                  <el-form-item>
                     <el-button type="primary" class="btn" @click="check">登录</el-button>
                 </el-form-item>
@@ -35,11 +48,13 @@ import starFlow from "./startFlow"
     export default {
         data() {
             return {
+                codePic:'http://192.168.0.9:8080/user-center/code',
                 loginLoading:false,
                 bg:{background:"url("+require('../assets/auth-bg.jpg')+") no-repeat",backgroundSize:"100% 100%"},
                 user:{
                     username:'admin',
-                    password: ''                
+                    password: '',
+                    checkCode:''                
                 },
                 rules: {
                     username: [
@@ -47,7 +62,10 @@ import starFlow from "./startFlow"
                     ],
                     password: [
                         { required: true, message: '请输入密码', trigger: 'blur' },
-                    ]
+                    ],
+                    checkCode: [
+                        { required: true, message: '验证码必填', trigger: 'blur' },
+                    ],
                
             },
             }
@@ -65,6 +83,10 @@ import starFlow from "./startFlow"
             }
         },
         methods: {
+            getCode(){
+                let str = new Date().getTime()
+                this.codePic = this.codePic.split('?')[0]+'?'+str
+            },
             getValue (url) {
                     let values = {}
                     if(url.indexOf('?') != -1) {
@@ -85,7 +107,8 @@ import starFlow from "./startFlow"
                     }
                     let prop={
                         username:_this.user.username,
-                        password:_this.user.password
+                        password:_this.user.password,
+                        imageCode:_this.user.checkCode
                     }
                     Login(prop).then((res) => {
                         if(res){
@@ -124,6 +147,23 @@ import starFlow from "./startFlow"
     }
 </script>
 <style>
+.validation{
+    width:155px;
+    height:34px;
+    background-color: #f0f0f0;
+    margin: 10px 0;
+}
+.validation img{
+    width:155px;
+    max-height: 34px;
+    float: left;
+}
+.checkCode_box{
+    width:140px;
+}
+.checkCode_box .el-input__inner{
+    width:105px;
+}
     #auth{
         width:100%;
         height:100%;

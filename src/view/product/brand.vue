@@ -43,6 +43,7 @@
         <el-table-column  label="操作" width="120"  >
           <template scope="scope">
             <div class="play_box">
+              <el-button type="text" @click="closeBrand(scope.row)">关闭品牌</el-button>
                 <el-button type="text" @click="handle( scope.row)">编辑</el-button>
                 <el-button type="text" @click="handleDel(scope.$index, scope.row)">删除</el-button>
           </div>
@@ -68,7 +69,7 @@
 <script>
 
 import dialogTem from './prochild/branddia'
-import { brandlist, addbrand, branddelete, brandupdate } from '@/service/getData'
+import { brandlist, addbrand, branddelete, brandupdate,closeBrand } from '@/service/getData'
 export default {
   data() {
     return {
@@ -209,9 +210,18 @@ export default {
       this.getbrandlist()
     },
 
-    // Success() {
-    //   this.getbrandlist()
-    // },
+   closeBrand(row){
+      let prop ={
+        brandId:row.brandId
+      }
+      this.$confirm('品牌关闭后将删除品牌下的商品，确认关闭吗？').then(() => {
+        closeBrand(prop).then(res => {
+          cosnole.log(res)
+        })
+      }).catch(() => {
+        console.log('取消')
+      })
+   }
 
   }
 }

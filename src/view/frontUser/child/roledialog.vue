@@ -3,14 +3,18 @@
         <h3 class="title">{{title}}
             <el-button class="fr" size="small" type="danger" :plain="true" @click.native="clean">取消</el-button>
         </h3>
-        <el-form :model="addForm" label-width="80px" ref="addForm">
-            <el-form-item label="链接方式" prop="roleCode" required>
-                <el-input v-model="addForm.roleCode " auto-complete="off"></el-input>
+        <el-form :model="addForm" label-width="80px" ref="addForm" :rules="addFormRules">
+            <el-form-item label="角色名称" prop="name" required>
+                <el-input v-model="addForm.name " auto-complete="off"></el-input>
             </el-form-item>
-            <el-form-item label="身份标识" prop="name" required>
-                <el-input v-model="addForm.name" auto-complete="off"></el-input>
-            </el-form-item>
-            <el-form-item label="关联权限" prop="permissionIds">
+            <el-form-item label="身份标识" prop="roleCode" required>
+                <el-input v-model="addForm.roleCode" auto-complete="off"></el-input>
+                 <p class="tip">角色：管理员：等级</p>
+            </el-form-item> 
+          <el-form-item label="默认角色" prop="theDefault">
+            <el-switch on-text="" off-text="" v-model="addForm.theDefault" on-text="是" off-text="否"></el-switch>
+          </el-form-item>
+            <el-form-item label="关联权限" prop="pIds">
                 <el-select v-model="classValues" multiple placeholder="请选择权限">
                     <el-option v-for="(item,index) in  classData" :key="index" :value="item.id" :label="item.name"> </el-option>
                 </el-select>
@@ -23,18 +27,36 @@
 </template>
 
 <script>
-import { rolelist, roleadd, roleedit } from '@/service/getData'
+import { permissionlist, roleadd, roleedit,rolelist} from '@/service/getData'
 export default {
     data() {
+          var nospace = (rule, value, callback) => {         
+             if (value.trim() == '') {
+                callback(new Error('不能输入一串字符'))
+            } else {
+                callback()
+            }
+          };
         return {
             parentClass: true,
             addLoading: false,
             addForm: {
-                permissionIds: '',
+                pIds: '',
                 roleCode: '',
                 name: '',
+                theDefault :''
             },
-            classValues: [],
+             addFormRules: {
+                name: [
+                    { required: true, message: '角色名称不可为空', trigger: 'blur' },
+                    { validator: nospace, trigger: 'blur' }
+                ],
+                  roleCode: [
+                    { required: true, message: '身份标识不可为空', trigger: 'blur' },
+                    { validator: nospace, trigger: 'blur' }
+                ],
+            },
+            classValues:[],
             classData: [],
         }
     },
@@ -53,52 +75,62 @@ export default {
         }
     },
     mounted() {
+        this.getclass()
         if (this.type == "edit") {
             this.addForm = {
                 id: this.formData.id,
-                permissionIds: this.formData.permissionIds,
+                pIds: this.formData.pIds,
                 name: this.formData.name,
                 roleCode: this.formData.roleCode,
+                theDefault :this.formData.theDefault
             }
+            // console.log(this.addForm)
         }
-        this.getclass()
     },
     methods: {
         getclass() {
-            rolelist().then((res) => {
+            permissionlist().then((res) => {
                 let _this = this
                 if (res.data.state == 200) {
                     let datas = res.data.content
-                    // console.log(datas)
-                    this.classData = []
+                     _this.classData = []
                     if (!datas) {
                         return false
                     }
                     _this.classValues = []
-                    datas.forEach(function(child) {
-                        if (_this.type == 'edit' && child.permissionList) {
-                            _this.classValues.push(child.permissionList[0].id)
-                        }
-                        //  console.log(child) 
-                        _this.classData.push({
-                            id: child.permissionList[0].id,
-                            name: child.permissionList[0].name
-                        })
-                        if (child.permissionList[0].children && child.permissionList[0].children.length > 0) {
-                            child.permissionList[0].children.forEach((item) => {
-                                if (_this.type == 'edit') {
-                                    _this.classValues.push(item.id)
+                    let str = this.addForm.pIds
+                    let sub=str.substring(0,str.length-1)
+                    let strr=sub.split(",");
+                   
+                    datas.forEach(function(child) {                            
+                        if (_this.type == 'edit') {
+                            strr.forEach(v => {
+                                if(parseInt(v) == child.id){
+                                    _this.classValues.push(child.id)
                                 }
-                                //  console.log(item)
+                            })                               
+                        }
+                        _this.classData.push({
+                            id: child.id,
+                            name: child.name,
+                        })
+                        if (child.children) {
+                            child.children.forEach((item) => {
+                                if (_this.type == 'edit') {
+                                         strr.forEach(v => {
+                                            if(parseInt(v) == item.id){
+                                                _this.classValues.push(item.id)
+                                            }
+                                        })
+                                }
                                 _this.classData.push({
                                     id: item.id,
-                                    name: '      ' + item.name
+                                    name: '　　　' + item.name
                                 })
                             })
                         }
                     }, this);
                 }
-
             })
         },
         // 保存
@@ -106,10 +138,12 @@ export default {
             let _this = this
             this.$refs.addForm.validate((valid) => {
                 if (valid) {
+                    this.addForm.pIds = this.classValues.join(',')
                     let para = {
-                        permissionIds: this.addForm.permissionIds,
+                        pIds: this.addForm.pIds,
                         name: this.addForm.name,
-                        roleCode: this.addForm.roleCode
+                        roleCode: this.addForm.roleCode,
+                        theDefault :this.addForm.theDefault
                     }
                     if (this.type == 'add') {
                         roleadd(para).then((res) => {
@@ -140,5 +174,13 @@ export default {
     display: inline-block;
     position: relative;
     width: 440px;
+}
+.roledialog .el-dialog__header {
+    padding: 5px 20px 0;
+}
+.roledialog .el-dialog__body {
+    padding: 16px 20px;
+    color: #48576a;
+    font-size: 14px;
 }
 </style>

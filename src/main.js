@@ -22,7 +22,7 @@ axios.interceptors.response.use(function (response) {
   let str = error+''
   console.log(str.indexOf('403')>0)
   if(str.indexOf('403')>0){//登录失效
-    // window.location = 'http://localhost:8023'
+    window.location = '/login'
   }
    
   return Promise.reject(error);

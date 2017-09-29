@@ -19,9 +19,10 @@ export const role = r => require.ensure([],() => r(require('../view/frontUser/ro
 // 订单管理
 export const orderList = r => require.ensure([],() => r(require('../view/order/list')),'group-order');
 export const advorder = r => require.ensure([],() => r(require('../view/order/adv_order')),'group-order');
-
+export const CheckOrder = r => require.ensure([],() => r(require('../view/check/checkOrder')),'group-order');
 // 账单管理
 export const bill = r => require.ensure([],() => r(require('../view/bill')),'group-order');
+export const checkBill = r => require.ensure([],() => r(require('../view/bill/check')),'group-order');
 
 // 审核
 export const checkBrand = r => require.ensure([],() => r(require('../view/check/ckBrand')),'group-check');

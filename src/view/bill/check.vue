@@ -7,14 +7,9 @@
            <el-form-item label="用户名">
             <el-input v-model="form.username"></el-input>
           </el-form-item>
-          <el-form-item label="账单状态">
-            <el-select v-model="form.state">
-              <el-option v-for="(item,index) in  options" :key="index" :label="item.label" :value="item.value"> </el-option>
-            </el-select>
-          </el-form-item>
             <el-form-item label="开始时间" >
                   <el-date-picker
-                            v-model="form.satrtTime"
+                            v-model="form.startTime"
                             type="datetime"
                             placeholder="选择开始日期"
                              >
@@ -77,7 +72,7 @@
 					<template scope="scope">
 						<div class="play_box">
 							<a  @click="aboutClick(scope.row)">查看详情</a>
-							<a class="reds" @click="handleDialog(scope.row)" v-if="scope.row.state==100">手动收账</a>
+							<a class="reds" @click="handleDialog(scope.row)">审核账单</a>
 						</div>
 					</template>
 				</el-table-column>
@@ -92,15 +87,13 @@
         </el-dialog>
 		 		<el-dialog v-model="isShowForm">
 					 <el-form :model="addForm" label-width="180px" size="small" :rules="addFormRules"  ref="addForm">
-								<el-form-item label="收款金额" prop="money">
-									<el-input style="width:200px" v-model="addForm.money" type="number" min="0.01" auto-complete="off" ></el-input>
-								</el-form-item>
-									<el-form-item label="是否完成该账单" prop="finish">
+							 
+									<el-form-item label="是否到账" prop="finish">
 									<el-switch v-model="addForm.finish"	on-text=""　off-text="">
 										</el-switch>
 								</el-form-item>
-							  <el-form-item label="收款描述" prop="description">
-									<el-input v-model="addForm.description" auto-complete="off" type="textarea" placeholder="请对本次收款进行详细描述"></el-input>
+							  <el-form-item label="描述" prop="description">
+									<el-input v-model="addForm.description" auto-complete="off" type="textarea" placeholder="请对本次收款进行相关描述"></el-input>
 								</el-form-item>
 							
 									
@@ -114,20 +107,19 @@
 
 <script>
 import billDetail from './child/dialog'
-import {billLists,handBill} from '@/service/getData'
+import {billLists,checkBill} from '@/service/getData'
 export default {
 		data(){
 			return{
         form:{
           username:'',
           state:'',
-          satrtTime:'',
+          startTime:'',
           endTime:''
 				},
 				isShowForm:false,
 				addForm:{
 					billsId:'',
-					money:'',
 					description:'',
 					finish:false
 				},
@@ -136,14 +128,6 @@ export default {
 							{required:true,message:'收款金额不能为空！',trigger:'blur'}
 						]
 				},
-        options:[
-          {value:'',label:'全部'},
-          {value:0,label:'未出账'},
-          {value:100,label:'未付款'},
-          {value:200,label:'已付款'},
-          {value:300,label:'账单关闭'},
-          {value:400,label:'账单完成'}
-        ],
         currentPage1:1,
         pageSize:10,
         page:1,
@@ -168,21 +152,13 @@ export default {
         let _this = this
 				this.listLoading = true
 				let prop = {
-           state:this.form.state,
+           state:200,
            username:this.form.username,
-           satrtTime:this.form.satrtTime,
-           endTime:this.form.endTime,
+           satrtTime:'',
+           endTime:'',
            page:this.page-1,
            pageSize:this.pageSize
 				}
-			
-				if(prop.satrtTime && prop.satrtTime!='' && prop.satrtTime!=0){
-					prop.satrtTime = prop.satrtTime.getTime()
-				}
-				if(prop.endTime && prop.endTime!='' && prop.endTime!=0){
-					prop.endTime =  prop.endTime.getTime()
-				}
-				console.log(prop)
 				billLists(prop).then((res) => {
 					console.log('bills',res)
 					this.listLoading = false
@@ -225,9 +201,8 @@ export default {
 				console.log(row)
 					this.addForm = {
 						billsId:row.id,
-						money:'',
 						description:'',
-						finish:false
+						finish:true
 					}
 					this.isShowForm = true
 			},
@@ -235,11 +210,10 @@ export default {
 				let _this = this
 				 let prop = {
 					 billsId:this.addForm.billsId,
-					 money:this.addForm.money,
 					 description:this.addForm.description,
 					 finish:this.addForm.finish
 				 }
-				 handBill(prop).then(res => {
+				 checkBill(prop).then(res => {
 					 	//  console.log(res)
 					 if(res.data.state == 200){
 							_this.isShowForm = false
