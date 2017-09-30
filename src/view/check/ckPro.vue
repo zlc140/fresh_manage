@@ -109,12 +109,14 @@ export default {
         prolist(para).then((res) => {
           console.log(res)
           this.listLoading = false
-          if (res.data.state == 200 &&　res.data.content.content) {
+          if (res.data.state == 200 &&　res.data.messages !='暂无数据!') {
               res.data.content.content.forEach(v=>{
                 let prop = { goods:v }
                 _this.getData.push(prop)
               })
             this.totalElements = res.data.content.totalElements;
+          }else{
+            this.$message(res.data.messages)
           }
         })
       }else{
@@ -123,9 +125,11 @@ export default {
           checkPro(para).then((res) => {
               console.log(res)
                this.listLoading = false
-              if (res.data.state == 200 &&　res.data.message !='暂无数据') {
+              if (res.data.state == 200 &&　res.data.messages !='暂无数据!') {
                 this.getData = res.data.content.content;
                 this.totalElements = res.data.content.totalElements;
+              }else{
+                this.$message(res.data.messages)
               }
           })
       }

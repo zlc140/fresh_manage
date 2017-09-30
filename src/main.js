@@ -20,8 +20,8 @@ axios.interceptors.response.use(function (response) {
 }, function (error) {
   // 对响应错误做点什么
   let str = error+''
-  console.log(str.indexOf('403')>0)
-  // if(str.indexOf('403')>0){//登录失效
+  console.log(str.indexOf('403')>0 )
+  // if(str.indexOf('403')>0){//登录失效 || str.indexOf('500')>0
   //   window.location = '/login'
   // }
    

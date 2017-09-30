@@ -374,6 +374,22 @@ export const voucherlist = (para) => {
         url:BASE_V+'/voucher/findVouchers'
     })
 }
+// 代金券记录
+export const voucherLog = (para) => {
+    return axios({
+        method:'post',
+        params:para,
+        url:BASE_V+'/voucherLog/findByCondition'
+    })
+}
+// 单个代金券记录
+export const voucherOneLog = (para) => {
+    return axios({
+        method:'post',
+        params:para,
+        url:BASE_V+'/voucherLog/findById'
+    })
+}
 export const addvoucher = (para) => {
     return axios({
         method:'post',

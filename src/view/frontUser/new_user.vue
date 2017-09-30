@@ -82,7 +82,7 @@ export default {
       permissionlist().then((res) => {
         if (res.data.state == 200) {
           this.lists = res.data.content
-        }
+        } 
       })
     },
      // 编辑

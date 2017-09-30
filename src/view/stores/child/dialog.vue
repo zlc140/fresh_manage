@@ -157,6 +157,8 @@ export default {
         this.addForm = Object.assign({}, this.addForm, this.FormData)
         if(this.addForm.regTime == 0 || this.addForm.regTime == '0'){
             this.addForm.regTime = ''
+        }else{
+            this.addForm.regTime = new Date(this.addForm.regTime )
         }
         this.selectPic.picList = []
         if (this.addForm.imgs.path != '' && this.addForm.imgs.path != 'undefined') {
@@ -176,7 +178,7 @@ export default {
                     this.loginLoading = true
                     let para = Object.assign({}, this.addForm)
                     // console.log('test',para.regTime.getTime())
-                    if(para.regTime != ''){
+                    if(para.regTime ){
                         para.regTime = para.regTime.getTime()
                     }
                     para.imgs = JSON.stringify(para.imgs)

@@ -49,11 +49,6 @@
           <span>{{ scope.row.member.username}}</span>
         </template>
       </el-table-column>
-        <el-table-column prop="homePhone   " label="家庭电话">
-        <template scope="scope">
-          <span>{{ scope.row.homePhone }}</span>
-        </template>
-      </el-table-column>
       <el-table-column prop="phone  " label="个人电话">
         <template scope="scope">
           <span>{{ scope.row.member.phone}}</span>

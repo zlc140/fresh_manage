@@ -87,7 +87,14 @@ export default {
           state:'BRAND_STATE_CHECK_ON'
         }
         brandupdate(para).then((res)=>{
-          this.getbrandlist()
+          console.log(res)
+          if(res.data.state == 200){
+            this.$message('审核成功！')
+            this.getbrandlist()
+          }else{
+            this.$message(res.data.messages)
+          }
+          
          })
       } else if(a=='npass') {
        let para = {     
@@ -95,7 +102,13 @@ export default {
           state:'BRAND_STATE_CHECK_OFF'
         }
          brandupdate(para).then((res)=>{
-          this.getbrandlist()
+           console.log(res)
+          if(res.data.state == 200){
+              this.$message('审核成功！')
+              this.getbrandlist()
+            }else{
+              this.$message(res.data.messages)
+            }
          })
       }
     },

@@ -333,14 +333,13 @@ export default {
         if (res.data.state == 200) {
           let prop = {
             username: para.userName,
-            state: ' USER_STATE_CHECK_NO'
+            state: 'USER_STATE_CHECK_NO'
           }
           checkMember(prop).then((res) => {
             if (res.data.state == 200) {
               this.$message('审核成功！')
               this.getList()
               this.editFormVisible = false
-
             }
           })
         }

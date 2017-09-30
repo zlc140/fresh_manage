@@ -28,7 +28,7 @@
       <!-- <el-table-column type="selection" width="55">
       </el-table-column> -->
       <el-table-column prop="brandTitle" label="品牌名称"></el-table-column>
-      <el-table-column  label="店铺名称">
+      <el-table-column  label="所属店铺">
         <template scope="scope">
           <span class="price">{{ scope.row.store?scope.row.store.storeName:'' }}</span>
         </template>
@@ -131,6 +131,7 @@ export default {
         brandId: this.form.brandId
       }
       brandlist(para).then((res) => {
+        console.log('brand',para)
         _this.listLoading = false
         if(res.data.state == 200){
             _this.getData = res.data.content.content;

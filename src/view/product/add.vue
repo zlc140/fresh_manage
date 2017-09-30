@@ -201,7 +201,7 @@ export default {
           { validator: nospace, trigger: 'blur' }
         ],
         goodsSubTitle: [
-          { validator: nospace, trigger: 'blur' }
+          // { validator: nospace, trigger: 'blur' }
         ],
         storeId: [
           { required: true, message: '请输入店铺编号', trigger: 'blur,change' },
@@ -333,7 +333,7 @@ export default {
       }
       console.log(para)
       addbrandlist(para).then((res) => {
-        console.log(res)
+        console.log('brand',res)
         if (res.data.state == 200) {
           this.brandData = []
           this.brandData = res.data.content
@@ -381,9 +381,11 @@ export default {
                   document.body.scrollTop = 0
                   _this.$refs['addForm'].resetFields()
                 }).catch(() => {
-
                   _this.$router.push('/view/prolist')
                 })
+              }else{
+                this.$message(res.data.message)
+                _this.$router.push('/view/prolist')
               }
             })
           } else {
@@ -395,6 +397,9 @@ export default {
                 _this.$message(res.data.messages)
                 _this.$router.push('/view/prolist')
 
+              }else{
+                this.$message(res.data.messages)
+                _this.$router.push('/view/prolist')
               }
             })
           }

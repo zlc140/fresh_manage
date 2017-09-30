@@ -1,7 +1,7 @@
 <template>
   <div class="dialog banner small">
     <h3 class="title">{{title}} <el-button class="fr"  size="small" type="danger" :plain="true" @click.native="clean">取消</el-button></h3>
-     <el-form :model="addForm"  label-width="80px" ref="addForm" :rules="addFormRules">
+     <el-form :model="addForm"  label-width="80px" ref="addForm" :rules="addFormRules" v-loading="addLoading">
         <el-form-item label="链接地址" prop="url" required>
           <el-input v-model="addForm.url"  auto-complete="off" ></el-input>
         </el-form-item>
@@ -22,7 +22,7 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click.native="addSubmit">保存</el-button>
+        <el-button type="primary" @click.native="addSubmit" v-loading="addLoading">保存</el-button>
       </div>
 </div>
 </template>
@@ -103,6 +103,7 @@ export default {
             let _this = this           
                 this.$refs.addForm.validate((valid) => {
                     if (valid) {
+                    this.addLoading = true;
                     let para = {
                         url: this.addForm.url,
                         method: this.addForm.method,
@@ -114,25 +115,31 @@ export default {
                     }
                    if(this.type=='add'){
                          permissionadd(para).then((res) => {
-                            this.addLoading = true;
+                           
+                            this.$message(res.data.messages)
                               this.$emit('close',true)
+                              this.addLoading = false
                         })
                    }else if(this.type=='edit'){
                         para.id = this.addForm.id
                         permissionedit(para).then((res) => {
-                            this.editFormLoading = true;
+                            this.$message(res.data.messages)
                             this.$emit('close',true)
+                             this.addLoading = false
                         })
                    }else if(this.type=="addChild"){
                        permissionadd(para).then((res) => {
-                            this.addChildLoading = true;
+                            this.addLoading = false
+                            this.$message(res.data.messages)
                              this.$emit('close',true)
                         })
                    }else if(this.type=="editChild"){
                         para.id = this.addForm.id
                         permissionedit(para).then((res) => {
-                            this.editFormLoading = true;
+                            this.addLoading = false
+                            this.$message(res.data.messages)
                              this.$emit('close',true)
+                            
                         })
                    }
                    

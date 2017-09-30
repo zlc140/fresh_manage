@@ -43,7 +43,7 @@
 <script>
  
 import {Login,getAdd} from '@/service/config_router.js'
-import { getStore } from '@/config/storage'
+import { getStore,setStore } from '@/config/storage'
 import starFlow from "./startFlow"
     export default {
         data() {
@@ -85,9 +85,19 @@ import starFlow from "./startFlow"
         },
         methods: {
            getCode(){
-                let str = new Date().getTime()+''
-                this.user.key = Math.random()+str
-                this.codePic = this.codePic+'?key='+this.user.key
+               if(getStore('keyCode') == null){
+                    let str = new Date().getTime()+''+Math.random()
+                     setStore('keyCode',str)
+                    this.user.key = getStore('keyCode') 
+                }else{
+                    this.user.key = getStore('keyCode') 
+                }
+                if(this.codePic.indexOf('?')>0){
+                     this.codePic =  this.codePic.split('?')[0]
+                }
+                let news = new Date().getTime()
+                this.codePic = this.codePic+'?key='+this.user.key+'&time='+news
+                console.log(this.user.key)
             },
             getValue (url) {
                     let values = {}
@@ -114,10 +124,13 @@ import starFlow from "./startFlow"
                         key:_this.user.key
                     }
                     Login(prop).then((res) => {
-                        if(res){
+                        _this.getCode()
+                        if(res == true){
                          _this.$router.push('/view/prolist')
+                        }else if(res == false){
+                            _this.$message('登录失败')
                         }else{
-                            _this.$message('用户名或密码错误')
+                            _this.$message(res)
                         }
                             
                     })

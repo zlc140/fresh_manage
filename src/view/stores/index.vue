@@ -58,7 +58,7 @@
       <el-table-column prop="businessLicenseNo" label="公司执照编号"></el-table-column>
       <el-table-column prop="regTime" label="公司成立时间">
         <template scope="scope">
-          <span>{{ scope.row.regTime | formatDate }}</span>
+          <span>{{ scope.row.regTime | formatDate2 }}</span>
         </template>
       </el-table-column>
       <el-table-column label="操作" width="100">
@@ -151,7 +151,6 @@ export default {
   },
   components: { dialogTem },
   mounted() {
-    console.log(new Date().getTime())
     this.getList()
   },
   methods: {
@@ -165,9 +164,9 @@ export default {
         storeId: this.form.storeId,
         state: this.form.state
       }
-      console.log(para)
+      
       selectStore(para).then((res) => {
-        console.log(res.data)
+        console.log('store',res.data)
         this.listLoading = false
         if(res.data.state==200){
          _this.storeData = res.data.content.content

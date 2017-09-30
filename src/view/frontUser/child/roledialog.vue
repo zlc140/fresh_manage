@@ -150,12 +150,14 @@ export default {
                     if (this.type == 'add') {
                         roleadd(para).then((res) => {
                             this.addLoading = true;
+                            this.$message(res.data.message)
                             this.$emit('close', true)
                         })
                     } else if (this.type == 'edit') {
                         para.id = this.addForm.id
                         roleedit(para).then((res) => {
                             this.editFormLoading = true;
+                            this.$message(res.data.message)
                             this.$emit('close', true)
                         })
                     }

@@ -161,10 +161,25 @@ export default {
                 classId: this.form.classId,
                 reqFrom:'front'
             }
+            let _this = this
             // 表格数据
             prolist(para).then((res) => {
                 if (res.data.state == 200) {
-                    this.getData = res.data.content.content;
+                    _this.getData = res.data.content.content;
+                    // if(_this.getData.length>0){
+                    //     _this.getData.forEach(v => {
+                    //         if(_this.selPro.length>0){
+                    //             v.sel = true
+                    //             _this.selPro.forEach(m => {
+                    //                 if(m.goodsId == v.goodsId){
+                    //                     v.sel = true
+                    //                     return false
+                    //                 }
+                    //             })
+                    //         }
+                    //     })
+                    // }
+                    console.log(_this.getData)
                     this.totalElements = res.data.content.totalElements;
                 }
             })

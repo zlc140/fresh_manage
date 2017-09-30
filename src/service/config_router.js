@@ -7,18 +7,19 @@ export const Login = (prop) => {
     // return new Promise((resolve,reject) => {
     //     resolve([200])
     // })
-    // console.log(prop)
+    console.log(prop)
     return  axios({
                     method:'POST',
                     url:'/user-center/login',
                     params:prop
             }).then((res) => {
+                console.log(res)
                 if(res.data.state == 'SUCCESS'){
                     prop.password = ''
                     setStore('username',prop)
                     return true
                 }else{
-                    return false
+                    return res.data.messages
                 }
                  
                 // return true
@@ -29,7 +30,7 @@ export const Login = (prop) => {
                 //     return false
                 // }
             }).catch((res) => {
-                console.log(res)
+               return false
             })
 }
 export const getAdd = () => {

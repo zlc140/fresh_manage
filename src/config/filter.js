@@ -23,7 +23,13 @@ Vue.filter('formatDate',function(value) {
         return tool.formatDate.format((value),'yyyy-MM-dd hh:mm:ss')
      
 })
+Vue.filter('formatDate2',function(value) {
+  if(value == 0 ||value == '0'|| value == '' || value =='undefined'){
+    return null
+  }
+  return tool.formatDate.format((value),'yyyy-MM-dd')
 
+})
 Vue.filter('parseDate',function(value) {
   if(value != '' && value != null && value != 'undefind') {
       return tool.formatDate.parse((value),'yyyy-MM-dd')

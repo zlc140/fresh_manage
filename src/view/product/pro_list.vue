@@ -215,6 +215,7 @@ export default {
         goodsId: this.form.goodsId,
         goodsTitle: this.form.goodsTitle,
         classId: this.form.gclist,
+        forMe:true
       }
       this.listLoading = true
       // 表格数据
@@ -281,9 +282,12 @@ export default {
       let para = Object.assign({},this.editForm)
       // para.price = JSON.stringify(para.price)
       editgoods(para).then((res) => {
+        console.log('快速改价',res)
          this.editFormVisible = false
         if(res.data.state == 200) {
           _this.getList()
+        }else{
+          _this.$message(res.data.messages)
         }
       })
 

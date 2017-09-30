@@ -284,7 +284,7 @@ export default {
                             this.$message('保存成功')
                             
                         }else{
-                            this.$message('保存失败')
+                            this.$message(res.data.messages)
                         }
                         this.clean()
                     })
@@ -305,7 +305,7 @@ export default {
                     if(res.data.state == 200){
                         this.$message('保存成功')
                     }else{
-                         this.$message('保存失败')
+                         this.$message(res.data.messages)
                     }
                     this.clean()
                     console.log(res)

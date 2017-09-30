@@ -86,7 +86,13 @@ export default {
           result :'success',
         }
         checkvoucher(para).then((res)=>{
-         this.getorderlist()
+          if(res.data.state == 200){
+              this.$message('审核通过')
+              this.getorderlist()
+          }else{
+            this.$message(res.data.messages)
+          }
+         
          })
       } else if(a=='npass') {
        let para = {     
@@ -94,7 +100,12 @@ export default {
           result:'failure',
         }
          checkvoucher(para).then((res)=>{
-          this.getorderlist()
+          if(res.data.state == 200){
+              this.$message('审核通过')
+              this.getorderlist()
+          }else{
+            this.$message(res.data.messages)
+          }
          })
       }
     },
