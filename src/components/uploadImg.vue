@@ -93,6 +93,7 @@ export default {
     },
     mounted() {
         this.srcs = this.picList
+        
         console.log(this.picList)
         // console.log(this.srcs)
         if (this.sizeBox != null) {

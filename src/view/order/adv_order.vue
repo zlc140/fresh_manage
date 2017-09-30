@@ -77,9 +77,9 @@
   </el-table>
   <!-- 分页 -->
   <el-col :span="24" class="toolbar">
-             <el-pagination layout="total,prev,pager,next" :current-page.sync="currentPage1" :page-size='pageSize' :total="total" @current-change="handleCurrentChange">
-            </el-pagination>        
-             </el-col>
+        <el-pagination layout="total,prev,pager,next" :current-page.sync="currentPage1" :page-size='pageSize' :total="total" @current-change="handleCurrentChange">
+        </el-pagination>        
+    </el-col>
  
 </div>
 </template>

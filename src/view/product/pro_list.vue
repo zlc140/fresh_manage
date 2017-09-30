@@ -43,7 +43,7 @@
       </el-table-column>
       <el-table-column label="商品名称" prop="goodsTitle" min-width="120px"> 
          <template scope="scope">
-          <span class="onlyOneRow">{{ scope.row.goodsTitle }}</span>
+          <span class="onlyOneRow" :title="scope.row.goodsTitle">{{ scope.row.goodsTitle }}</span>
         </template>
       </el-table-column>
       <el-table-column label="所属分类" prop="classTitle" width="110px">
@@ -51,7 +51,7 @@
           <span>{{ scope.row.goodsClass.classTitle }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="商品单价" prop="price" width="100px;">
+      <el-table-column label="商品单价" align="center" prop="price" width="120px;">
         <template scope="scope">
           <span class="edit-box" @click="edtiPrice(scope.row)">{{ scope.row.price.GOODS_MARKET_PRICE | currency }}<i class="el-icon-edit"></i></span>
         </template>
@@ -154,7 +154,7 @@ export default {
           label: '审核中'
         }, {
           value: 'GOODS_STATE_CHECK_ON',
-          label: '审核通过'
+          label: '审核通过  '
         },{
            value: 'GOODS_STATE_CHECK_OFF',
            label: '审核不通过'
@@ -219,6 +219,7 @@ export default {
       this.listLoading = true
       // 表格数据
       prolist(para).then((res) => {
+        console.log(res)
         this.listLoading = false
         if (res.data.state == 200 &&　res.data.message !='暂无数据') {
           this.getData = res.data.content.content;

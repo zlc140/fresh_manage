@@ -3,7 +3,7 @@
     <div class="title toolbar">
       <el-button @click="addOne" :plain="true" v-show="!addFormVisible">添加角色</el-button>
     </div>
-    <el-table :data="lists" style="98%" v-loading="listLoading" @selection-change="selsChange" v-show="!addFormVisible">
+    <el-table :data="lists" border style="98%" v-loading="listLoading" @selection-change="selsChange" v-show="!addFormVisible">
       <el-table-column label="权限编号" prop="id"></el-table-column>
       <el-table-column label="角色名称" prop="name">
         <template scope="scope">
@@ -65,6 +65,7 @@ export default {
     },
     getList() {
       rolelist().then((res) => {
+        console.log(res)
         if (res.data.state == 200) {
           this.lists = res.data.content
         }

@@ -130,7 +130,6 @@ export default {
   data() {
     return {
       erWeiMa:'http://192.168.0.111:9090/image/201709/674ae228-23c1-4593-8ed0-c0ae12979481.JPEG',
-      show: true,
       printT:[],
       form: {
         ordersId: '',
@@ -193,11 +192,11 @@ export default {
       this.total = 0
       orderlist(para).then((res) => {
         console.log(res)
-        if (res.data.content.orderState != '20') {
-          this.show = false
-        } else {
-          this.show = true
-        }
+        // if (res.data.content.orderState != '20') {
+        //   this.show = false
+        // } else {
+        //   this.show = true
+        // }
         if (res.data.state == 200) {
           this.getData = res.data.content.content;
           this.total = res.data.content.totalElements

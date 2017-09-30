@@ -70,7 +70,7 @@ export default {
          };
         //  店铺电话
           var notel = (rule, value, callback) => {
-            var par=/^(\(\d{3,4}\)|\d{3,4}-|\s)?\d{8}$/;
+            var par=/^(\(\d{3,4}\)|\d{3,4}-|\s)?\d{7,8}$/;
             var phone = /^1[34578]\d{9}$/ ;
             if (!phone.test(value) && !par.test(value) && value.trim() != '' ) {
                 callback(new Error('请输入电话号码的正确格式'));//09557777777
@@ -175,20 +175,31 @@ export default {
                     }
                     this.loginLoading = true
                     let para = Object.assign({}, this.addForm)
-                    console.log('test',para.regTime.getTime())
+                    // console.log('test',para.regTime.getTime())
                     if(para.regTime != ''){
                         para.regTime = para.regTime.getTime()
                     }
                     para.imgs = JSON.stringify(para.imgs)
                     if (this.type == 'add') {
                         saveStore(para).then((res) => {
-                            console.log(res)
+                            console.log('addstore',res)
+                            if(res.data.state == 200){
+                                this.$message('添加成功')
+                            }else{
+                                this.$message(res.data.messages)
+                            }
                             this.loginLoading = false;
                             this.$emit('close', false)
                         })
                     } else if (this.type == 'edit') {
                         para.storeId = this.addForm.storeId;
                         updateStore(para).then((res) => {
+                            console.log('editstore',res)
+                             if(res.data.state == 200){
+                                this.$message('编辑成功')
+                            }else{
+                                this.$message(res.data.messages)
+                            }
                             this.loginLoading = false;
                             this.$emit('close', false)
                         })

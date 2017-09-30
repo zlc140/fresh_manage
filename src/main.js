@@ -21,9 +21,9 @@ axios.interceptors.response.use(function (response) {
   // 对响应错误做点什么
   let str = error+''
   console.log(str.indexOf('403')>0)
-  if(str.indexOf('403')>0){//登录失效
-    window.location = '/login'
-  }
+  // if(str.indexOf('403')>0){//登录失效
+  //   window.location = '/login'
+  // }
    
   return Promise.reject(error);
 });

@@ -31,7 +31,7 @@
           <span>{{ scope.row.goods.goodsClass.classTitle }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="商品单价" prop="price" width="100px;">
+      <el-table-column label="商品单价" align="center" prop="price" width="120px;">
         <template scope="scope">
           <span>{{ scope.row.goods.price.GOODS_MARKET_PRICE | currency }}</span>
         </template>
@@ -143,7 +143,7 @@ export default {
                 this.$message('审核成功')
                 _this.getList()
               }else{
-                 this.$message(res.data.message)
+                 this.$message(res.data.messages)
               }
               
             })
@@ -154,7 +154,7 @@ export default {
                 this.$message('审核成功')
                 _this.getList()
               }else{
-                 this.$message(res.data.message)
+                 this.$message(res.data.messages)
               }
             })
         }

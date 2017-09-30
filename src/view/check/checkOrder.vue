@@ -58,7 +58,6 @@
       <el-table-column label="操作">
         <template scope="scope">
           <div>
-            
             <el-button type="text" @click="handle( scope.row)" v-if="scope.row.orderState == 20">发货</el-button>
           </div>
         </template>
@@ -145,6 +144,8 @@ export default {
             type: 'success'
           })
           this.getorderlist()
+        }else{
+          this.$message(res.data.messages)
         }
       })
     },

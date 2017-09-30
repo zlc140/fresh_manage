@@ -28,9 +28,9 @@
       <!-- <el-table-column type="selection" width="55">
       </el-table-column> -->
       <el-table-column prop="brandTitle" label="品牌名称"></el-table-column>
-      <el-table-column prop="storeId" label="店铺名称">
+      <el-table-column  label="店铺名称">
         <template scope="scope">
-          <span class="price">{{ scope.row.store.storeName }}</span>
+          <span class="price">{{ scope.row.store?scope.row.store.storeName:'' }}</span>
         </template>
       </el-table-column>
      

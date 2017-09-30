@@ -15,7 +15,7 @@
             <el-switch on-text="" off-text="" v-model="addForm.theDefault" on-text="是" off-text="否"></el-switch>
           </el-form-item>
             <el-form-item label="关联权限" prop="pIds">
-                <el-select v-model="classValues" multiple placeholder="请选择权限">
+                <el-select v-model="classValues" multiple placeholder="请选择权限" class="bigSelect">
                     <el-option v-for="(item,index) in  classData" :key="index" :value="item.id" :label="item.name"> </el-option>
                 </el-select>
             </el-form-item>
@@ -101,7 +101,7 @@ export default {
                     let str = this.addForm.pIds
                     let sub=str.substring(0,str.length-1)
                     let strr=sub.split(",");
-                   
+                    console.log(datas)
                     datas.forEach(function(child) {                            
                         if (_this.type == 'edit') {
                             strr.forEach(v => {
@@ -112,7 +112,7 @@ export default {
                         }
                         _this.classData.push({
                             id: child.id,
-                            name: child.name,
+                            name: child.description,
                         })
                         if (child.children) {
                             child.children.forEach((item) => {
@@ -125,11 +125,13 @@ export default {
                                 }
                                 _this.classData.push({
                                     id: item.id,
-                                    name: '　　　' + item.name
+                                    name: '　　　' + item.description
                                 })
                             })
                         }
+                        
                     }, this);
+                   
                 }
             })
         },
@@ -183,4 +185,5 @@ export default {
     color: #48576a;
     font-size: 14px;
 }
+
 </style>

@@ -18,15 +18,24 @@
        <!-- 子级 -->
       <el-table-column type="expand">
         <template scope="scope">
-         <p prop="username" label="名称">单位名称: {{'　　　　　'+ scope.row.username}}</p>
-         <p prop="workUnit" label="工作单位">工作单位: {{'　　　　　'+ scope.row.workUnit}}</p>
-         <p prop="officeTel" label="办公室电话">办公室电话: {{ '　　　　'+scope.row.officeTel}}</p>
-         <p prop="officeAddress" label="办公室地址">办公室地址: {{ '　　　　'+scope.row.officeAddress}}</p>
-         <p prop="businessLicenseSN" label="营业执照编号">营业执照编号: {{'　　　'+ scope.row.businessLicenseSN}}</p>
-         <p prop="organizationCode" label="组织机构">组织机构: {{'　　　　　'+ scope.row.organizationCode}}</p>
-         <p prop="birthdate" label="用户出生日期">用户出生日期: {{'　　　'+ scope.row.birthdate}}</p>
-         <p prop="updateTime" label="更新时间">更新时间:{{ scope.row.updateTime | formatDate }}</p>
-         <p prop="createTime" label="创建时间"> 创建时间:{{ scope.row.createTime | formatDate}}</p>
+          <div class="member_detail">
+              <p><span>用户角色：</span>{{ scope.row.rolesName?scope.row.rolesName:''}} </p>
+              <p ><span>工作单位:</span>{{ scope.row.workUnit}}</p>
+              <p ><span>办公室电话:</span>{{ scope.row.officeTel}}</p>
+              <p ><span>办公室地址: </span>{{ scope.row.officeAddress}}</p>
+              <p ><span>营业执照编号:</span>{{ scope.row.businessLicenseSN}}</p>
+              <p ><span>组织机构:</span>{{ scope.row.organizationCode}}</p>
+              <p ><span>更新时间:</span>{{ scope.row.updateTime | formatDate }}</p>
+              <p> <span>创建时间:</span>{{ scope.row.createTime | formatDate}}</p>
+         </div>
+         <div class="Pic_box">
+            <ul class="List ">
+              <li v-if="scope.row.businessLicensePic && scope.row.businessLicensePic.path"> <img :src="scope.row.businessLicensePic.path"/>  <span>营业执照照片</span> </li>
+              <li v-if="scope.row.organizationCodePic && scope.row.organizationCodePic.path"> <img :src="scope.row.organizationCodePic.path"/> <span>组织机构代码图片</span></li>
+              <li v-if="scope.row.portrait &&　scope.row.portrait.path"> <img :src="scope.row.portrait.path"/> <span>头像</span></li>
+              <li v-if="scope.row.member.idCardPic && scope.row.member.idCardPic.path"> <img :src="scope.row.member.idCardPic.path"/> <span>身份证图片</span></li>
+            </ul>
+         </div>
         </template>
       </el-table-column>
       <!-- 父级 -->
@@ -58,6 +67,11 @@
        <el-table-column prop="nickName" label="用户昵称">
         <template scope="scope">
           <span>{{ scope.row.member.nickName}}</span>
+        </template>
+      </el-table-column>
+       <el-table-column prop="email  " label="邮箱地址">
+        <template scope="scope">
+          <span>{{ scope.row.member.email?scope.row.member.email:''}}</span>
         </template>
       </el-table-column>
       <el-table-column prop="updateTime  " label="上次修改时间">
@@ -95,6 +109,8 @@ export default {
         username: '',
         id: '',
       },
+      rowData:null,
+      rolesName:'',
       listLoading: false,
       tableData: [],
       // 分页
@@ -152,6 +168,7 @@ export default {
         username: this.form.username,      
       }
       memberlist(para).then((res) => {
+        console.log(res.data)
           _this.tableData=[]
           _this.totalElements=0
         _this.listLoading = false
@@ -159,14 +176,26 @@ export default {
           if(res.data.content.content){
               this.tableData = res.data.content.content;
               // console.log(this.tableData)
-              this.tableData.forEach(function(child) {
-              }, this);
               this.totalElements = res.data.content.totalElements;
           }else{
             this.tableData = []
             this.tableData.push( res.data.content)
             this.totalElements = 1;
-          }       
+          }
+           this.tableData.forEach(function(child) {
+             child.rolesName = ''
+             if(child.member.roleList && child.member.roleList.length>0){
+               child.member.roleList.forEach(v=> {
+                  child.rolesName += v.name + ','
+                  if(v.permissionsList && v.permissionsList.length>0){
+                    v.permissionsList.forEach(m => {
+                      child.rolesName += m.name +','
+                    })
+                  }
+               })
+             }
+            }, this);   
+           
         }
       }).catch(() => {
         _this.listLoading = false
@@ -182,31 +211,52 @@ export default {
     },
     //编辑
     editSubmit: function(row) {
-      console.log('cccc',row)
-      this.editFormVisible = true;
-      this.FormData = {
-        username: row.username,//用户名
-        organizationCode:row.organizationCode,//组织机构
-        businessLicenseSN:row.businessLicenseSN,//编号
-        officeTel: row.officeTel,//用户办公室电话
-        apartment: row.apartment,//用户住址
-        homePhone: row.homePhone,//用户家庭电话
-        portrait:row.portrait,//用户头像
-        businessLicensePicStr:row.businessLicensePicStr,//营业执照图片
-        birthdate: row.birthdate,//用户出生日期
-        birthplace: row.birthplace,//用户出生地址
-        userDetail: row.userDetail,//用户个人简介
-        education: row.education,//用户学历
-        graduatedFrom: row.graduatedFrom,// 用户毕业学校
-        workUnit: row.workUnit,//用户工作单位
-        blood: row.blood,//用户血型
-        name:row.member.name,//真实姓名
-        nickName:row.member.nickName,//昵称
-        phone:row.member.phone,//个人电话
-        roleList:row.member.roleList,
-        officeAddress:row.officeAddress,//办公室地址
+     
+        this.getContent(row.username)
+     
+    },
+     getContent(username) {
+      let _this = this
+      let para = {
+        username: username,      
       }
-      // console.log(this.FormData)
+      memberlist(para).then((res) => {
+          
+        if (res.data.state == 200 && res.data.message != '暂无数据') {
+           console.log('edit',res.data)
+            let row = res.data.content
+            
+             _this.FormData = {
+                memberId:row.member.memberId,
+                username: row.username,//用户名
+                name:row.member.name,//真实姓名
+                nickName:row.member.nickName,//昵称
+                phone:row.member.phone,//个人电话
+                eMail:row.member.email?row.member.email:'',
+                idCardNo:row.member.idCardNo?row.member.idCardNo:'',
+                idCardPicStr:{ path:row.member.idCardPic.path?row.member.idCardPic.path:''},
+                organizationCode:row.organizationCode?row.organizationCode:'',//组织机构
+                organizationCodePicStr:{
+                  path:row.organizationCodePic.path?row.organizationCodePic.path:''
+                },
+                businessLicenseSN:row.businessLicenseSN.path?row.businessLicenseSN:'',//编号
+                businessLicensePicStr:{
+                  path:row.businessLicensePic.path?row.businessLicensePic.path:'' 
+                },//营业执照图片
+                portrait:{
+                  path:row.portrait?row.portrait.path:''
+                },//用户头像
+                workUnit: row.workUnit?row.workUnit:'',//用户工作单位
+                officeAddress:row.officeAddress?row.officeAddress:'',//办公室地址
+                officeTel: row.officeTel?row.officeTel:'',//用户办公室电话
+                roleList:row.member.roleList,//用户角色
+              }
+              console.log('either', this.FormData )
+              _this.editFormVisible = true;
+          }
+      }).catch(() => {
+        _this.listLoading = false
+      })
     },
     // 分页
     handleCurrentChange(val) {
@@ -221,16 +271,6 @@ export default {
 }
 </script>
 
-<style>
-.list img {
-  width: 60px;
-  max-height: 60px;
-  display: inline-block
-}
-.list .el-table__expanded-cell p{
-  font-size: 14px;
-  display: inline-block;
-  width: 800px;
-  float: left;
-}
+<style lang="scss">
+ 
 </style>

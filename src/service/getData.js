@@ -55,10 +55,19 @@ export const memberlist = (prop) => {
         params:prop
     })
 }
+// 用户资料修改
 export const memberadd = (prop) => {
     return axios({
         method:'post',
         url:BASE_mer+'/memberInfo/save',
+        params:prop
+    })
+}
+// 用户注册资料修改
+export const userChange = (prop) => {
+    return axios({
+        method:'post',
+        url:BASE_CEN+'/member/update',
         params:prop
     })
 }
@@ -67,6 +76,14 @@ export const memberState = (prop) => {
     return axios({
         method:'post',
         url:BASE_mer+'/memberInfo/findByState',
+        params:prop
+    })
+}
+// 用户基本设置
+export const adduser = (prop) => {
+    return axios({
+        method:'post',
+        url:BASE_mer+'/memberSetting/save',
         params:prop
     })
 }

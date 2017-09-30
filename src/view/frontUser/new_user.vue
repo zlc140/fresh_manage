@@ -3,7 +3,7 @@
     <div class="title toolbar">
       <el-button @click="addOne" :plain="true" v-show="!addFormVisible">添加权限</el-button>
     </div>
-    <el-table :data="lists" style="98%" v-loading="listLoading" @selection-change="selsChange" v-show="!addFormVisible">
+    <el-table :data="lists" border style="98%" v-loading="listLoading" @selection-change="selsChange" v-show="!addFormVisible">
       <!-- 子级 -->
       <el-table-column type="expand" label="子类">
         <template scope="scope">
@@ -33,9 +33,9 @@
       <el-table-column label="操作" width="100">
         <template scope="scope">
           <div class="play_box">
-            <el-button type="text" @click="addChild(scope.$index, scope.row)">添加子类权限</el-button>
+            <el-button type="text" @click="addChild(scope.$index, scope.row)">添加子权限</el-button>
             <el-button type="text" @click="editd(scope.$index, scope.row)">编辑</el-button>
-             <el-button type="text" @click="delChild(scope.$index, scope.row)">删除</el-button>
+            <el-button type="text" @click="delChild(scope.$index, scope.row)">删除</el-button>
           </div>
         </template>
       </el-table-column>
@@ -155,12 +155,12 @@ export default {
 
 <style lang="scss">
 .classTree {
-  .play_box {
-    width: 80px;
-    text-align: center;
-    margin-left: -20px;
-    padding: 10px 0;
-  }
+  // .play_box {
+  //   width: 80px;
+  //   text-align: center;
+  //   margin-left: -20px;
+  //   padding: 10px 0;
+  // }
   .title {
     padding: 10px 20px;
   }

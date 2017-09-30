@@ -21,7 +21,7 @@
     <el-table border  :data="getData" style="width: 100%"  v-loading="listLoading">
       <el-table-column label="商品名称" prop="goodsTitle ">
         <template scope="scope">
-          <span>{{ scope.row.goodsTitle}}</span>
+          <span class="onlyOneRow">{{ scope.row.goodsTitle}}</span>
         </template>
       </el-table-column>
       <el-table-column label="商品编号" prop="goodsId ">
@@ -29,12 +29,12 @@
           <span>{{ scope.row.goodsId}}</span>
         </template>
       </el-table-column>
-      <el-table-column  align="center" label="库存数量" prop="stockNum">
+      <el-table-column  align="center" label="库存数量" prop="stockNum"　width="140">
         <template scope="scope">
           <span class="edit-box" @click="changNum(scope.$index, scope.row)"> {{ scope.row.goodsStock.stockNum}} <i class="el-icon-edit"></i></span>
         </template>
       </el-table-column>
-      <el-table-column  align="center" label="所属分类" prop="classTitle">
+      <el-table-column  align="center" label="所属分类" prop="classTitle" width="160">
         <template scope="scope">
           <span>{{ scope.row.goodsClass.classTitle}}</span>
         </template>
@@ -44,7 +44,7 @@
           <span>{{ scope.row.goodsClass.keywords}}</span>
         </template>
       </el-table-column>
-      <el-table-column  align="center" label="商品单价" prop="GOODS_MARKET_PRICE">
+      <el-table-column  align="center" label="商品单价" prop="GOODS_MARKET_PRICE" >
         <template scope="scope">
           <span>{{ scope.row.price.GOODS_MARKET_PRICE | currency}}</span>
         </template>

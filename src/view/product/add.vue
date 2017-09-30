@@ -33,6 +33,9 @@
       <el-form-item label="成本价" required prop="costPrice">
         <el-input v-model="addForm.costPrice" type="number" min="0.01"></el-input>
       </el-form-item>
+       <el-form-item label="商品单位" prop="sku">
+        <el-input v-model="addForm.sku"></el-input>
+      </el-form-item>
       <el-form-item label=" 商品提取佣金" required prop="commission">
         <el-input v-model="addForm.commission" type="number" min="0.01"></el-input>
       </el-form-item>
@@ -45,9 +48,7 @@
       <el-form-item label="商品库存" required prop="repositoryNum">
         <el-input v-model="addForm.repositoryNum" type="number" min="1" step="10"></el-input>
       </el-form-item>
-      <el-form-item label="商品单位" prop="sku">
-        <el-input v-model="addForm.sku"></el-input>
-      </el-form-item>
+     
 
       <el-form-item label="上架时间" required>
         <el-col :span="6">
@@ -200,7 +201,6 @@ export default {
           { validator: nospace, trigger: 'blur' }
         ],
         goodsSubTitle: [
-          { required: true, message: '请对商品进行描述', trigger: 'blur,change' },
           { validator: nospace, trigger: 'blur' }
         ],
         storeId: [
@@ -251,6 +251,7 @@ export default {
       let para = { goodsId: val }
       let _this = this
       findgoods(para).then(res => {
+        console.log('product',res)
         if (res.data.state == 200) {
           let datas = res.data.content
           _this.addForm = {
@@ -260,10 +261,10 @@ export default {
             costPrice: datas.price.GOODS_COST_PRICE,//成本价
             storeId: datas.store.storeId,//'店铺Id，平台可选，商家固定'
             classId: datas.goodsClass.classId,//'分类Id'
-            brandId: '',//'品牌Id'
+            brandId: datas.brand?datas.brand.brandId:'',//'品牌Id'datas.brandId
             imgs: datas.goodsPic,//商品图片
             goodsBody: datas.goodsBody,//商品详情
-            keywords: datas.keywords,//商品关键字
+            keywords: datas.keywords?datas.keywords:'',//商品关键字
             repositoryNum: datas.goodsStock.stockNum,//商品的库存有多少
             sku: datas.goodsStock.sku,//库存单元
             commission: datas.commission,//佣金
@@ -387,6 +388,7 @@ export default {
             })
           } else {
             para.goodsId = this.$route.query.id
+            console.log('go',para)
             editgoods(para).then((res) => {
               console.log(res)
               if (res.data.state == 200) {
@@ -396,6 +398,8 @@ export default {
               }
             })
           }
+        }else{
+           document.documentElement.scrollTop=0
         }
       })
     },

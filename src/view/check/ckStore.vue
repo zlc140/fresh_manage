@@ -79,9 +79,14 @@ export default {
         state:'STORE_STATE_ON_CHECKING'
       }
       selectStore(para).then((res) => {
+        console.log('store',res)
          this.listLoading = false
-        this.storeData = res.data.content.content
-        this.totalElements = res.data.content.totalElements
+         if(res.data.state == 200){
+            this.storeData = res.data.content.content
+            this.totalElements = res.data.content.totalElements
+        }else{
+          this.$message(res.data.messages)
+        }
       })
     },
      handle(a,row){
@@ -95,7 +100,13 @@ export default {
         updateStore(para).then((res)=>{
            this.listLoading = false
           console.log(res.data)
-          this.getList()
+          if(res.data.state == 200){
+            this.$message('审核成功')
+            this.getList()
+          }else{
+            this.$message(res.data.messages)
+          }
+         
          })
       } else if(a=='npass') {
        let para = {     
@@ -104,7 +115,12 @@ export default {
         }
          updateStore(para).then((res)=>{
            this.listLoading = false
-          this.getList()
+          if(res.data.state == 200){
+            this.$message('审核成功')
+            this.getList()
+          }else{
+            this.$message(res.data.messages)
+          }
          })
       }
     },

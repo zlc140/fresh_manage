@@ -54,7 +54,8 @@ import starFlow from "./startFlow"
                 user:{
                     username:'admin',
                     password: '',
-                    checkCode:''                
+                    checkCode:'',
+                    key:''                
                 },
                 rules: {
                     username: [
@@ -74,7 +75,7 @@ import starFlow from "./startFlow"
             starFlow
         },
         mounted(){
-            
+            this.getCode()
         },
          computed: {
             // 验证手机号
@@ -83,9 +84,10 @@ import starFlow from "./startFlow"
             }
         },
         methods: {
-            getCode(){
-                let str = new Date().getTime()
-                this.codePic = this.codePic.split('?')[0]+'?'+str
+           getCode(){
+                let str = new Date().getTime()+''
+                this.user.key = Math.random()+str
+                this.codePic = this.codePic+'?key='+this.user.key
             },
             getValue (url) {
                     let values = {}
@@ -108,7 +110,8 @@ import starFlow from "./startFlow"
                     let prop={
                         username:_this.user.username,
                         password:_this.user.password,
-                        imageCode:_this.user.checkCode
+                        imageCode:_this.user.checkCode,
+                        key:_this.user.key
                     }
                     Login(prop).then((res) => {
                         if(res){

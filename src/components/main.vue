@@ -42,8 +42,8 @@ export default {
     font-weight: normal;
 }
 .onlyOneRow{
+    cursor: pointer;
     white-space: nowrap;
-    display: inline-block;
     width:100%;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -230,5 +230,47 @@ export default {
 .reds{
     color:red;
 }
+.member_detail{
+    width:600px;
+   line-height: 25px;
+   display: inline-block;
+   padding-right: 50px;
+ }
+ .member_detail p span{
+    display: inline-block;
+    width:140px;
+    padding: 0 20px;
+    text-align: right;
+ }
+.Pic_box{
+  display: inline-block;
+  .List {
+    width:650px;
+    padding-top: 20px;
+    overflow: hidden;
+    zoom: 1;
+    li{
+      float: left;
+      display: inline-block;
+      width:150px;
+      height:150px;
+      margin: 5px;
+      border: 1px solid #f0f0f0;
+      position: relative;
+      img{
+        width:150px;
+        max-height: 150px;
 
+      }
+      span{
+        margin-top: -30px;
+        position: absolute;
+        top: 0px;
+        left: 0;
+      }
+      
+    }
+
+  }
+}
 </style>

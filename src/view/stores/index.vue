@@ -17,7 +17,7 @@
           </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="onSubmit('search')">查询</el-button>
-             <el-button type="primary" :plain="true"  @click="handleDialog('add')">新增</el-button>
+             <el-button type="primary" :plain="true"  @click="handleDialog('add')">创建店铺</el-button>
           </el-form-item>
           <el-form-item>
            
@@ -34,9 +34,9 @@
                   <img :src="scope.row.businessLicense.path" />
               </li>
             </ul>
-            <p><span>店铺电话</span>{{scope.row.officeTel?scope.row.officeTel[0]:''}}</p>
-            <p><span>店铺传真</span>{{scope.row.officeAddress?scope.row.officeAddress[0]:''}}</p>
-            <p><span>店铺地址</span>{{scope.row.faxes?scope.row.faxes[0]:''}}</p>
+            <p><span>店铺电话:　　</span>{{scope.row.officeTel?scope.row.officeTel[0]:''}}</p>
+            <p><span>店铺地址:　　</span>{{scope.row.officeAddress?scope.row.officeAddress[0]:''}}</p>
+            <p><span>店铺传真:　　</span>{{scope.row.faxes?scope.row.faxes[0]:''}}</p>
         </template>
       </el-table-column>
       <el-table-column prop="storeId " label="店铺编号">
@@ -254,7 +254,13 @@ export default {
       }
       this.$confirm('店铺关闭后店铺的商品品牌订单将被删除').then(() => {
         closeStore(prop).then(res => {
-          cosnole.log(res)
+          if(res.data.state == 200){
+            this.getList()
+             this.$message('关闭成功')
+
+          }else{
+            this.$message(res.data.message)
+          }
         })
       }).catch(() => {
         console.log('取消')
