@@ -129,3 +129,28 @@ Vue.filter('filterBill',(value)=>{
     return '账单完成'
   }
 })
+
+// 设置项目
+Vue.filter('filterSetting',(value)=>{
+  if(value=='ORDER_AUTOMATIC_ORDER'){
+      return '自动下单时间'
+  }else if(value=='BILLS_PAYMENT_TIME'){
+      return '账单付款时间'
+  }else if(value=='BILLS_PAYMENT_FINISH_TIME'){
+      return '账单结算时间'
+  }else if(value=='VOUCHER_PAST_TIME'){
+    return '优惠券过期时间'
+  }
+})
+// 设定时间的格式
+Vue.filter('filterKeycode',(value)=>{
+   let  tt = value.split(' ')
+   if(tt.length > 1){
+       for(let v=0;v<tt.length-1;v++){
+         if(tt[v].length == 1){
+          tt[v]= '0'+tt[v]
+         }
+       }
+      return tt[2]+':'+tt[1]+':'+tt[0]
+   }
+})

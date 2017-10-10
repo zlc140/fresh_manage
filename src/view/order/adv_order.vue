@@ -59,19 +59,19 @@
             <span class="price">{{ scope.row.price | currency }}</span>
         </template>
     </el-table-column>
-     <el-table-column label="买家" prop="name">
+     <el-table-column label="买家" prop="">
         <template scope="scope">   
-            <span>{{ scope.row.orderDaddress.name}}</span>
+            <span>{{ scope.row.orderDaddress?scope.row.orderDaddress.name:'-'}}</span>
         </template>
     </el-table-column>
-     <el-table-column label="买家地址" prop="address">
+     <el-table-column label="买家地址" prop="">
         <template scope="scope">   
-            <span>{{ scope.row.orderDaddress.address}}</span>
+            <span>{{ scope.row.orderDaddress?scope.row.orderDaddress.address:''}}</span>
         </template>
     </el-table-column>
-    <el-table-column label="买家电话" prop="phone">
+    <el-table-column label="买家电话" prop="">
         <template scope="scope">   
-            <span>{{ scope.row.orderDaddress.phone}}</span>
+            <span>{{ scope.row.orderDaddress?scope.row.orderDaddress.phone:''}}</span>
         </template>
     </el-table-column>
   </el-table>

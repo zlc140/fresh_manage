@@ -162,10 +162,11 @@ export default {
         pageSize: this.pageSize,
         username: this.form.username,      
       }
+      
       memberlist(para).then((res) => {
-        console.log(res.data)
-          _this.tableData=[]
-          _this.totalElements=0
+        console.log('TEST',res.data)
+        _this.tableData=[]
+        _this.totalElements=0
         _this.listLoading = false
         if (res.data.state == 200 && res.data.message != '暂无数据') {
           if(res.data.content.content){
@@ -224,8 +225,8 @@ export default {
              _this.FormData = {
                 memberId:row.member.memberId,
                 username: row.username,//用户名
-                name:row.member.name,//真实姓名
-                nickName:row.member.nickName,//昵称
+                name:row.member.name?row.member.name:'',//真实姓名
+                nickName:row.member.nickName?row.member.nickName:'',//昵称
                 phone:row.member.phone,//个人电话
                 eMail:row.member.email?row.member.email:'',
                 idCardNo:row.member.idCardNo?row.member.idCardNo:'',
@@ -234,7 +235,7 @@ export default {
                 organizationCodePicStr:{
                   path:row.organizationCodePic.path?row.organizationCodePic.path:''
                 },
-                businessLicenseSN:row.businessLicenseSN.path?row.businessLicenseSN:'',//编号
+                businessLicenseSN:row.businessLicenseSN?row.businessLicenseSN:'',//编号
                 businessLicensePicStr:{
                   path:row.businessLicensePic.path?row.businessLicensePic.path:'' 
                 },//营业执照图片

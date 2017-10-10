@@ -7,6 +7,8 @@ const BASE_V = '/fresh-voucher'
 const BASE_BILL = '/fresh-bills'
 const BASE_CEN = '/user-center'
 const BASE_mer = '/fresh-member'
+
+
 // 用户订单
 export const orderlist = (prop) => {
     return axios({
@@ -129,6 +131,15 @@ export const rolelist = (prop) => {
     return axios({
         method:'post',
         url:BASE_mer+'/role/find',
+        params:prop
+    })
+}
+//获得角色的权限
+export const getPermittion = (prop) => {
+    console.log(prop)
+    return axios({
+        method:'post',
+        url:BASE_mer+'/role/findPermission',
         params:prop
     })
 }
@@ -564,5 +575,39 @@ export const checkBill = (para) => {
         method:'post',
         params:para,
         url:BASE_BILL+'/bills/check',
+    })
+}
+// 基本设定
+const BASE_SET = '/fresh-setting'
+// 添加设定
+export const settingSave = () => {
+    return axios({
+        method:'post',
+        params:para,
+        url:BASE_SET+'/setting/saveBasicSetup',
+    })
+}
+// 设定列表
+export const settinglist = (para) => {
+    return axios({
+        method:'post',
+        params:para,
+        url:BASE_SET+'/setting/findAllBs',
+    })
+}
+// 编辑设定
+export const settingEdit = () => {
+    return axios({
+        method:'post',
+        params:para,
+        url:BASE_SET+'/setting/updateBasicSetup',
+    })
+}
+// 删除设定
+export const settingDel = () => {
+    return axios({
+        method:'post',
+        params:para,
+        url:BASE_SET+'/setting/updateBasicSetup',
     })
 }

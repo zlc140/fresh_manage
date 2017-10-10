@@ -80,10 +80,10 @@ export const router = new Router({
       component:main,
       children:[
         {path:'proAdd',component:proAdd,name:'发布商品'},
-        {path:'prolist',component:proList,name:'商品列表'},
-        {path:'kucunlist',component:kucunList,name:'库存管理'},
+        {path:'prolist',component:proList,name:'商品管理'},
+        {path:'kucunlist',component:kucunList,name:'商品库存'},
         {path:'classlist',component:classList,name:'商品分类'},
-        {path:'brand',component:brand,name:'品牌列表'},
+        {path:'brand',component:brand,name:'品牌管理'},
         // {path:'review',component:review,name:'商品评论'}
       ]
     },
@@ -102,7 +102,7 @@ export const router = new Router({
       name:'商铺模块',
       component:main,
       children:[
-          {path:'storeManage',component:storeList,name:'商铺管理'}
+          {path:'storeManage',component:storeList,name:'店铺管理'}
       ]
     },
     {
@@ -123,32 +123,32 @@ export const router = new Router({
       name:'优惠活动',
       component:main,
       children:[
-          {path:'couponList',component:couponList,name:'管理代金券'},
-          {path:'history',component:history,name:'操作日志'},
+          {path:'couponList',component:couponList,name:'代金券管理'},
+          {path:'history',component:history,name:'代金券操作日志'},
       ]
     },
-    {
-      path:'/finance',
-      name:'财务模块',
-      component:main,
-      children:[
-          {path:'finance',component:finance,name:'财务管理'}
-      ]
-    },
-    {
-      path:'/tabel',
-      name:'报表模块',
-      component:main,
-      children:[
-          {path:'baobiao',component:baobiao,name:'报表管理'}
-      ]
-    },
+    // {
+    //   path:'/finance',
+    //   name:'财务模块',
+    //   component:main,
+    //   children:[
+    //       {path:'finance',component:finance,name:'财务管理'}
+    //   ]
+    // },
+    // {
+    //   path:'/tabel',
+    //   name:'报表模块',
+    //   component:main,
+    //   children:[
+    //       {path:'baobiao',component:baobiao,name:'报表管理'}
+    //   ]
+    // },
     {
       path:'/Manage',
       name:'系统设置',
       component:main,
       children:[
-          {path:'managelist',component:manageList,name:'基本设定'}
+          {path:'managelist',component:manageList,name:'系统基本设定'}
       ]
     },
     {

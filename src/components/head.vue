@@ -7,7 +7,7 @@
                 <el-col :span="10">
                     <div class="tools">
                         <i class="el-icon-menu "  @click="collapse"></i>
-                        欢迎 {{ userName.username }} 登录生鲜馆后台管理系统
+                        欢迎 ( {{roleName}} - {{ userName.username }})  登录生鲜馆后台管理系统
                     </div>
                 </el-col>
                 <el-col :span = "8" class="userinfo">
@@ -31,17 +31,33 @@ export default {
     data() {
         return {
             userName:{
-                username:getStore('username')?getStore('username').username:''
+                username:getStore('username')?getStore('username').username:'',
             },
             collapsed:false,
         }
     },
+    computed:{
+        roleName(){
+            return this.$store.state.role
+        }
+    },
     mounted(){
         // 判断是否登录成功
-        if(getStore('username') == null){
+        if(getStore('username') == null ){
             this.$message('请先登录！')
             this.$router.push('/login')
         } 
+         this.$store.dispatch('GenerateRoutes').then(res => {  
+             console.log(res)
+             if(res !== true){
+                 this.$message(res)
+                 this.$router.push('/login')
+             }else{
+                 let urls = getStore('addRouters')[0].path+'/' +getStore('addRouters')[0].children[0].path
+                 this.$router.push(urls)
+             } 
+         })
+       
     },
     methods:{
 

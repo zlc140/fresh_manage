@@ -6,19 +6,25 @@ Vue.use(Vuex)
 
 const state = {
     username:'',
-    addRouters:[]
+    addRouters:[],
+    role:''
 }
 
 const mutations = {
     SET_ROUTES: (state, routers) => {
+        console.log('mei',routers)
         state.addRouters = []
-        state.addRouters = routers
-        setStore('addRouters',routers)
+        state.addRouters = routers.routs
+        state.role = routers.roleName.name
+        setStore('roleName',routers.roleName)
+        setStore('addRouters',routers.routs)
     },
     LOGOUT: (state) => {
         state.addRouters = []
         removeStore('username')
         removeStore('addRouters')
+        removeStore('roleName')
+        removeStore('keyCode')
     }
 }
 

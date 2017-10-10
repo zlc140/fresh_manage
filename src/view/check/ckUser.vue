@@ -282,6 +282,19 @@ export default {
             _this.tableData.push(res.data.content)
             _this.totalElements = 1;
           }
+           _this.tableData.forEach(function(child) {
+             child.rolesName = ''
+             if(child.member.roleList && child.member.roleList.length>0){
+               child.member.roleList.forEach(v=> {
+                  child.rolesName += v.name + ','
+                  if(v.permissionsList && v.permissionsList.length>0){
+                    v.permissionsList.forEach(m => {
+                      child.rolesName += m.name +','
+                    })
+                  }
+               })
+             }
+            }, this);  
         }
       }).catch(() => {
         _this.listLoading = false

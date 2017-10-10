@@ -9,7 +9,7 @@
             </el-form-item>
             <el-form-item label="身份标识" prop="roleCode" required>
                 <el-input v-model="addForm.roleCode" auto-complete="off"></el-input>
-                 <p class="tip">角色：管理员：等级</p>
+                 <p class="tip">角色：管理员：等级（ROLE:SELLER:UE）</p>
             </el-form-item> 
           <el-form-item label="默认角色" prop="theDefault">
             <el-switch on-text="" off-text="" v-model="addForm.theDefault" on-text="是" off-text="否"></el-switch>
@@ -27,7 +27,7 @@
 </template>
 
 <script>
-import { permissionlist, roleadd, roleedit,rolelist} from '@/service/getData'
+import { permissionlist, roleadd, roleedit,getPermittion} from '@/service/getData'
 export default {
     data() {
           var nospace = (rule, value, callback) => {         
@@ -75,17 +75,20 @@ export default {
         }
     },
     mounted() {
-        this.getclass()
+       console.log(this.addForm)
         if (this.type == "edit") {
             this.addForm = {
                 id: this.formData.id,
-                pIds: this.formData.pIds,
+                pIds:'',
                 name: this.formData.name,
                 roleCode: this.formData.roleCode,
                 theDefault :this.formData.theDefault
             }
-            // console.log(this.addForm)
+           
         }
+        this.getclass()
+        this.getPer()
+        
     },
     methods: {
         getclass() {
@@ -97,32 +100,15 @@ export default {
                     if (!datas) {
                         return false
                     }
-                    _this.classValues = []
-                    let str = this.addForm.pIds
-                    let sub=str.substring(0,str.length-1)
-                    let strr=sub.split(",");
-                    console.log(datas)
                     datas.forEach(function(child) {                            
-                        if (_this.type == 'edit') {
-                            strr.forEach(v => {
-                                if(parseInt(v) == child.id){
-                                    _this.classValues.push(child.id)
-                                }
-                            })                               
-                        }
+                       
                         _this.classData.push({
                             id: child.id,
                             name: child.description,
                         })
                         if (child.children) {
                             child.children.forEach((item) => {
-                                if (_this.type == 'edit') {
-                                         strr.forEach(v => {
-                                            if(parseInt(v) == item.id){
-                                                _this.classValues.push(item.id)
-                                            }
-                                        })
-                                }
+                                
                                 _this.classData.push({
                                     id: item.id,
                                     name: '　　　' + item.description
@@ -133,6 +119,24 @@ export default {
                     }, this);
                    
                 }
+            })
+        },
+        getPer(){
+            let prop = {
+                roleId:this.addForm.id
+            }
+            let _this = this
+            _this.classValues = []
+            getPermittion(prop).then(res => {
+                console.log('ro',res)
+                let ids = ''
+                if(res.data.state == 200){
+                    res.data.content.forEach(v => {
+                        _this.classValues.push(v.id)
+                    })
+                     
+                }
+                
             })
         },
         // 保存
@@ -147,17 +151,18 @@ export default {
                         roleCode: this.addForm.roleCode,
                         theDefault :this.addForm.theDefault
                     }
+                    console.log('role',para)
                     if (this.type == 'add') {
                         roleadd(para).then((res) => {
                             this.addLoading = true;
-                            this.$message(res.data.message)
+                            this.$message(res.data.messages)
                             this.$emit('close', true)
                         })
                     } else if (this.type == 'edit') {
                         para.id = this.addForm.id
                         roleedit(para).then((res) => {
                             this.editFormLoading = true;
-                            this.$message(res.data.message)
+                            this.$message(res.data.messages)
                             this.$emit('close', true)
                         })
                     }

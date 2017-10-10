@@ -2,11 +2,7 @@ import axios from 'axios'
 import { setStore,getStore } from '@/config/storage'
 
 export const Login = (prop) => {
-     
     
-    // return new Promise((resolve,reject) => {
-    //     resolve([200])
-    // })
     console.log(prop)
     return  axios({
                     method:'POST',
@@ -33,11 +29,12 @@ export const Login = (prop) => {
                return false
             })
 }
-export const getAdd = () => {
+// 登录后验证权限
+export const getRole  = () => {
     return axios({
         method:'post',
-        url:'/test2'
+        url:'/fresh-member/memberInfo/findMyRole',
     }).then(res => {
         console.log(res)
-    })
+    }) 
 }

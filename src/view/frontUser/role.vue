@@ -7,7 +7,19 @@
       <el-table-column label="权限编号" prop="id"></el-table-column>
       <el-table-column label="角色名称" prop="name">
         <template scope="scope">
-          <span @mouseover="Default(scope.$index, scope.row)">{{scope.row.name}}</span>
+          <span >{{scope.row.name}}</span>
+        </template>
+      </el-table-column>
+       <el-table-column label="默认角色" prop="theDefault">
+        <template scope="scope">
+            <!-- <el-radio class="radio" v-model="scope.row.theDefault" label="1" >设为默认</el-radio> -->
+          <el-switch
+          @click="check(scope.row)"
+          v-model="scope.row.theDefault"
+          @change= "handleChange(scope.row)"
+          on-text=""
+          off-text="">
+        </el-switch>
         </template>
       </el-table-column>
       <el-table-column label="身份标识" prop="roleCode"></el-table-column>
@@ -20,9 +32,9 @@
         </template>
       </el-table-column>
     </el-table>
-      <el-dialog  size="mini" v-model="editFormVisible" :close-on-click-modal="false">
+      <!-- <el-dialog  size="mini" v-model="editFormVisible" :close-on-click-modal="false">
        <el-button type="primary" @click.native="editSubmit">设为默认</el-button>
-    </el-dialog>
+    </el-dialog> -->
     <!-- 编辑添加 -->
     <dialog-tem v-if="addFormVisible" :type="type" :title="title" :formData="addForm" @close="close"></dialog-tem>
   </div>
@@ -41,7 +53,6 @@ export default {
         roleCode: '',
         name: '',
       },
-      editFormVisible:false,
       editForm:{
         theDefault:''
       },
@@ -73,28 +84,23 @@ export default {
     },
     // 编辑
     editd(index, row) {
-      console.log(row)
+     
       this.type = "edit"
       this.title = "编辑角色"
       this.addFormVisible = true;
       let ids = ''
-      if(row.permissionList){
-        row.permissionList.forEach(v => {
-          ids += v.id+','
-          if(v.children && v.children.length>0){
-            v.children.forEach(child => {
-              ids += child.id+','
-            })
-          }
-        })
-      }
+      // if(row.permissionList){
+      //   row.permissionList.forEach(v => {
+      //     ids += v.id+','
+      //   })
+      // }
       this.addForm = {
-        pIds: ids,
         roleCode: row.roleCode,
         name: row.name,
         id:row.id,
         theDefault :row.theDefault 
       }
+      //  console.log("编辑角色",row,this.addForm)
     },
     // 添加角色
     addOne() {
@@ -102,7 +108,6 @@ export default {
       this.title = "添加角色"
       this.addFormVisible = true;
       this.addForm = {
-        pIds: '',
         roleCode: '',
         name: '',
       }
@@ -120,6 +125,24 @@ export default {
          this.editFormVisible = false
          this.getList()
       })
+    },
+    check(row){
+      if(row.theDefault == true){
+        row.theDefault = true
+        return false
+      }
+    },
+    handleChange(row){
+      console.log('1111',row)
+        row.theDefault = !row.theDefault 
+        let prop = {
+          id : row.id
+        }
+        roleDefault(prop).then((res)=>{
+          console.log('radio',res)
+          this.editFormVisible = false
+          this.getList()
+        })
     },
     // 删除
     delChild(index, row) {

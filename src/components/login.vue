@@ -42,7 +42,8 @@
 </template>
 <script>
  
-import {Login,getAdd} from '@/service/config_router.js'
+import {Login,getRole} from '@/service/config_router.js'
+
 import { getStore,setStore } from '@/config/storage'
 import starFlow from "./startFlow"
     export default {
@@ -113,10 +114,11 @@ import starFlow from "./startFlow"
                let _this = this
               this.$refs.ruleForm.validate((valid) => {
                 if(valid) {
-                    if(getStore('username') != null){//当前有账号登录，却要登录另一个号怎么处理
-                         this.$router.push('/view/prolist')
-                         return false
-                    }
+                    // if(getStore('username') != null){//当前有账号登录，却要登录另一个号怎么处理
+                    //  _this.checkRole()
+                    //      this.$router.push('/view/prolist')
+                    //      return false
+                    // }
                     let prop={
                         username:_this.user.username,
                         password:_this.user.password,
@@ -126,6 +128,7 @@ import starFlow from "./startFlow"
                     Login(prop).then((res) => {
                         _this.getCode()
                         if(res == true){
+                           
                          _this.$router.push('/view/prolist')
                         }else if(res == false){
                             _this.$message('登录失败')
@@ -157,7 +160,9 @@ import starFlow from "./startFlow"
                     }
                 })
 
-            },
+            }
+             
+
            
         }
     }

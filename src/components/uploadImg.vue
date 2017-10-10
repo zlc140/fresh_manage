@@ -92,8 +92,15 @@ export default {
         }
     },
     mounted() {
-        this.srcs = this.picList
-        
+        let _this = this
+        this.srcs = []
+        if(this.picList.length>0){
+            this.picList.forEach(function(ele) {
+                if( ele  ){
+                    _this.srcs.push(ele)
+                }
+            });
+        }
         console.log(this.picList)
         // console.log(this.srcs)
         if (this.sizeBox != null) {
