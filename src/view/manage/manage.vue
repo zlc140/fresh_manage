@@ -13,7 +13,7 @@
       </el-table-column>
       <el-table-column label="操作时间" prop="keyCode">
         <template scope="scope">
-          <span>{{scope.row.keyCode | filterKeycode}}</span>
+          <span>{{scope.row.keyCode}}</span>
         </template>
       </el-table-column>
       <el-table-column label="操作" width="100">
@@ -72,7 +72,13 @@ export default {
       this.type = "edit"
       this.title = "编辑设定"
       this.addFormVisible = true;
-      this.addForm = Object.assign({}, row)
+      let str = row.keyCode.split(' ').join(',')
+      
+      this.addForm = {
+         keyNames:row.keyNames,
+         keyCode:str,
+         id:row.id
+      }
     },
     
     addOne(){

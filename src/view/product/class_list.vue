@@ -8,6 +8,7 @@
       <el-table-column type="expand" label="子类">
         <template scope="scope">
           <el-table :data="scope.row.childClass" style="100%" :show-header="false">
+           <el-table-column label="分类排序" prop="orderNum"> </el-table-column>
             <el-table-column label="分类名称" prop="classTitle"> </el-table-column>
             <el-table-column label="关键字" prop="keywords"> </el-table-column>
             <el-table-column label="创建时间" prop="createTime">
@@ -32,6 +33,8 @@
         </template>
       </el-table-column>
       <!-- 父级 -->
+      <el-table-column label="分类排序" prop="orderNum">
+      </el-table-column>
       <el-table-column label="分类名称" prop="classTitle">
       </el-table-column>
       <el-table-column label="关键字" prop="keywords">
@@ -83,7 +86,6 @@ export default {
       type: 'add',
       title: '添加分类',
       picShow: true,
-
       listLoading: false,
       //添加分类
       addFormVisible: false,
@@ -107,7 +109,6 @@ export default {
   methods: {
     close() {
       this.getList()
-
       this.addFormVisible = false
     },
     show(index, row) {
@@ -175,7 +176,8 @@ export default {
         classTitle: row.classTitle,
         keywords: row.keywords,
         classId: row.classId,
-        gcShow: row.gcShow
+        gcShow: row.gcShow,
+        orderNum:row.orderNum
       }
     },
     // 添加子类
@@ -187,7 +189,9 @@ export default {
         classTitle: '',
         keywords: '',
         parentClassId: row.classId,
-        gcShow: true
+        gcShow: true,
+        orderNum:0
+
       }
     },
     // 添加分类
@@ -199,6 +203,7 @@ export default {
         classTitle: '',
         keywords: '',
         gcShow: true,
+        orderNum:0,
         pics: [
           {
             path: ''

@@ -6,7 +6,7 @@
 					<el-input v-model="addForm.title" auto-complete="off" ></el-input>
 				</el-form-item>
 				<el-form-item label="链接地址" prop="url">
-					<el-input v-model="addForm.image.url" auto-complete="off"></el-input>
+					<el-input v-model="addForm.image.url" auto-complete="off" placeholder="提示：http://hafu365.com"></el-input>
 				</el-form-item>
                 <el-form-item label="上传图片" prop="image.path" required class="addPicBox">
                     <template scope="scope">
@@ -20,7 +20,7 @@
                             :multiple="selectPic.multiple"
                             :cropShow="selectPic.cropShow">
                         </vue-core-image-upload> 
-                        <p class="tip">提示：为避免失真，请尽可能上传 1200 × 350 的图片做为首页banner展示图</p>
+                        <p class="tip">提示：为避免失真，请尽可能上传1980px*470px的图片做为首页banner展示图</p>
                     </template> 
 				</el-form-item>
                 <el-form-item label="永久显示" prop="onlyShow" >
@@ -97,8 +97,8 @@ export default {
              selectPic:{
                 // upImg
                 radio:'1200:350',
-                size:['1200','350'],
-                cropShow:true,
+                size:['1200',''],
+                cropShow:false,
                 multiple: false,
                 picList:[]
             },

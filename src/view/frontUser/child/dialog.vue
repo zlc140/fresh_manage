@@ -1,10 +1,15 @@
 <template>
     <div class="dialog brand">
-        <h3 class="title">{{title}}
+        <h3 class="title">
+            <el-radio-group v-model="radio" @change="handle">
+                <el-radio-button label="add">修改用户注册信息</el-radio-button>
+                <el-radio-button label="edit">修改用户资料</el-radio-button>
+            </el-radio-group>
             <el-button class="fr" @click.native="clean">取消</el-button>
         </h3>
-        <p class="titleLitter">——修改用户注册信息——</p>
-        <el-form :model="editForm" label-width="150px" ref="editForm">
+        
+        <!-- <p class="titleLitter">——修改用户注册信息——</p> -->
+        <el-form :model="editForm" label-width="150px" ref="editForm" v-if="radio == 'add'">
             
                <el-form-item label="用户昵称"  prop="nickName">
                 <el-input v-model="editForm.nickName" auto-complete="off" placeholder="请填写用户昵称"></el-input>
@@ -18,7 +23,7 @@
                 <el-form-item label="个人身份证"  prop="idCardNo ">
                     <el-input v-model="editForm.idCardNo " auto-complete="off" placeholder="请填写个人身份证"></el-input>
                 </el-form-item>
-                <el-form-item label="身份证照片" >
+                <!-- <el-form-item label="身份证照片" >
                     <vue-core-image-upload 
                     v-if="picShow" 
                     @getImg="getIdCardImg" 
@@ -28,14 +33,14 @@
                     :multiple="selectPic.multiple" 
                     :cropShow="selectPic.cropShow">
                     </vue-core-image-upload>
-                </el-form-item>
+                </el-form-item> -->
             </el-form>
-                <div slot="footer" class="dialog-footer border_top">
-                    <el-button type="primary" @click.native="saveMember">保存用户</el-button>
-                </div>
+                <div slot="footer" class="dialog-footer border_top" v-if="radio == 'add'">
+                    <el-button type="primary" @click.native="saveMember">保 存</el-button>
+                </div> 
 
-            <p class="titleLitter">——修改完善用户资料——</p>
-            <el-form :model="editForm" label-width="150px" ref="editForm">
+            <!-- <p class="titleLitter">——修改完善用户资料——</p> -->
+            <el-form :model="editForm" label-width="150px" ref="editForm" v-if="radio == 'edit'">
                 
                     <!-- 上传用户头像  -->
                 <el-form-item label="用户头像" >
@@ -49,9 +54,14 @@
                     :cropShow="selectPic.cropShow">
                     </vue-core-image-upload>
                 </el-form-item>
-                    <el-form-item label="用户角色" prop="roleId">
+                <el-form-item label="用户角色" prop="roleId">
                     <el-select v-model="roleSel" multiple>
                         <el-option v-for="(item,index) in  classData" :key="index" :value="item.id" :label="item.name"> </el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="用户状态" prop="state">
+                    <el-select v-model="editForm.state">
+                        <el-option v-for="(item,index) in  options" :key="index" :value="item.value" :label="item.name"> </el-option>
                     </el-select>
                 </el-form-item>
                <el-form-item label="组织机构代码"  prop="organizationCode">
@@ -96,8 +106,8 @@
                 </vue-core-image-upload>
             </el-form-item>
         </el-form>
-        <div slot="footer" class="dialog-footer border_top">
-            <el-button type="primary" @click.native="editSubmit">保存</el-button>
+        <div slot="footer" class="dialog-footer border_top" v-if="radio == 'edit'">
+            <el-button type="primary" @click.native="editSubmit">保 存</el-button>
         </div>
     </div>
 </template>
@@ -107,12 +117,20 @@ import vueCoreImageUpload from '@/components/uploadImg'
 import { memberlist, memberadd, rolelist,userChange } from '@/service/getData'
 export default {
     data() {
+ 
         return {
             //图片
+            radio:'add',
             picShow: false,
-            getIdCard:[],//身份证照片
+            // getIdCard:[],//身份证照片
             getOranization:[],//组织机构图片
             getBus:[],//营业执照图片
+            options:[
+                {value:'USER_STATE_CHECK_ING',name:'审核中'},
+                {value:'USER_STATE_CHECK_NO',name:'审核通过'},
+                {value:'USER_STATE_CHECK_OFF',name:'不通过'},
+                {value:'USER_STATE_LOCK_ING',name:'用户锁定'}
+            ],
             selectPic: {
                 radio: '1200:350',
                 size: ['400', ''],
@@ -134,7 +152,7 @@ export default {
                 roleId: '',
                 businessLicenseSN :'',
                 organizationCode:'',
-
+                state:'',
                 username: '',
                 portrait: {path:''},//用户头像
                 name:'',//用户个人资料
@@ -175,7 +193,7 @@ export default {
         this.editForm = Object.assign({}, this.FormData)
         console.log('te',this.FormData)
         this.selectPic.picList = []
-        this.getIdCard=[]//身份证照片
+        // this.getIdCard=[]//身份证照片
         this.getOranization=[]//组织机构图片
         this.getBus=[]//营业执照图片
         // 头像
@@ -197,15 +215,18 @@ export default {
             )
         }
         // 身份证
-         if (this.editForm.idCardPicStr.path != '') {
-            this.getIdCard.push(
-                this.editForm.idCardPicStr.path
-            )
-        }
+        //  if (this.editForm.idCardPicStr.path != '') {
+        //     this.getIdCard.push(
+        //         this.editForm.idCardPicStr.path
+        //     )
+        // }
         this.picShow = true
         this.list()
     },
     methods: {
+        handle(val){
+            console.log(val)
+        },
         list() {
             rolelist().then((res) => {
                 let _this = this              
@@ -217,7 +238,15 @@ export default {
                         if(_this.FormData.roleList){
                             _this.FormData.roleList.forEach(m =>{
                                 if(m.id == child.id){
+                                    // let p = true
+                                    // _this.roleSel.forEach(roles => {
+                                    //     if(roles == child.id){
+                                    //         p = false
+                                    //     }
+                                    // })
+                                    // if(p == true){
                                     _this.roleSel.push(child.id)
+                                    // }
                                 }
                             })
                         }
@@ -231,7 +260,7 @@ export default {
         },
         clean() {
             this.$emit('close', false)
-            this.$refs['editForm'].resetFields()
+            // this.$refs['editForm'].resetFields()
         },
         // 保存
         editSubmit() {
@@ -251,6 +280,7 @@ export default {
                         })
                     }
                     let para = {
+                        state:this.editForm.state,
                         username: this.editForm.username,
                         roleId: this.editForm.roleId,
                         officeTel: this.editForm.officeTel,
@@ -298,7 +328,7 @@ export default {
                         idCardNo:this.editForm.idCardNo,
                         eMail:this.editForm.eMail,
                         phone:this.editForm.phone,
-                        idCardPicStr :{path:this.editForm.idCardPicStr.path},//身份证图片
+                        // idCardPicStr :{path:this.editForm.idCardPicStr.path},//身份证图片
                 }
                 console.log(para)
                 userChange(para).then((res) => {

@@ -35,7 +35,7 @@
           <template scope="scope">
             <div class="play_box">
                 <el-button type="text" @click="check('pass',scope.row)">审核通过</el-button>
-                 <el-button type="text" @click="check('pass',scope.row)">审核不通过</el-button>
+                 <el-button type="text" @click="check('npass',scope.row)">审核不通过</el-button>
           </div>
         </template>
       </el-table-column>

@@ -19,7 +19,7 @@
                       <el-button size="mini" @click="addPro(item)">关联商品</el-button>
                       <span class="close" @click="delAdv(item,index)"><i class="el-icon-close"></i></span>
                       <img :src="item.image.path"/>
-                      <el-input v-model="item.image.url" placeholder="图片链接"></el-input>
+                      <el-input v-model="item.image.url"  placeholder="提示：http://hafu365.com"></el-input>
                       <el-input v-model="item.image.title" placeholder="图片标题"></el-input>
                       <dl v-if="item.goods.length>0">
                         <dd v-for="(child,index) in item.goods" :key="index">

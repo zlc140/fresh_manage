@@ -21,7 +21,7 @@
                 </span>
             </li>
          </ul>
-         <el-dialog class="imglog" v-model="bigImgShow"   :close-on-click-modal="true">
+         <el-dialog class="imglog" v-model="bigImgShow"  :close-on-click-modal="true">
              <div class="content imgBox">
                  <img :src="bigImg" ref="getImg" :style="styles"/>
             </div>
@@ -44,8 +44,9 @@ export default {
             bigImgShow:false,
             styles:{
                 width:'auto',
+                minWidth:'200px',
+                minHeight:'200px',
                 height:'auto',
-                minWidth:'200px'
             }
         }
     },
@@ -104,8 +105,8 @@ export default {
         console.log(this.picList)
         // console.log(this.srcs)
         if (this.sizeBox != null) {
-                this.styles.width = this.sizeBox[0]+'px'
-                // this.styles.Height = this.sizeBox[0]+'px'
+            this.styles.width = this.sizeBox[0]+'px'
+            this.styles.height = 'auto'
                 
         }
         if (this.cropShow == true) {

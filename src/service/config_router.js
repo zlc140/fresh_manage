@@ -12,7 +12,7 @@ export const Login = (prop) => {
                 console.log(res)
                 if(res.data.state == 'SUCCESS'){
                     prop.password = ''
-                    setStore('username',prop)
+                    // setStore('username',prop)
                     return true
                 }else{
                     return res.data.messages

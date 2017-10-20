@@ -33,6 +33,9 @@ export default {
 </script>
 
 <style lang="scss">
+.dialog-content{
+    min-width:400px;
+}
 .edit-box{
   cursor: pointer;
 }
@@ -54,6 +57,7 @@ export default {
   -ms-display:flex;
   width:100%;
   min-height:calc(100% - 70px);
+  min-height:-webkit-calc(100% - 70px);
 
 }
 .toolbar{
@@ -61,6 +65,9 @@ export default {
     text-align: right;
     .add{
         float:right;
+    }
+    .el-input__inner{
+        width:170px;
     }
 }
 .section{
@@ -79,6 +86,7 @@ export default {
 }
 .aside{
   max-width:230px;
+  background-color: #324157;
 }
 .el-button {
     padding: 7px 15px;
@@ -245,21 +253,21 @@ export default {
 .Pic_box{
   display: inline-block;
   .List {
-    width:650px;
+    width:450px;
     padding-top: 20px;
     overflow: hidden;
     zoom: 1;
     li{
       float: left;
       display: inline-block;
-      width:150px;
-      height:150px;
+      width:100px;
+      height:100px;
       margin: 5px;
       border: 1px solid #f0f0f0;
       position: relative;
-      img{
-        width:150px;
-        max-height: 150px;
+      &>img{
+        width:100px;
+        max-height: 100px;
 
       }
       span{
@@ -268,9 +276,33 @@ export default {
         top: 0px;
         left: 0;
       }
-      
+      .doing{
+          position: absolute;
+          width:100%;
+          height:100%;
+          left:0;
+          top: 30px;
+          z-index: 9;
+          background-color: rgba(0,0,0,0.3);
+          display: none;
+          text-align: center;
+          line-height: 100px;
+          color:white;
+          font-size: 20px;
+      }
+      &:hover .doing{
+          display: block;
+      }
     }
 
   }
 }
+.dialogImgBox{
+   width:100%;
+   img{
+     max-width: 100%;
+     min-width:300px;
+     height:auto;
+   }
+ }
 </style>

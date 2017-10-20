@@ -54,7 +54,7 @@
     <el-dialog title="修改库存" size="mini"  :rules="rules" v-model="editFormVisible" :close-on-click-modal="false">
       <el-form :model="editForm" :rules="rules" label-width="80px" ref="editForm">
         <el-form-item label="库存数量" prop="stockNum">
-          <el-input type="number" v-model="editForm.stockNum" min="1" auto-complete="off"></el-input>
+          <el-input type="number" v-model="editForm.stockNum" min="1" step="1" auto-complete="off"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -69,16 +69,23 @@
 </template>
 
 <script>
-import { prolist,classlist, kucunedit} from '@/service/getData'
+ import { getStore } from '@/config/storage'
+import { prolist,classlist, kucunedit,getMyStore} from '@/service/getData'
 export default {
   data() {
-    var kcNum = (rule, value, callback) => {
+     var kcNum = (rule, value, callback) => {
+      let par = /^(?!^0*(\.0{1,2})?$)^\d{1,13}(\.\d{1,2})?$/
       let str = value + ''
-      if (parseFloat(value) < 1) {
+      if(parseFloat(value) == NaN ){
+         callback(new Error('库存格式不正确'))
+      }else if (parseFloat(value) < 1) {
         callback(new Error('库存不少于1'))
       } else if (str.indexOf('.') + 1 > 1) {
         callback(new Error('库存应为整数'))
-      } else {
+        console.log(parseInt(value))
+      } else if (!par.test(value)) {
+        callback(new Error('库存格式不正确'))
+      }else {
         callback()
       }
     }
@@ -87,6 +94,7 @@ export default {
         goodsId: '',//货号
         goodsTitle: '',//商品名称
         gclist: '',//菜单
+        storeId:''
       },
       // 分页
       listLoading:false,
@@ -115,7 +123,13 @@ export default {
     }
   },
   mounted() {
-    this.getList()
+    if(getStore('roleName') &&　getStore('roleName').roleCode.indexOf('SELLER')>0){
+      this.seachMove = false
+      this.getThisStore()
+    }else{
+      this.getList()
+    }
+    
   },
   methods: {
     getList() {
@@ -126,6 +140,9 @@ export default {
         goodsId: this.form.goodsId,
         gclist:this.form.gclist,
         goodsTitle:this.form.goodsTitle
+      }
+      if(this.form.storeId != ''){
+        para.storeId = this.form.storeId
       }
       // 表格数据
       prolist(para).then((res) => {  
@@ -146,6 +163,19 @@ export default {
           stockNum: row.goodsStock.stockNum
       }
     },
+     getThisStore() {
+        console.log(0)
+        let _this = this
+          getMyStore().then(res => {
+            console.log('myStore',res)
+            if(res.data.state == 200){
+                _this.form.storeId = res.data.content.storeId
+                _this.getList()
+            }else{
+              this.$message('您的店铺还没有审核，请确认是否完善资料！')
+            }
+          })
+     },
     // 提交
     editSubmit() {
       let _this = this

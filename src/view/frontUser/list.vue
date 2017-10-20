@@ -19,7 +19,7 @@
       <el-table-column type="expand">
         <template scope="scope">
           <div class="member_detail">
-              <p><span>用户角色：</span>{{ scope.row.rolesName?scope.row.rolesName:''}} </p>
+              <p><span>用户真实姓名：</span>{{ scope.row.member.name?scope.row.member.name:''}} </p>
               <p ><span>工作单位:</span>{{ scope.row.workUnit}}</p>
               <p ><span>办公室电话:</span>{{ scope.row.officeTel}}</p>
               <p ><span>办公室地址: </span>{{ scope.row.officeAddress}}</p>
@@ -30,16 +30,30 @@
          </div>
          <div class="Pic_box">
             <ul class="List ">
-              <li v-if="scope.row.businessLicensePic && scope.row.businessLicensePic.path"> <img :src="scope.row.businessLicensePic.path"/>  <span>营业执照照片</span> </li>
-              <li v-if="scope.row.organizationCodePic && scope.row.organizationCodePic.path"> <img :src="scope.row.organizationCodePic.path"/> <span>组织机构代码图片</span></li>
-              <li v-if="scope.row.portrait &&　scope.row.portrait.path"> <img :src="scope.row.portrait.path"/> <span>头像</span></li>
-              <li v-if="scope.row.member.idCardPic && scope.row.member.idCardPic.path"> <img :src="scope.row.member.idCardPic.path"/> <span>身份证图片</span></li>
+              <li v-if="scope.row.businessLicensePic && scope.row.businessLicensePic.path">
+                 <img :src="scope.row.businessLicensePic.path"/>  
+                 <span>营业执照照片</span> 
+                 <span class="doing"><i class="el-icon-view" @click="bigMove(scope.row.businessLicensePic.path)"></i></span> 
+                 </li>
+              <li v-if="scope.row.organizationCodePic && scope.row.organizationCodePic.path">
+                 <img :src="scope.row.organizationCodePic.path"/> 
+                 <span>组织机构代码图片</span>
+                  <span class="doing"><i class="el-icon-view" @click="bigMove(scope.row.organizationCodePic.path)"></i></span>
+                 </li>
+              <li v-if="scope.row.portrait &&　scope.row.portrait.path"> 
+                <img :src="scope.row.portrait.path"/> <span>头像</span>
+                <span class="doing"><i class="el-icon-view" @click="bigMove(scope.row.portrait.path)"></i></span>
+                </li>
+              <!-- <li v-if="scope.row.member.idCardPic && scope.row.member.idCardPic.path"> 
+                <img :src="scope.row.member.idCardPic.path"/> <span>身份证图片</span>
+                <span class="doing"><i class="el-icon-view" @click="bigMove(scope.row.member.idCardPic.path)"></i></span>
+                </li> -->
             </ul>
          </div>
         </template>
       </el-table-column>
       <!-- 父级 -->
-      <el-table-column prop="memberId " label="用户编号" min-width="100px">
+      <el-table-column prop="memberId " label="用户编号" min-width="130px">
         <template scope="scope">
           <span>{{ scope.row.member.memberId}}</span>
         </template>
@@ -49,39 +63,47 @@
           <span>{{ scope.row.member.username}}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="phone  " label="个人电话">
+      <el-table-column prop="phone  " label="个人电话" width="120">
         <template scope="scope">
           <span>{{ scope.row.member.phone}}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="name" label="真实姓名">
+      <el-table-column prop="rolesName" label="用户角色" min-width="120">
         <template scope="scope">
-          <span>{{ scope.row.member.name}}</span>
+          <span>{{ scope.row.rolesName?scope.row.rolesName:''}}</span>
         </template>
       </el-table-column>
-       <el-table-column prop="nickName" label="用户昵称">
+       <!-- <el-table-column prop="nickName" label="用户昵称">
         <template scope="scope">
           <span>{{ scope.row.member.nickName}}</span>
         </template>
-      </el-table-column>
-       <el-table-column prop="email  " label="邮箱地址">
+      </el-table-column> -->
+       <el-table-column prop="email  " label="邮箱地址" min-width="120">
         <template scope="scope">
           <span>{{ scope.row.member.email?scope.row.member.email:''}}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="updateTime  " label="上次修改时间">
+       <el-table-column prop="state" label="状态">
+        <template scope="scope">
+          <span>{{ scope.row.state | userstate}}</span>
+        </template>
+      </el-table-column>
+      <el-table-column prop="updateTime  " label="上次修改时间" width= "160">
         <template scope="scope">
           <span>{{ scope.row.member.updateTime | formatDate}}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="createTime  " label="创建时间">
+      <el-table-column prop="createTime  " label="创建时间" width= "160">
         <template scope="scope">
           <span>{{ scope.row.member.createTime | formatDate}}</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作" width="100">
+     <el-table-column label="操作" width="120" align="center" fixed="right">
         <template scope="scope">
-          <el-button type="text" @click="editSubmit(scope.row)">编辑</el-button>
+          <div class="play_box">
+            <el-button type="text" @click="editSubmit(scope.row)">编辑</el-button>
+            <el-button type="text" @click="shSubmit(scope.row)" v-show="scope.row.state=='USER_STATE_CHECK_NO'?1:0">设定</el-button>
+          </div>
         </template>
       </el-table-column>
     </el-table>
@@ -89,21 +111,56 @@
     <el-col :span="24" class="toolbar" v-if="!editFormVisible">
       <el-pagination layout="total,prev,pager,next" :current-page.sync="currentPage1" :page-size='pageSize' :total="totalElements" @current-change="handleCurrentChange"> </el-pagination>
     </el-col>
-    <!--弹出界面-->
+   <!-- 编辑 -->
     <dialog-tem :title="title" v-if="editFormVisible" :FormData="FormData" :type="type" @close="close"></dialog-tem>
+ <!--大图查看弹出-->
+     <el-dialog class="dialogImgBox" v-model="bigImgShow"   :close-on-click-modal="true">
+             <div class="content imgBox">
+                 <img :src="bigImg" ref="getImg" />
+            </div>
+      </el-dialog>
+      <!-- 设定弹框 -->
+      <el-dialog title="" size="mini" v-model="shFormVisible" :close-on-click-modal="false">
+      <el-form :model="addForm" label-width="80px">
+        <el-form-item label="还款日期" required prop="settlementInterval">
+          <el-select v-model="addForm.settlementInterval">
+            <el-option v-for="(item,index) in  options" :key="index" :label="item.value" :value="item.value"> </el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="结账日期" required prop="settlementDate">
+          <el-select v-model="addForm.settlementDate">
+            <el-option v-for="(item,index) in  options" :key="index" :label="item.value" :value="item.value"> </el-option>
+          </el-select>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click.native="Submit">提交</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import dialogTem from './child/dialog'
-import { memberlist } from '@/service/getData'
+import { memberlist,sdlist,submit } from '@/service/getData'
 export default {
   data() {
     return {
+      bigImgShow:false,
+      bigImg:'',
       form: {
         username: '',
         id: '',
       },
+       // 弹框
+      shFormVisible: false,
+      addForm: {
+        settlementInterval: '',
+        settlementDate: '',
+        userName: '',
+      },
+      // 出账日期
+      options:[],
       rowData:null,
       rolesName:'',
       listLoading: false,
@@ -120,6 +177,7 @@ export default {
       type: 'edit',
       listLoading: false,
       editFormVisible: false,
+      state:'',
       FormData: {
         username: '',
         officeTel: '',
@@ -152,8 +210,18 @@ export default {
   },
   mounted() {
     this.getList()
+     for (var i=1;i<=27;i++){
+        this.options.push({value:i});
+    }
   },
   methods: {
+    bigMove(val){
+      if(val != '')　{
+      this.bigImg = val
+      this.bigImgShow = true
+      }
+
+    },
     getList() {
       this.listLoading = true
       let _this = this
@@ -181,15 +249,16 @@ export default {
            this.tableData.forEach(function(child) {
              child.rolesName = ''
              if(child.member.roleList && child.member.roleList.length>0){
-               child.member.roleList.forEach(v=> {
-                  child.rolesName += v.name + ','
-                  if(v.permissionsList && v.permissionsList.length>0){
-                    v.permissionsList.forEach(m => {
-                      child.rolesName += m.name +','
-                    })
-                  }
+               child.member.roleList.forEach((v,index)=> {
+                
+                 if(  child.rolesName.indexOf(v.name+',') < 0){
+                    child.rolesName += v.name + ','
+                 } 
                })
+               
              }
+          child.rolesName = child.rolesName.substr(0,child.rolesName.length-1) 
+          // console.log(child.rolesName)
             }, this);   
            
         }
@@ -210,6 +279,46 @@ export default {
      
         this.getContent(row.username)
      
+    },
+     // 设定
+    shSubmit(row) {
+     
+      let para = {
+        memberId: row.member.memberId
+      }
+      sdlist(para).then((res) => {
+        console.log('res' ,res)
+         this.shFormVisible = true
+         if(res.data.state == 200){
+            this.addForm.settlementDate = res.data.content.settlementDate,
+            this.addForm.settlementInterval = res.data.content.settlementInterval,
+            this.addForm.userName = res.data.content.member.username
+          } 
+      })
+    },
+    // 设定提交
+    Submit() {
+      let para = {
+        userName: this.addForm.userName,
+        settlementInterval: this.addForm.settlementInterval,
+        settlementDate: this.addForm.settlementDate
+      }
+      if (para.settlementInterval == '') {
+        this.$message('请选择还款日期')
+        return false
+      }
+      if (para.settlementDate == '') {
+        this.$message('请选择结账日期')
+        return false
+      }
+      submit(para).then((res) => {
+        if(res.data.state == 200){
+              this.$message('修改成功')
+          }else{
+            this.$message(res.data.messages)
+          }
+        this.shFormVisible = false
+      })
     },
      getContent(username) {
       let _this = this
@@ -235,6 +344,7 @@ export default {
                 organizationCodePicStr:{
                   path:row.organizationCodePic.path?row.organizationCodePic.path:''
                 },
+                state:row.state?row.state:'',
                 businessLicenseSN:row.businessLicenseSN?row.businessLicenseSN:'',//编号
                 businessLicensePicStr:{
                   path:row.businessLicensePic.path?row.businessLicensePic.path:'' 
@@ -260,13 +370,12 @@ export default {
       this.getList()
     },
     close(val) {
-      this.getList()
       this.editFormVisible = val
+      this.getList()
+      
     },
   }
 }
 </script>
 
-<style lang="scss">
  
-</style>

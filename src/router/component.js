@@ -1,5 +1,7 @@
 export const Login = r => require.ensure([],() => r(require('../components/login')),'group-login');
 
+export const Index = r => require.ensure([],() => r(require('../view/index/index')),'group-index');
+
 // 商品管理
 export const proList = r => require.ensure([],() => r(require('../view/product/pro_list')),'group-product');
 export const classList = r => require.ensure([],() => r(require('../view/product/class_list')),'group-product');

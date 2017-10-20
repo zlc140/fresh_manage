@@ -1,8 +1,8 @@
 <template>
   <div class="store">
     <!-- form -->
-    <div class="storeform">
-      <el-form ref="form" :model="form" label-width="80px" v-if="!addFormVisible" >
+    <div class="storeform" v-if="!addFormVisible" >
+      <el-form ref="form" v-if="seachMove" :model="form" label-width="80px"  >
         <el-row :gutter="10" class="margin-top">
           <el-form-item label="店铺名称">
             <el-input v-model="form.storeName"></el-input>
@@ -66,13 +66,13 @@
           <div class="play_box">
           <el-button type="text" @click="closeS(scope.row)">关闭店铺</el-button>
           <el-button type="text" @click="handleDialog(scope.row)">编辑</el-button>
-          <el-button type="text" @click="handleDel(scope.$index, scope.row)">删除</el-button>
+          <el-button type="text" v-if="seachMove" @click="handleDel(scope.$index, scope.row)">删除</el-button>
           </div>
         </template>
       </el-table-column>
     </el-table>
     <!-- 分页 -->
-    <el-col :span="24" class="toolbar" v-if="!addFormVisible" >
+    <el-col :span="24" class="toolbar" v-if="!addFormVisible && seachMove" >
       <el-pagination 
         layout="total,prev,pager,next" 
         :current-page.sync="currentPage1" 
@@ -87,7 +87,8 @@
 </template>
 <script>
 import dialogTem from './child/dialog'
-import { selectStore, deleteStore, updateStore, saveStore,closeStore } from '@/service/getData'
+import { removeStore,getStore } from '@/config/storage'
+import { selectStore,getMyStore, deleteStore, updateStore, saveStore,closeStore } from '@/service/getData'
 export default {
   data() {
     return {
@@ -146,14 +147,20 @@ export default {
         }
       ],
       //  列表数据
-      storeData: []
+      storeData: [],
+      seachMove:true
     }
   },
   components: { dialogTem },
   mounted() {
+    
+    if(getStore('roleName') &&　getStore('roleName').roleCode.indexOf('SELLER')>0){
+      this.seachMove = false
+    }
     this.getList()
   },
   methods: {
+   
     getList() {
       let _this=this
       this.listLoading = true
@@ -164,7 +171,7 @@ export default {
         storeId: this.form.storeId,
         state: this.form.state
       }
-      
+      if(this.seachMove == true){
       selectStore(para).then((res) => {
         console.log('store',res.data)
         this.listLoading = false
@@ -176,6 +183,17 @@ export default {
           _this.totalElements = 0
         }
       })
+      }else{
+           getMyStore().then(res => {
+            console.log('myStore',res)
+            if(res.data.state == 200){
+               _this.storeData = []
+               _this.storeData.push(res.data.content)
+            }else{
+              this.$message('您的店铺还没有审核，请确认是否完善资料！')
+            }
+          })
+      }
     },
     //   弹框
     handleDialog: function(row) {
@@ -251,8 +269,9 @@ export default {
       let prop ={
         storeId:row.storeId
       }
-      this.$confirm('店铺关闭后店铺的商品品牌订单将被删除').then(() => {
+      this.$confirm('注意：店铺关闭后店铺的所属商品、品牌、订单都将被删除!',{type: 'warning'}).then(() => {
         closeStore(prop).then(res => {
+          console.log('closeStore',res)
           if(res.data.state == 200){
             this.getList()
              this.$message('关闭成功')

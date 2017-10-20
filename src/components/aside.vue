@@ -4,7 +4,7 @@
       <el-menu class="el-menu-vertical-demo" :default-active="onRouter" :class="collapsed?'':'el-menu--dark'"
         @select="handleselect" unique-opened router>
         <template v-for="(item,index) in datas"   v-if="item.children">     
-            <el-submenu :index="index+''" v-if="!item.leaf">
+            <el-submenu :index="index+''" v-if="item.name!='后台首页'">
               <template slot="title"> {{item.name}} </template>
                 <el-menu-item 
                     v-for="child in item.children" 

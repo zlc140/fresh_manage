@@ -140,6 +140,10 @@ Vue.filter('filterSetting',(value)=>{
       return '账单结算时间'
   }else if(value=='VOUCHER_PAST_TIME'){
     return '优惠券过期时间'
+  }else if(value == 'BILLS_CLEARING_BILLS'){
+    return '出账时间'
+  }else if(value == 'MODIFY_PRICE_GOODS_CHECKON_TIME'){
+    return '价格修改商品自动生效时间'
   }
 })
 // 设定时间的格式
@@ -154,3 +158,16 @@ Vue.filter('filterKeycode',(value)=>{
       return tt[2]+':'+tt[1]+':'+tt[0]
    }
 })
+
+// 用户状态
+Vue.filter('userstate',function(value) {
+  if(value=='USER_STATE_CHECK_ING'){
+    return '审核中'
+  }else if(value=="USER_STATE_CHECK_NO"){
+    return '审核通过'
+  }else if(value=='USER_STATE_CHECK_OFF'){
+    return '不通过'
+  }else if(value='USER_STATE_LOCK_ING'){
+    return '用户锁定'
+  }
+})   

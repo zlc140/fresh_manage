@@ -2,17 +2,17 @@
         <el-col :span="24" class="header" :class="collapsed?'':'header-dark'">
             <el-col :span="24" class="top" >
                 <el-col :span="6" class="logo" >
-                    <img src="../assets/logo.png" alt="">
+                    <router-link to="/welcome/index"><img src="../assets/logo.png" alt=""></router-link>
                 </el-col>
                 <el-col :span="10">
                     <div class="tools">
                         <i class="el-icon-menu "  @click="collapse"></i>
-                        欢迎 ( {{roleName}} - {{ userName.username }})  登录生鲜馆后台管理系统
+                        欢迎 ( {{roleName}} - {{ username }})  登录生鲜馆后台管理系统
                     </div>
                 </el-col>
                 <el-col :span = "8" class="userinfo">
                         <a @click="logout"> 退出 </a>
-                    <a>生鲜馆首页</a>
+                    <a :href="goMange" target="_blank">生鲜馆首页</a>
                 </el-col>
             </el-col>
             <el-col :span="24" class="breadcrumb">
@@ -26,41 +26,82 @@
 
 <script>
  
- import { removeStore,getStore } from '@/config/storage'
+ import { removeStore,getStore,setStore} from '@/config/storage'
+ import {getSummary} from '@/service/getData'
 export default {
     data() {
         return {
-            userName:{
-                username:getStore('username')?getStore('username').username:'',
-            },
+            // userName:{
+            //     username:getStore('username')?getStore('username').username:'',
+            // },
             collapsed:false,
+            goMange:''
         }
     },
     computed:{
         roleName(){
             return this.$store.state.role
+        },
+        username(){
+             return this.$store.state.username
         }
     },
     mounted(){
+         let src =  window.location.protocol+ '//'+window.location.host
+        this.goMange = src+'#/index'
+        this.checkOpen()
+        console.log(this.username)
         // 判断是否登录成功
-        if(getStore('username') == null ){
-            this.$message('请先登录！')
-            this.$router.push('/login')
+        if(this.username == '' ){
+             this.checkLogin()
         } 
-         this.$store.dispatch('GenerateRoutes').then(res => {  
-             console.log(res)
-             if(res !== true){
-                 this.$message(res)
-                 this.$router.push('/login')
-             }else{
-                 let urls = getStore('addRouters')[0].path+'/' +getStore('addRouters')[0].children[0].path
-                 this.$router.push(urls)
-             } 
-         })
-       
+        if(getStore('roleName') && getStore('addRouters')){
+                let prop = {
+                    role:getStore('roleName'),
+                    routesList:getStore('addRouters')
+                }
+                this.$store.commit('stateRole',prop)
+        }
+        if(!getStore('addRouters')){
+             this.getroutes()
+        }
+        
     },
     methods:{
-
+        checkOpen(){
+            let _this =this 
+            // let OriginTitile = document.title,titleTime
+             document.addEventListener('visibilitychange', function() {
+                    if (document.hidden) {
+                        // document.title = '你去那里了'
+                        //  clearTimeout(titleTime);
+                    } else {
+                        // document.title = '(つェ⊂)咦!又好了!';
+                        _this.checkLogin()
+                       
+                        // _this.$router.push('/welcome/index')
+                        //   titleTime = setTimeout(function() {
+                        //     document.title = OriginTitile;
+                        // },1000);
+                    }
+                });
+        },
+        getroutes(){
+            this.$store.dispatch('GenerateRoutes').then(res => {  
+                console.log(res)
+                if(res !== true){
+                    // this.logout()
+                    this.$message(res)
+                    this.$router.push('/login')
+                }else{
+                    console.log(this.$route)
+                    if(this.$route.name == '登录'){
+                         this.$router.push('/welcome/index')
+                    }
+                } 
+            })
+       
+        },
         collapse() {
             this.collapsed = !this.collapsed
             this.$emit('changeCollapsed',this.collapsed)
@@ -72,6 +113,34 @@ export default {
                 }
             })
 
+        },
+        checkLogin(){
+            getSummary().then((res) => {
+                console.log('ceck,',res)
+                if(res.data.state == 200){
+                    let prop ={
+                        username:res.data.content.username
+                    }
+                    if(prop.username != getStore('username').username){
+                         this.getroutes()
+                        this.$store.commit('REM_USER',prop)
+                        this.$message('账号已切换')
+                        this.$router.push('/welcome/index')
+                    }else{
+                        this.getroutes()
+                        this.$store.commit('REM_USER',prop)
+                    }
+                }else{
+                    // this.logout()
+                    this.$message(res.data.messages)
+                    this.$router.push('/login')
+                }
+            // if(res.data.state == 400 && getStore('username') != null){
+            //             this.$store.dispatch('logout').then(() =>{
+            //             this.$router.push('/login')
+            //             })
+            //     }
+            }) 
         }
          
     }

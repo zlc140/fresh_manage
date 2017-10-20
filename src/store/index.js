@@ -19,12 +19,20 @@ const mutations = {
         setStore('roleName',routers.roleName)
         setStore('addRouters',routers.routs)
     },
+    REM_USER: (state,prop) => {
+        state.username = prop.username
+        setStore('username',prop)
+    },
     LOGOUT: (state) => {
         state.addRouters = []
         removeStore('username')
         removeStore('addRouters')
         removeStore('roleName')
         removeStore('keyCode')
+    },
+    stateRole(state,rolename) {
+        state.role = rolename.role.name
+        state.addRouters = rolename.routesList
     }
 }
 

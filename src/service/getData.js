@@ -8,12 +8,35 @@ const BASE_BILL = '/fresh-bills'
 const BASE_CEN = '/user-center'
 const BASE_mer = '/fresh-member'
 
+// 个人中心   这里的页面只有在登录以后才会获取数据
+export const getSummary = () => {
+    return axios({
+        method:'post',
+        url:BASE_mer+'/memberInfo/findMe',
+    }) 
+}
 
 // 用户订单
 export const orderlist = (prop) => {
     return axios({
         method:'post',
         url:BASE_ORDER+'/order/findAllOrders',
+        params:prop
+    })
+}
+// 获取店铺的订单
+export const orderMylist = (prop) => {
+    return axios({
+        method:'post',
+        url:BASE_ORDER+'/order/findAllOrdersByStore',
+        params:prop
+    })
+}
+//店铺 预计配送订单
+export const findStoreadvOrder = (prop) => {
+    return axios({
+        method:'post',
+        url:BASE_ORDER+'/order/findOrdersByStore',
         params:prop
     })
 }
@@ -83,6 +106,22 @@ export const memberState = (prop) => {
 }
 // 用户基本设置
 export const adduser = (prop) => {
+    return axios({
+        method:'post',
+        url:BASE_mer+'/memberSetting/save',
+        params:prop
+    })
+}
+// 用户设定
+export const sdlist = (prop) => {
+    return axios({
+        method:'post',
+        url:BASE_mer+'/memberSetting/findByMember',
+        params:prop
+    })
+}
+// 用户设定提交
+export const submit = (prop) => {
     return axios({
         method:'post',
         url:BASE_mer+'/memberSetting/save',
@@ -199,7 +238,7 @@ export const addgoods = (prop) => {
 export const prolist = (prop) => {
     return axios({
         method:'post',
-        url:BASE_GOODS+'/goods/findGoods',
+        url:BASE_GOODS+'/goods/findBackGoods',
         params:prop
     })
 }
@@ -438,6 +477,24 @@ export const selectStore = (para) => {
         url:BASE_GOODS+'/store/selectStore'
     })
 }
+
+// 得到的店铺
+export const selectAllStore = () => {
+     // 店铺审核通过的参数
+    return axios({
+        method:'post',
+        // params:para,
+        url:BASE_GOODS+'/store/findCheckedStore'
+    })
+}
+// 得到自己的店铺
+export const getMyStore = (para) => {
+    // 店铺审核通过的参数
+   return axios({
+       method:'post',
+       url:BASE_GOODS+'/store/findMyStore'
+   })
+}
 // 关闭店铺
 export const closeStore = (para) => {
     return axios({
@@ -580,7 +637,7 @@ export const checkBill = (para) => {
 // 基本设定
 const BASE_SET = '/fresh-setting'
 // 添加设定
-export const settingSave = () => {
+export const settingSave = (para) => {
     return axios({
         method:'post',
         params:para,
@@ -596,7 +653,7 @@ export const settinglist = (para) => {
     })
 }
 // 编辑设定
-export const settingEdit = () => {
+export const settingEdit = (para) => {
     return axios({
         method:'post',
         params:para,
@@ -604,10 +661,10 @@ export const settingEdit = () => {
     })
 }
 // 删除设定
-export const settingDel = () => {
+export const settingDel = (para) => {
     return axios({
         method:'post',
         params:para,
-        url:BASE_SET+'/setting/updateBasicSetup',
+        url:BASE_SET+'/setting/deleteBs',
     })
 }

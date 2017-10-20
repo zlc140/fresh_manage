@@ -5,6 +5,11 @@
       <el-form-item label="品牌名称">
         <el-input v-model="form.brandTitle" placeholder="品牌名称"></el-input>
       </el-form-item>
+       <el-form-item label="所属店铺" v-if="seachMove">
+            <el-select v-model="form.storeId" v-on:change="changeStore()" placeholder="请选择店铺">
+              <el-option v-for="(item,index) in  storeData" :key="index" :value="item.storeId" :label="item.storeName"> </el-option>
+            </el-select>
+          </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="onSubmit('search')">查询</el-button>
       </el-form-item>
@@ -55,7 +60,8 @@
         :title="title"
         v-if="addFormVisible"
         :FormData="FormData"
-        :type="type"              
+        :type="type"
+        :seachMove="seachMove"              
         @close="close"
     ></dialog-tem>
   <!-- 分页 -->
@@ -67,21 +73,18 @@
 </template>
 
 <script>
-
+import { getStore } from '@/config/storage'
 import dialogTem from './prochild/branddia'
-import { brandlist, addbrand, branddelete, brandupdate,closeBrand } from '@/service/getData'
+import { brandlist, branddelete,selectStore,getMyStore,closeBrand } from '@/service/getData'
 export default {
   data() {
     return {
       picShow: false,
       form: {
         brandTitle: '',//品牌名称
-        pics: {
-          path: ''
-        },//图
         storeId: '',
         state: '',
-        brandId: ''
+        
       },
       listLoading:false,
       // 新增编辑
@@ -108,15 +111,24 @@ export default {
       lists: [],
       sels: [],//列表选中列
       getData: [],
-      checked: true
+      checked: true,
+      seachMove:true,
+      storeData:[]
     }
   },
   components: {
     dialogTem
   },
   mounted() {
-    this.getbrandlist()
+     
     this.picShow = true
+     if(getStore('roleName') &&　getStore('roleName').roleCode.indexOf('SELLER')>0){
+      this.seachMove = false
+      this.getThisStore()
+    }else{
+       this.getStore()//店铺列表
+       this.getbrandlist()//商品列表
+    }
   },
   methods: {
 
@@ -128,7 +140,6 @@ export default {
         pageSize: this.pageSize,
         brandTitle: this.form.brandTitle,
         storeId: this.form.storeId,
-        brandId: this.form.brandId
       }
       brandlist(para).then((res) => {
         console.log('brand',para)
@@ -141,6 +152,35 @@ export default {
          _this.listLoading = false
       })
     },
+      // 得到店铺
+     getStore() {
+      let para = {
+        state: 'STORE_STATE_CHECK_ON'
+      }
+      selectStore(para).then((res) => {
+        if (res.data.state == 200) {
+          this.storeData = res.data.content.content;
+          this.storeData.push({
+            storeId:'',
+            storeName:'全部'
+          })
+        }
+
+      })
+     },
+      getThisStore() {
+        console.log(0)
+        let _this = this
+          getMyStore().then(res => {
+            console.log('myStore',res)
+            if(res.data.state == 200){
+                _this.form.storeId = res.data.content.storeId
+                _this.getbrandlist()
+            }else{
+              this.$message('您的店铺还没有审核，请确认是否完善资料！')
+            }
+          })
+     },
     //   弹框
     handle: function(row) {
       this.addFormVisible = true;
@@ -151,8 +191,10 @@ export default {
           storeId: '',
           brandTitle: '',//品牌名称
           pics:[],
-          
         };
+        if(this.seachMove == true){
+          this.FormData.storeId = this.form.storeId
+        }
       } else {
         this.type = 'edit'
         this.title = '编辑'
@@ -217,12 +259,17 @@ export default {
       }
       this.$confirm('品牌关闭后将删除品牌下的商品，确认关闭吗？').then(() => {
         closeBrand(prop).then(res => {
-          cosnole.log(res)
+          if(res.data.state == 200){
+            this.getbrandlist()
+          }
+          this.$message(res.data.messages)
+          console.log('del',res)
         })
       }).catch(() => {
         console.log('取消')
       })
    }
+
 
   }
 }

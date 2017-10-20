@@ -42,18 +42,18 @@
 </template>
 <script>
  
-import {Login,getRole} from '@/service/config_router.js'
+import {Login} from '@/service/config_router.js'
 
-import { getStore,setStore } from '@/config/storage'
+import { getStore,setStore,removeStore } from '@/config/storage'
 import starFlow from "./startFlow"
     export default {
         data() {
             return {
-                codePic:'http://192.168.0.9:8080/user-center/code',
+                codePic:'',
                 loginLoading:false,
                 bg:{background:"url("+require('../assets/auth-bg.jpg')+") no-repeat",backgroundSize:"100% 100%"},
                 user:{
-                    username:'admin',
+                    username:'',
                     password: '',
                     checkCode:'',
                     key:''                
@@ -76,6 +76,8 @@ import starFlow from "./startFlow"
             starFlow
         },
         mounted(){
+            let src =  window.location.protocol+ '//'+window.location.host
+            this.codePic =src+'/user-center/code'
             this.getCode()
         },
          computed: {
@@ -128,8 +130,13 @@ import starFlow from "./startFlow"
                     Login(prop).then((res) => {
                         _this.getCode()
                         if(res == true){
-                           
-                         _this.$router.push('/view/prolist')
+                            let pr = {
+                                username:prop.username
+                            }
+                        this.$store.commit('REM_USER',pr)
+                        removeStore('roleName')
+                        removeStore('addRouters')
+                         _this.$router.push('/welcome/index')
                         }else if(res == false){
                             _this.$message('登录失败')
                         }else{
@@ -160,10 +167,8 @@ import starFlow from "./startFlow"
                     }
                 })
 
-            }
+            },
              
-
-           
         }
     }
 </script>

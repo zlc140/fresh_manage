@@ -2,28 +2,39 @@
   <div class="dialog banner small">
     <h3 class="title">{{title}} <el-button class="fr"  size="small" type="danger" :plain="true" @click.native="clean">取消</el-button></h3>
      <el-form :model="addForm" :rules="addFormRules" label-width="80px" ref="addForm">
+       
         <el-form-item label="分类名称" prop="classTitle">
           <el-input v-model="addForm.classTitle" placeholder="分类名称长度应在2-10位，推荐3-6个汉字" auto-complete="off"  @keyup.enter.native="check"></el-input>
         </el-form-item>
         <el-form-item label="关键字" prop="keywords">
           <el-input v-model="addForm.keywords" auto-complete="off"></el-input>
         </el-form-item>
-        <el-form-item label="是否显示" prop="gcShow">
-          <el-switch v-model="addForm.gcShow" on-text="是" off-text="否"></el-switch>
+         <el-form-item label="分类排序" prop="orderNum">
+         <!-- @change="handleChange" -->
+            <template scope="scope">
+            <el-input-number v-model="addForm.orderNum"  :min="1" :max="10"></el-input-number>
+            </template>
         </el-form-item>
         <!-- hover前图片  -->
         <el-form-item label="鼠标移入" prop="pics[0].path" required v-if="parentClass">
           <template scope="scope">
-            <vue-core-image-upload v-if="picShow" @getImg="addImg" :cropRatio="selectPic.radio" :picList="selectPic.picList" :sizeBox='selectPic.size' :multiple="selectPic.multiple" :cropShow="selectPic.cropShow">
+            <vue-core-image-upload v-if="picShow" @getImg="addImg" :cropRatio="selectPic.radio"  :picList="selectPic.picList"   :multiple="selectPic.multiple" :cropShow="selectPic.cropShow">
             </vue-core-image-upload>
           </template>
         </el-form-item>
+        
         <!-- hover后图片  -->
         <el-form-item label="鼠标移出" prop="pics[1].path" required v-if="parentClass">
           <template scope="scope">
-            <vue-core-image-upload v-if="picShow" @getImg="addgetImg" :cropRatio="selectPic.radio" :picList="selectPic2.picList" :sizeBox='selectPic.size' :multiple="selectPic.multiple" :cropShow="selectPic.cropShow">
+            <vue-core-image-upload v-if="picShow" @getImg="addgetImg"  :cropRatio="selectPic.radio" :picList="selectPic2.picList"   :multiple="selectPic.multiple" :cropShow="selectPic.cropShow">
             </vue-core-image-upload>
           </template>
+        </el-form-item>
+        
+         <el-form-item label="是否显示" prop="gcShow">
+          <template scope="scope">
+                    <el-switch v-model="addForm.gcShow" on-text="是" off-text="否"></el-switch>
+           </template>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -51,6 +62,7 @@ export default {
             parentClass:true,
             selectPic: {
                 radio: '1:1',
+                size: ['200', '200'],
                 cropShow: false,
                 multiple: false,
                 picList: []
@@ -67,6 +79,7 @@ export default {
                 classTitle: '',
                 keywords: '',
                 gcShow: true,
+                orderNum:'',
                 pics: [
                 {
                     path: ''
@@ -108,6 +121,7 @@ export default {
                 classTitle: this.formData.classTitle,
                 keywords: this.formData.keywords,
                 gcShow: this.formData.gcShow,
+                orderNum:this.formData.orderNum,
                 pics: [
                     {
                         path: this.formData.classPic[0].path
@@ -147,6 +161,7 @@ export default {
                         classTitle:this.addForm.classTitle,
                         keywords: this.addForm.keywords,
                         gcShow: this.addForm.gcShow,
+                        orderNum:this.addForm.orderNum
                     }
                     if(this.type == 'add' || this.type == "edit"){
                         if(this.addForm.pics[0].path == '' || this.addForm.pics[1].path==''){
@@ -158,26 +173,38 @@ export default {
                     }
                    if(this.type=='add'){
                          addClass(para).then((res) => {
-                            this.addLoading = true;
-                              this.$emit('close',true)
+                            this.$message(res.data.messages)
+                            if(res.data.state == 200){
+                                this.addChildLoading = true;
+                                this.$emit('close',true)
+                            }
                         })
                    }else if(this.type=='edit'){
                         para.classId = this.addForm.classId
                         editData(para).then((res) => {
-                            this.editFormLoading = true;
-                            this.$emit('close',true)
+                            this.$message(res.data.messages)
+                              if(res.data.state == 200){
+                                this.addChildLoading = true;
+                                this.$emit('close',true)
+                            }
                         })
                    }else if(this.type=="addChild"){
                        para.parentClassId = this.addForm.parentClassId
                        addClass(para).then((res) => {
-                            this.addChildLoading = true;
-                             this.$emit('close',true)
+                           this.$message(res.data.messages)
+                           if(res.data.state == 200){
+                                this.addChildLoading = true;
+                                this.$emit('close',true)
+                            }
                         })
                    }else if(this.type=="editChild"){
                         para.classId = this.addForm.classId
                         editData(para).then((res) => {
-                            this.editFormLoading = true;
-                             this.$emit('close',true)
+                            this.$message(res.data.messages)
+                             if(res.data.state == 200){
+                                this.addChildLoading = true;
+                                this.$emit('close',true)
+                            }
                         })
                    }
                    

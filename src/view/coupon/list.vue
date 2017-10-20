@@ -1,5 +1,5 @@
  <template>
-  <div class="voucher">
+  <div class="voucher" v-loading="listLoading" >
     <!-- form -->
     <el-form :inline="true" :model="form" class="demo-form-inline" v-if="!addFormVisible">
        <el-form-item label="用户名">
@@ -75,6 +75,7 @@ export default {
   data() {
     return {
       // form
+      listLoading:false,
       form: {
         voucherId: '',
         state:'',
@@ -82,7 +83,7 @@ export default {
       },
       // 分页
       currentPage1: 1,
-      pageSize: 3,
+      pageSize:10,
       pageNum : 1,
       total: 0,
       lists: [],
@@ -132,7 +133,9 @@ export default {
     this.getorderlist()
   },
   methods: {
+    
     getorderlist() {
+      this.listLoading = true
       let _this = this
       let para = {
         pageNum: this.pageNum - 1,
@@ -141,11 +144,15 @@ export default {
         state:this.form.state,
         userName:this.form.userName
       }
-      voucherlist(para).then((res) => {    
+      voucherlist(para).then((res) => { 
+        this.listLoading = false   
           if(res.data.state == 200){
             _this.getData = res.data.content.content
             _this.total = res.data.content.totalElements
-          }
+          }else{
+            _this.getData = []
+            _this.total =0
+           }
       })
     },
     //   弹框
@@ -178,16 +185,16 @@ export default {
     },
     // 删除
     handleDel(row){
-        this.listLoding = true;
+        this.listLoading = true;
         let para = { voucherId : row.voucherId}
         delvoucher(para).then((res)=>{
-             if (res.data.state == '200') {
-            this.$message({
-              message: '删除成功',
-              type: 'success'
-            })
-           this.getorderlist()
-        }
+          console.log('del',res)
+          if (res.data.state == 200) {
+            this.$message( res.data.messages )
+            this.getorderlist()
+          }else{
+            this.$message( res.data.messages )
+          }
         })
     },
      // 查询

@@ -65,6 +65,8 @@ export default {
         overflow: hidden;
         text-align: center;
         img{
+            max-width: 600px;
+            max-height:40px;
             margin: 0 auto;
         }
         h2{

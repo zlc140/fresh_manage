@@ -3,7 +3,7 @@
     <h3 class="title">{{title}} <el-button class="fr" @click.native="clean">取消</el-button></h3>
     <el-form :model="addForm" :rules="addFormRules" label-width="150px" ref="addForm">
        
-        <el-form-item label="店铺名称" required prop="storeId">
+        <el-form-item label="店铺名称" required prop="storeId" v-if="seachMove">
           <el-select v-model="addForm.storeId"   placeholder="请选择店铺">
             <el-option v-for="(item,index) in  storeData" :key="index" :value="item.storeId" :label="item.storeName"> </el-option>
           </el-select>
@@ -43,14 +43,15 @@
 </template>
 
 <script>
+import { getStore } from '@/config/storage'
 import vueCoreImageUpload from '@/components/uploadImg'
-import { selectStore, addbrand, brandupdate,classlist } from '@/service/getData'
+import { selectAllStore, addbrand, brandupdate,classlist } from '@/service/getData'
 export default {
   data() {
      var nospace = (rule, value, callback) => {
-            var par = /^[a-zA-Z\u4E00-\u9FA5\_]{2,10}$/
+            var par = /^[a-zA-Z0-9\-\u4E00-\u9FA5\_]{2,10}$/
             if (!par.test(value) && value.trim() != '') {
-                callback(new Error('品牌名称为中英文,下划线，长度2~10位'));
+                callback(new Error('品牌名称为中英文，数字,下划线,中间线，长度2~10位'));
             } else if (value.trim() == '') {
                 callback(new Error('品牌名称不能为空'))
             } else {
@@ -64,7 +65,7 @@ export default {
       classData:[],
       selectPic: {
         radio: '1200:350',
-        size: ['1200', '350'],
+        size: ['300', ''],
         cropShow: false,
         multiple: false,
         picList: []
@@ -86,7 +87,7 @@ export default {
           { required: true, message: '品牌名称不能为空', trigger: 'change' },
            {validator: nospace, trigger: 'blur' }
         ],
-      }
+      },
     }
   },
   props: {
@@ -102,13 +103,19 @@ export default {
       type: String,
       default: 'add'
     },
+    seachMove:{
+      type:Boolean,
+      default:true
+    }
     
   },
   components: {
     vueCoreImageUpload
   },
   mounted() {
-    this.getStore()
+     if(this.seachMove == true){
+        this.getStore()
+    }
     this.getclass()
     this.addForm = Object.assign({},this.FormData)
     this.selectPic.picList = []
@@ -126,9 +133,10 @@ export default {
       let para = {
         state:'STORE_STATE_CHECK_ON'
       }
-      selectStore(para).then((res) => {
+      selectAllStore().then((res) => {
+        console.log('stores',res)
         if(res.data.state == 200){
-            this.storeData = res.data.content.content;
+            this.storeData = res.data.content;
         }
         
       })
@@ -144,7 +152,7 @@ export default {
                     return false
                 }
                 // _this.classValues = []
-                console.log(_this.FormData.brandId)
+                // console.log(_this.FormData.brandId)
                 datas.forEach((child) => {
                     if(_this.type == 'edit'&& child.brandList && JSON.stringify(child.brandList).indexOf(_this.FormData.brandId)>0){
                         _this.classValues.push(child.classId)
@@ -223,9 +231,7 @@ export default {
                   })
                   // this.$emit('Success',true)
                   this.clean()
-                } else if (res.data == '') {
-                  this.$message('登录超时，请重新登录')
-                }else{
+                } else {
                   this.$message(res.data.messages)
                 }
               })

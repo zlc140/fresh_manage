@@ -5,7 +5,7 @@
         </h3>
         <el-form :model="addForm" :rules="rules" label-width="80px" size="small" v-loading="loginLoading" ref="addForm">
             <el-form-item label="店铺名称" prop="storeName">
-                <el-input v-model="addForm.storeName" auto-complete="off" placeholder="店铺名称为中英文,下划线，长度2~20位"></el-input>
+                <el-input v-model="addForm.storeName" auto-complete="off" placeholder="店铺名称为中英文,数字、下划线，长度2~20位"></el-input>
             </el-form-item>
             <el-form-item label="执照编号" prop="businessLicenseNo">
                 <el-input v-model="addForm.businessLicenseNo" auto-complete="off" placeholder="请填写有效的执照编号"></el-input>
@@ -51,9 +51,9 @@ export default {
     data() {
           // 店铺名称
         var nospace = (rule, value, callback) => {
-            var par = /^[a-zA-Z\u4E00-\u9FA5\_]{2,20}$/
+             var par = /^[\d\a-zA-Z\u4E00-\u9FA5\_]{2,20}$/
             if (!par.test(value) && value.trim() != '') {
-                callback(new Error('店铺名称为中英文,下划线，长度2~20位'));
+                callback(new Error('店铺名称为中英文,数字、下划线，长度2~20位'));
             } else if (value.trim() == '') {
                 callback(new Error('店铺名称不能为空'))
             } else {

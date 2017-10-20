@@ -7,6 +7,9 @@
             <el-form-item label="商品名称">
             <el-input v-model="form.goodsTitle"></el-input>
           </el-form-item>
+          <el-form-item label="店铺名称" v-if="seachMove">
+             <el-input v-model="form.storeName"></el-input>
+          </el-form-item>
            <el-form-item label="商品货号">
             <el-input v-model="form.goodsId"></el-input>
           </el-form-item>
@@ -22,7 +25,7 @@
             </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="onSubmit('search')">查询</el-button>
-             <el-button  :plain="true" ><router-link to="/view/proAdd">发布商品</router-link></el-button>
+             <el-button  :plain="true" @click="goAdd"><router-link to="/view/proAdd">发布商品</router-link></el-button>
           </el-form-item>
         </el-row>
       </el-form>
@@ -44,6 +47,11 @@
       <el-table-column label="商品名称" prop="goodsTitle" min-width="120px"> 
          <template scope="scope">
           <span class="onlyOneRow" :title="scope.row.goodsTitle">{{ scope.row.goodsTitle }}</span>
+        </template>
+      </el-table-column>
+       <el-table-column label="所属店铺" prop="" min-width="120px"> 
+         <template scope="scope">
+          <span class="onlyOneRow" >{{ scope.row.store?scope.row.store.storeName:'' }}</span>
         </template>
       </el-table-column>
       <el-table-column label="所属分类" prop="classTitle" width="110px">
@@ -80,10 +88,10 @@
           {{scope.row.goodsShow == true?'显示':'不显示'}}
         </template>
       </el-table-column>
-      <el-table-column label="操作" width="120" fixed="right">
+      <el-table-column label="操作" width="120" align="center" fixed="right">
         <template scope="scope">
           <div class="play_box">
-            <el-button type="text">查看详情</el-button>
+            <el-button  @click="goProp(scope.row.goodsId)" type="text" ><a :href ="goMange+'/#/detail?id='+scope.row.goodsId" target="_blank">查看详情</a></el-button>
             <el-button type="text" @click="editPro(scope.row.goodsId)">编辑</el-button>
             <el-button type="text" @click="deleteRow(scope.row.goodsId)">删除</el-button>
           </div>
@@ -96,9 +104,9 @@
       <el-pagination layout="total,prev,pager,next" :current-page.sync="currentPage1" :page-size='pageSize' :total="totalElements" @current-change="handleCurrentChange"> </el-pagination>
     </el-col>
     <el-dialog title="快速改价" size="mini" v-model="editFormVisible" :close-on-click-modal="false">
-      <el-form :model="editForm"  :rules="rules"  label-width="80px">
+      <el-form :model="editForm"  :rules="rules" ref="editForm"  label-width="80px">
         <el-form-item label="编辑价格" prop="marketPrice">
-          <el-input type="number" v-model="editForm.marketPrice" min="0.01" auto-complete="off"></el-input>
+          <el-input type="number" v-model="editForm.marketPrice" step="0.01" min="0.01" auto-complete="off"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -111,24 +119,34 @@
 
 <script>
 import dialogTem from './add'
-import { prolist, classlist, delGoods,editgoods } from '@/service/getData'
+import { getStore } from '@/config/storage'
+import { prolist, classlist, delGoods,editgoods,selectStore ,getMyStore} from '@/service/getData'
 export default {
   data() {
      var checkPrice = (rule, value, callback) => {
+       let par = /^(?!^0*(\.0{1,2})?$)^\d{1,13}(\.\d{1,2})?$/
        if (parseFloat(value) < 0.01) {
         callback(new Error('价格不能少于0.01'))
-      } else {
+      }else if(!par.test(value)){
+        callback(new Error('价格格式不正确'))
+      }else if ((value+'').split('.').length>2) {
+        callback(new Error('价格格式不正确1'))
+        console.log(parseInt(value))
+      }else {
         callback()
       }
     }
     return {
+      storeData:[],
       listLoading:false,
       checked: true,
+
       form: {
         state: '', //商品状态
         goodsId: '',//货号
         goodsTitle: '',//商品名称
         gclist: '',//一级分类
+        storeId:''
       },
       editFormVisible:false,
       editForm:{
@@ -142,7 +160,7 @@ export default {
       },
       // 分页
       currentPage1: 1,
-      pageSize: 8,
+      pageSize: 10,
       pageNum: 1,
       totalElements: 0,
       lists: [],
@@ -166,47 +184,41 @@ export default {
           label:'全部状态'
         }
       ],
+      seachMove:true,
       // 表格数据
       getData: [],
       // 分类数据
-      gcData:[]
+      gcData:[],
+      goMange:''
     }
   },
    components: {
     dialogTem
   },
   mounted() {
-    this.getList()
-    // 分类数据
-    let _this = this
-    classlist().then((res) => {
-      if (res.data.state == 200 ) {
-        let datas = res.data.content
-        _this.gcData = []
-        if(datas){
-          datas.forEach((child) => {
-            _this.gcData.push({
-              classId: child.classId,
-              classTitle: child.classTitle
-            })
-            if (child.childClass && child.childClass.length > 0) {
-              child.childClass.forEach((item) => [
-                _this.gcData.push({
-                  classId: item.classId,
-                  classTitle: '　　' + item.classTitle
-                })
-              ])
-            }
-          })
-           _this.gcData.push({
-              classId: '',
-              classTitle: '全部分类'
-          })
-        }
-      }
-    })
+    this.goMange=  window.location.protocol+ '//'+window.location.host
+  //  this.goMange = 'http://localhost:8078'
+    this.getClassList()//的到分类
+    if(getStore('roleName') &&　getStore('roleName').roleCode.indexOf('SELLER')>0){
+      
+      this.seachMove = false
+      this.getThisStore()
+    }else{
+      //  this.getStore()//店铺列表
+       this.getList()//商品列表
+    }
+     
+    
   },
   methods: {
+    goAdd(){
+      this.$router.push('/view/proAdd')
+    },
+    goProp(ids){
+      let str =  this.goMange+'/#/detail?id='+ids
+        window.open(str)
+        return false
+    },
     getList() {
       let para = {
         pageNum: this.pageNum - 1,
@@ -215,6 +227,7 @@ export default {
         goodsId: this.form.goodsId,
         goodsTitle: this.form.goodsTitle,
         classId: this.form.gclist,
+        storeName: this.form.storeName,
         forMe:true
       }
       this.listLoading = true
@@ -225,11 +238,79 @@ export default {
         if (res.data.state == 200 &&　res.data.message !='暂无数据') {
           this.getData = res.data.content.content;
           this.totalElements = res.data.content.totalElements;
+        }else{
+           this.getData = []
+           this.totalElements = 0
+           this.$message(res.data.messages)
         }
       }).catch(() => {
         this.listLoading = false
       })
     },
+    // 得到分类
+    getClassList(){
+      let _this = this
+      classlist().then((res) => {
+        console.log('class',res)
+        if (res.data.state == 200 ) {
+          let datas = res.data.content
+          _this.gcData = []
+          if(datas){
+            datas.forEach((child) => {
+              _this.gcData.push({
+                classId: child.classId,
+                classTitle: child.classTitle
+              })
+              if (child.childClass && child.childClass.length > 0) {
+                child.childClass.forEach((item) => [
+                  _this.gcData.push({
+                    classId: item.classId,
+                    classTitle: '　　' + item.classTitle
+                  })
+                ])
+              }
+            })
+            _this.gcData.push({
+                classId: '',
+                classTitle: '全部分类'
+            })
+          }
+        }
+      })
+    },
+    // 得到店铺
+    //  getStore() {
+    //   let para = {
+    //     state: 'STORE_STATE_CHECK_ON'
+    //   }
+    //   selectStore(para).then((res) => {
+    //     console.log('store',res)
+    //     if (res.data.state == 200) {
+    //       this.storeData = res.data.content.content;
+    //       this.storeData.push({
+    //         storeId:'',
+    //         storeName:'全部'
+    //       })
+    //     }
+
+    //   })
+    //  },
+      getThisStore() {
+        console.log(0)
+        let _this = this
+          getMyStore().then(res => {
+            console.log('myStore',res)
+            if(res.data.state == 200 && res.data.messages=='店铺未通过审核！'){
+                 this.$message('店铺未通过审核！')
+            }else if(res.data.state == 200 && res.data.messages!='暂无数据！'){
+                _this.form.storeId = res.data.content.storeId
+                _this.getList()
+            }else{
+
+              this.$message('您的店铺还没有审核，请确认是否完善资料！')
+            }
+          })
+     },
     // 编辑
     editPro(val){
         this.$router.push({
@@ -250,6 +331,7 @@ export default {
             if(res.data.state == 200){
               _this.getList()
             }
+            this.$message(res.data.messages)
           })
       }).catch(() => {
 
@@ -271,26 +353,33 @@ export default {
     },
     // 快速改价
     edtiPrice(row){
+    
       this.editFormVisible = true
-      this.editForm = {
-        goodsId:row.goodsId,
-        marketPrice:row.price.GOODS_MARKET_PRICE
-      }
+        this.editForm = {
+          goodsId:row.goodsId,
+          marketPrice:row.price.GOODS_MARKET_PRICE
+        }
+    
     },
     editSubmit(){
+      this.$refs.editForm.validate((valid) => {
+      if (valid) {
+       
       let _this = this
       let para = Object.assign({},this.editForm)
       // para.price = JSON.stringify(para.price)
-      editgoods(para).then((res) => {
-        console.log('快速改价',res)
-         this.editFormVisible = false
-        if(res.data.state == 200) {
-          _this.getList()
-        }else{
-          _this.$message(res.data.messages)
-        }
+          editgoods(para).then((res) => {
+            console.log('快速改价',res)
+            this.editFormVisible = false
+            if(res.data.state == 200) {
+              this.$message('为避免影响交易，新价格将于次日生效')
+              _this.getList()
+            }else{
+              _this.$message(res.data.messages)
+            }
+          })
+       }
       })
-
     }
   }
 }

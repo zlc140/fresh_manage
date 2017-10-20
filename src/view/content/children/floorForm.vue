@@ -17,13 +17,13 @@ s<template>
                             :multiple="titlePic.multiple"
                             :cropShow="titlePic.cropShow">
                         </vue-core-image-upload>
-                        <p class="tip">提示：用于楼层标题展示的图片最后都会被拉成宽1200px的图片,推荐大小1200px*70px，请注意比例和大小</p> 
+                        <p class="tip">提示：用于楼层标题展示的图片最大宽度为1200px，最大高度为70px，请注意比例和大小</p> 
 				</el-form-item>
 				<el-form-item label="楼层标题" prop="title">
 					<el-input v-model="addForm.title" auto-complete="off" required></el-input>
 				</el-form-item>
                 <el-form-item label="链接地址" prop="titleImage">
-					<el-input v-model="addForm.titleImage.url" auto-complete="off"></el-input>
+					<el-input v-model="addForm.titleImage.url" placeholder="提示：http://hafu365.com" auto-complete="off"></el-input>
 				</el-form-item>
                 <el-form-item label="是否永久显示" prop="onlyShow" >
                     <el-row class="el-input">
@@ -249,11 +249,17 @@ export default {
                         this.$message('请选择类型，并编辑子楼层')
                         return false
                     }
-                    if(this.addForm.body == null || this.addForm.body.length!=4 ){
+                    if(this.addForm.type == 'FLOOR_IMAGES' && (this.addForm.body == null || this.addForm.body.length!=4) ){
                         console.log(this.addForm.body)
-                        this.$message('请编辑子楼层,每个楼层包含四个子楼层')
+                        this.$message('每个广告楼层包含四个子楼层！')
                         return false
                     }
+                     if(this.addForm.type == 'FLOOR_GOODS' && (this.addForm.body == null || this.addForm.body.length%2!=0) ){
+                        console.log(this.addForm.body)
+                        this.$message('商品楼层必须为双数！')
+                        return false
+                    }
+                    
                     this.loginLoading = true
                     let para = {
                             title: this.addForm.title,

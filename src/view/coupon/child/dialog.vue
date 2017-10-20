@@ -2,7 +2,7 @@
   <div class="dialog brand">
     <h3 class="title">{{title}} <el-button class="fr" @click.native="clean">取消</el-button></h3>
     <el-form :model="addForm" :rules="rules" label-width="150px" ref="addForm"> 
-        <el-form-item label="用户名" required prop="userName">
+        <el-form-item label="用户名" required prop="userName" v-if="type=='add'">
         <el-input v-model="addForm.userName" auto-complete="off" placeholder="请输入用户名"></el-input>
       </el-form-item>      
        <el-form-item label="代金券金额" required prop="money">
@@ -57,9 +57,10 @@ export default {
           //  代金券金额
           var validmoney = (rule, value, callback) => {
             var par=/^[0-9]*$/;
-            if (!par.test(value) && value.trim() != '') {
-                callback(new Error('请输入正确格式'));
-            } else if (value.trim() == '') {
+            let str = value +''
+            if (!par.test(value) && str.trim() != '') {
+                callback(new Error('代金券为正整数'));
+            }else if (str.trim() == '') {
                 callback(new Error('不能输入一串空字符'))
             } else {
                 callback()
@@ -87,7 +88,7 @@ export default {
                     { validator: validaddress, trigger: 'blur' }
                 ],
                 money: [
-                    { required: true, message: '代金券金额', trigger: 'blur' },
+                    // { required: true, message: '代金券金额', trigger: 'blur' },
                     { validator: validmoney, trigger: 'blur' }
                 ],
                 description: [
@@ -158,7 +159,8 @@ export default {
           if (this.type == 'add') {
               addvoucher(para).then((res) => {
                  if(res.data.state == 400){
-                    this.$message('用户不存在')
+                    this.clean()
+                    this.$message(res.data.messages)
                  }
                   this.addLoading = true;
                   this.clean()
@@ -174,11 +176,12 @@ export default {
                     type: 'success'
                   })
                   this.clean()
-                } else if (res.data == '') {
-                  this.$message('登录超时，请重新登录')
-                }else{
+                } else{
+                   this.clean()
                   this.$message(res.data.messages)
                 }
+              }).catch(res => {
+                console.log('error',res)
               })
           }
         }

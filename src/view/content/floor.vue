@@ -160,8 +160,11 @@ export default {
 </script>
 
 <style lang="scss">
+.mgT180{
+    margin-top: 180px;
+}
  .floor_box{
-       width:700px;
+       width:900px;
     //    padding: 20px;
     //    border: 1px solid #f0f0f0;
        ul{

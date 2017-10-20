@@ -1,61 +1,48 @@
 <template>
 
-        <div class="dialog-content"  >
-            <div class="table">
-                <el-table :data="datas"  style="width: 100%;" height="500">
-                    <el-table-column type="expand" width="50">
+        <div class="dialog-content" v-loading="listLoading" >
+            <div class="table" v-if="orderDetail != null">
+            <ul class="getAddr">
+                <li><span>订单号:</span> {{orderDetail.ordersId}}<span>应付金额:</span><span class="tip"> {{orderDetail.price | currency}}</span></li>
+            </ul>
+            <el-table  border  :data="orderDetail.goodsList"  style="width: 100%" >  
+                    <el-table-column   prop="goods.goodsTitle"  label="商品名称" min-width="200px"> </el-table-column>
+                    <el-table-column prop="goodsId"  label="商品编号" width="200px"> </el-table-column>
+                    <el-table-column  prop="goods.price.GOODS_MARKET_PRICE" label="商品单价" width="100px">
+                    <template scope="scope">   
+                        <span class="price">{{ scope.row.goods.price.GOODS_MARKET_PRICE | currency }}</span>
+                    </template>
+                    </el-table-column>
+                    <el-table-column  prop="number" label="购买数量" width="100px"> 
                         <template scope="scope">
-                            <div v-if="scope.row.order">
-                            <el-table  border  :data="scope.row.order.goodsList"  style="width: 90%">  
-                                    <el-table-column   prop="goods.goodsTitle"  label="商品名称" min-width="200px"> </el-table-column>
-                                    <el-table-column prop="goodsId"  label="商品编号" width="200px"> </el-table-column>
-                                    <el-table-column  prop="goods.price.GOODS_MARKET_PRICE" label="商品单价" width="100px">
-                                    <template scope="scope">   
-                                        <span class="price">{{ scope.row.goods.price.GOODS_MARKET_PRICE | currency }}</span>
-                                    </template>
-                                    </el-table-column>
-                                    <el-table-column  prop="number" label="商品数量" width="100px"> 
-                                        <template scope="scope">
-                                            <span>× {{scope.row.number}}</span>
-                                        </template>
-                                    </el-table-column>
-                                    <el-table-column  prop="price" label="小计" width="100px"> 
-                                    <template scope="scope">   
-                                        <span class="price">{{ scope.row.price | currency }}</span>
-                                    </template>
-                                    </el-table-column>
-                            </el-table>
-                            <ul class="getAddr">
-                                <li><span>订单号:</span> {{scope.row.order.ordersId}}<span>应付金额:</span><span class="price"> {{scope.row.order.price | currency}}</span></li>
-                            </ul>
-                            </div>
-                            <div v-else>没有详情</div>
+                            <span>× {{scope.row.number}}</span>
                         </template>
                     </el-table-column>
-                    <el-table-column align="center" prop="createTime" label="创建日期" width="180">
+                    <el-table-column  prop="price" label="小计" width="100px"> 
+                    <template scope="scope">   
+                        <span class="price">{{ scope.row.price | currency }}</span>
+                    </template>
+                    </el-table-column>
+                      <el-table-column prop="price" label="拒签数量" width="100px">
                         <template scope="scope">
-                            {{scope.row.createTime | formatDate}}
+                            <span class="price">{{ scope.row.rejection }}</span>
+                        </template>
+                        </el-table-column>
+                        <el-table-column prop="price" label="拒签理由" width="100px">
+                        <template scope="scope">
+                            <span class="price">{{ scope.row.rejectreason?scope.row.rejectreason:'-' }}</span>
                         </template>
                     </el-table-column>
-                    <el-table-column align="center" prop="description" label="描述" >
-                    </el-table-column>
-                    <el-table-column align="left" prop="money" label="金额" width="120">
-                        <template scope="scope">
-                            <span :class="scope.row.type == 300?'greens':'reds'">{{ scope.row.type==300?'+':'-' }} {{ scope.row.money | currency}}</span>
-                        </template>
-                    </el-table-column>
-                    <!-- <el-table-column align="center" prop="type" label="类型" width="180">
-                        <template scope="scope">
-                            <span>{{scope.row.type==300?'-':'+'}}</span>
-                        </template>
-                    </el-table-column> -->
-                </el-table>
+            </el-table>
+           
             </div>
+             <div v-else>没有详情</div>
         </div>
       
 </template>
 
 <script>
+import {orderlist} from '@/service/getData'
 export default {
     props: {
         isShow: {
@@ -63,16 +50,40 @@ export default {
             default: false
         },
         datas:{
-            type:Array,
-            default:[]
+            type:String,
+            default:''
         }
     },
-     
+     data(){
+         return {
+             orderDetail:null,
+             listLoading:false
+         }   
+     },
     mounted(){
+        this.getDetail()
     },
     methods: {
         closeMyself() {
             this.$emit('on-close')
+        },
+        getDetail(){
+                this.listLoading = true
+            	let prop = {
+					ordersId:this.datas
+				}
+                let _this = this
+                console.log(prop)
+				orderlist(prop).then(res => {
+                    console.log(res)
+                      this.listLoading = false
+                      _this.orderDetail = null
+						if(res.data.state == 200){
+								_this.orderDetail = res.data.content.content[0]
+						}else{
+
+                        }
+				})
         }
     },
 }

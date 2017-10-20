@@ -1,5 +1,6 @@
 <template>
   <div>
+      <p class="tip">该楼层包含三个小楼层和一个大楼层</p>
      <el-col :span="4">
       <vue-core-image-upload  
               @getImg = "bodyImg"  
@@ -30,7 +31,7 @@
                   <li v-for="(item,index) in bodyImgs" :key="index">
                         <span class="close" @click="delAdv(item)"><i class="el-icon-close"></i></span>
                       <img :src="item.path"/>
-                      <el-input v-model="item.url" placeholder="图片链接"></el-input>
+                      <el-input v-model="item.url" placeholder="链接 提示：http://hafu365.com"></el-input>
                       <el-input v-model="item.title" placeholder="图片标题"></el-input>
                   </li>
               </ul>
@@ -38,7 +39,7 @@
                   <li >
                       <span class="close"  @click="delAdv('big')"><i class="el-icon-close" ></i></span>
                       <img :src="bodyBigImg.path"/>
-                      <el-input v-model="bodyBigImg.url" placeholder="图片链接"></el-input>
+                      <el-input v-model="bodyBigImg.url" placeholder="链接 提示：http://hafu365.com"></el-input>
                       <el-input v-model="bodyBigImg.title" placeholder="图片标题"></el-input>
                   </li>
               </ul>

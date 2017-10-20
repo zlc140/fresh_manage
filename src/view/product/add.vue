@@ -9,8 +9,8 @@
       <el-form-item v-show="classData.length<1">
         <p class="tip">发布商品之前请先 创建店铺，分类以及品牌！</p>
       </el-form-item>
-      <el-form-item label="店铺名称" prop="storeId">
-        <el-select v-model="addForm.storeId" v-on:change="changeStore()" placeholder="请选择店铺">
+      <el-form-item label="店铺名称" prop="" required v-if="seachMove && title == '发布商品'">
+        <el-select v-model="storeId" v-on:change="changeStore()" placeholder="请选择店铺">
           <el-option v-for="(item,index) in  storeData" :key="index" :value="item.storeId" :label="item.storeName"> </el-option>
         </el-select>
       </el-form-item>
@@ -28,16 +28,16 @@
         <el-input v-model="addForm.goodsTitle"></el-input>
       </el-form-item>
       <el-form-item label="市场价" required prop="marketPrice">
-        <el-input v-model="addForm.marketPrice" type="number" min="0.01"></el-input>
+        <el-input v-model="addForm.marketPrice" placeholder="价格保留小数点后两位" type="number" step="0.01"></el-input>
       </el-form-item>
       <el-form-item label="成本价" required prop="costPrice">
-        <el-input v-model="addForm.costPrice" type="number" min="0.01"></el-input>
+        <el-input v-model="addForm.costPrice" type="number"  step="0.01" placeholder="价格保留小数点后两位"></el-input>
       </el-form-item>
        <el-form-item label="商品单位" prop="sku">
         <el-input v-model="addForm.sku"></el-input>
       </el-form-item>
       <el-form-item label=" 商品提取佣金" required prop="commission">
-        <el-input v-model="addForm.commission" type="number" min="0.01"></el-input>
+        <el-input v-model="addForm.commission" type="number"  step="0.01"></el-input>
       </el-form-item>
       <el-form-item label="商品描述" prop="goodsSubTitle">
         <el-input v-model="addForm.goodsSubTitle"></el-input>
@@ -46,7 +46,7 @@
         <el-input v-model="addForm.keywords"></el-input>
       </el-form-item>
       <el-form-item label="商品库存" required prop="repositoryNum">
-        <el-input v-model="addForm.repositoryNum" type="number" min="1" step="10"></el-input>
+        <el-input v-model="addForm.repositoryNum" type="number"  step="1"></el-input>
       </el-form-item>
      
 
@@ -75,12 +75,14 @@
 
       <!-- 商品详情 -->
       <el-form-item label="商品详情" prop="goodsBody">
+      <p class="tip">提示：商品详情上传的图片宽为1120px</p>
         <vue-editor v-model="addForm.goodsBody" @input="getContent" :value="editor.value">
         </vue-editor>
       </el-form-item>
       <!-- 按钮 -->
       <el-form-item>
         <el-button type="primary" @click="onSubmit">{{this.$route.query.id?'确认编辑':'立即创建'}}</el-button>
+         <span v-if="title == '编辑商品'" class="tip">注意：商品价格修改次日生效，库存与上下架时间马上生效，其他属性需管理员审核后才会生效！</span>
       </el-form-item>
     </el-form>
 
@@ -90,7 +92,8 @@
 <script>
 import vueCoreImageUpload from '@/components/uploadImg'
 import vueEditor from '@/components/vueEditor'
-import { addgoods, addbrandlist, classlist, selectStore, findgoods, editgoods } from '@/service/getData'
+import { addgoods, addbrandlist, classlist, selectAllStore,getMyStore, findgoods, editgoods } from '@/service/getData'
+import { getStore } from '@/config/storage'
 export default {
 
   data() {
@@ -119,27 +122,39 @@ export default {
       }
     };
     var minNum = (rule, value, callback) => {
+      let pas = /^(?!^0*(\.0{1,2})?$)^\d{1,13}(\.\d{1,2})?$/
       if (parseFloat(value) < 0.01) {
         callback(new Error('价格不能少于0.01'))
+      }else if( !pas.test(value) ){
+      callback(new Error('价格格式不正确'))
       } else {
         callback()
       }
     }
     var MoreZero = (rule, value, callback) => {
+      let pas = /^(?!^0*(\.0{1,2})?$)^\d{1,13}(\.\d{1,2})?$/
       if (parseFloat(value) < 0) {
         callback(new Error('佣金必须大于0'))
+      }else if( !pas.test(value) ){
+        callback(new Error('佣金格式不正确'))
       } else {
         callback()
       }
     }
 
     var kcNum = (rule, value, callback) => {
+      let par = /^(?!^0*(\.0{1,2})?$)^\d{1,13}(\.\d{1,2})?$/
       let str = value + ''
-      if (parseFloat(value) < 1) {
+      if(parseFloat(value) == NaN ){
+         callback(new Error('库存格式不正确'))
+      }else if (parseFloat(value) < 1) {
         callback(new Error('库存不少于1'))
       } else if (str.indexOf('.') + 1 > 1) {
         callback(new Error('库存应为整数'))
-      } else {
+        console.log(parseInt(value))
+      } else if (!par.test(value)) {
+        callback(new Error('库存格式不正确'))
+      }else {
         callback()
       }
     }
@@ -148,12 +163,13 @@ export default {
       modShow: false,
       title: '发布商品',
       // 添加商品的字段名
+      storeId: '',//'店铺Id，平台可选，商家固定'
       addForm: {
         goodsTitle: '',//商品名称
         goodsSubTitle: '',//商品描述
         marketPrice: '0.00',//市场价
         costPrice: '0.00',//成本价
-        storeId: '',//'店铺Id，平台可选，商家固定'
+       
         classId: '',//'分类Id'
         brandId: '',//'品牌Id'
         imgs: [],//商品图片
@@ -203,10 +219,7 @@ export default {
         goodsSubTitle: [
           // { validator: nospace, trigger: 'blur' }
         ],
-        storeId: [
-          { required: true, message: '请输入店铺编号', trigger: 'blur,change' },
-          { validator: nospace, trigger: 'blur' }
-        ],
+       
         classId: [
           { required: true, message: '请输入分类编号', trigger: 'blur,change' },
           { validator: nospace, trigger: 'blur' }
@@ -216,7 +229,7 @@ export default {
           { validator: nospace, trigger: 'blur' }
         ],
         sku: [
-          { required: true, message: '请输入商品库存单元', trigger: 'blur,change' },
+          { required: true, message: '请输入商品库存单位', trigger: 'blur,change' },
           { validator: nospace, trigger: 'blur' }
         ],
         soldInTime: [
@@ -225,7 +238,8 @@ export default {
         soldOutTime: [
           { validator: compareaddDate, trigger: 'change' }
         ],
-      }
+      },
+      seachMove:true
 
     };
   },
@@ -233,7 +247,27 @@ export default {
     vueCoreImageUpload, vueEditor
   },
   mounted() {
-    this.getStore()
+
+     if(getStore('roleName') &&　getStore('roleName').roleCode.indexOf('SELLER')>0){
+      this.seachMove = false
+       getMyStore().then(res => {
+        console.log('myStore',res)
+        if(res.data.state == 200 && res.data.messages =="店铺未通过审核！"){
+             this.$message('店铺未通过审核！不能添加或编辑商品')
+             this.$router.push('/view/prolist')
+        }else if(res.data.state == 200 && res.data.messages != '暂无数据！'){
+            this.storeId = res.data.content.storeId
+        }else{
+          this.$message(res.data.messages)
+          this.$router.push('/view/prolist')
+          
+        }
+      })
+    } 
+    if(this.title == '发布商品'){
+      this.getStore()
+    }
+    
     this.getclass()
 
     if (this.$route.query.id) {
@@ -256,10 +290,9 @@ export default {
           let datas = res.data.content
           _this.addForm = {
             goodsTitle: datas.goodsTitle,//商品名称
-            goodsSubTitle: datas.goodsSubTitle,//商品描述
-            marketPrice: datas.price.GOODS_MARKET_PRICE,//市场价
-            costPrice: datas.price.GOODS_COST_PRICE,//成本价
-            storeId: datas.store.storeId,//'店铺Id，平台可选，商家固定'
+            goodsSubTitle: datas.goodsSubTitle?datas.goodsSubTitle:'',//商品描述
+            marketPrice: datas.price.GOODS_MARKET_PRICE?datas.price.GOODS_MARKET_PRICE:'',//市场价
+            costPrice: datas.price.GOODS_COST_PRICE?datas.price.GOODS_COST_PRICE:'',//成本价
             classId: datas.goodsClass.classId,//'分类Id'
             brandId: datas.brand?datas.brand.brandId:'',//'品牌Id'datas.brandId
             imgs: datas.goodsPic,//商品图片
@@ -273,6 +306,7 @@ export default {
             soldOutTime: datas.soldOutTime,//商品结束时间  
 
           }
+          _this.storeId = datas.store?datas.store.storeId:''
           _this.addForm.commission = _this.addForm.commission.toString()
           _this.modShow = true
           _this.selectPic.picList = []
@@ -287,15 +321,26 @@ export default {
     },
     // 店铺
     getStore() {
-      let para = {
-        state: 'STORE_STATE_CHECK_ON'
-      }
-      selectStore(para).then((res) => {
+      
+      let _this = this
+      if(this.seachMove == true){
+      selectAllStore().then((res) => {
+        console.log('stores',res)
         if (res.data.state == 200) {
-          this.storeData = res.data.content.content;
+          _this.storeData = res.data.content;
         }
-
       })
+      }
+      // else{
+      //    getMyStore().then(res => {
+      //       console.log('myStore',res)
+      //       if(res.data.state == 200 && res.data.messages != '暂无数据！'){
+      //           _this.storeId = res.data.content.storeId
+      //       }else{
+      //         this.$message('您的店铺还没有审核，请确认是否完善资料！')
+      //       }
+      //     })
+      // }
     },
     // 分类
     getclass() {
@@ -328,7 +373,7 @@ export default {
     },
     getBrand() {
       let para = {
-        storeId: this.addForm.storeId,
+        storeId: this.storeId,
         classId: this.addForm.classId
       }
       console.log(para)
@@ -341,17 +386,18 @@ export default {
       })
     },
     changeStore: function() {
-      if(this.addForm.storeId != '' && this.addForm.classId !=''){
+      if(this.storeId != '' && this.addForm.classId !=''){
            this.getBrand()
       }
     },
     changeclass: function() {
-      if(this.addForm.storeId != '' && this.addForm.classId !=''){
+      if(this.storeId != '' && this.addForm.classId !=''){
            this.getBrand()
       }
     },
     onSubmit() {
       let _this = this
+      console.log('teset',this.storeId,this.seachMove)
       this.$refs.addForm.validate((valid) => {
         if (valid) {
           let para = Object.assign({}, this.addForm);
@@ -359,6 +405,7 @@ export default {
             this.$message('商品图片为必传！')
             return false
           }
+
           para.imgs = JSON.stringify(para.imgs)
           if (para.soldInTime == '') {
             para.soldInTime = ''
@@ -371,26 +418,34 @@ export default {
             para.soldOutTime = para.soldOutTime.getTime() + '';
           }
           if (!this.$route.query.id) {
+           
+              para.storeId = _this.storeId
+            
+            console.log('add',para)
+            this.modShow = false
             addgoods(para).then((res) => {
+              console.log('add',res)
               if (res.data.state == 200) {
                 _this.$confirm('添加成功', {
                   confirmButtonText: '继续添加',
                   cancelButtonText: '去查看',
                 }).then(() => {
                   _this.selectPic.picList = []
+                   this.modShow = true
                   document.body.scrollTop = 0
                   _this.$refs['addForm'].resetFields()
                 }).catch(() => {
                   _this.$router.push('/view/prolist')
                 })
               }else{
-                this.$message(res.data.message)
+                this.$message(res.data.messages)
                 _this.$router.push('/view/prolist')
               }
             })
           } else {
             para.goodsId = this.$route.query.id
             console.log('go',para)
+            
             editgoods(para).then((res) => {
               console.log(res)
               if (res.data.state == 200) {

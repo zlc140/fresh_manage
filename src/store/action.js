@@ -54,6 +54,13 @@ export default {
                                     return v
                                 }
                         })
+                        // accessRoutes.unshift({
+                        //     name:'后台首页',
+                        //     path:'/welcome',
+                        //     children:[
+                        //         {path:'index',name:'生鲜首页'}
+                        //     ]
+                        // })
                         console.log('getRouters',accessRoutes)
                         role.name = res.data.content.role.name
                         role.roleCode = res.data.content.role.roleCode;
@@ -77,6 +84,7 @@ export default {
             method:'post',
             url:'/user-center/logout'
         }).then((res) => {
+            console.log('logout ',res)
             commit('LOGOUT')
             return true
         })

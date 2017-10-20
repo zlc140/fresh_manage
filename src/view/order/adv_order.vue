@@ -5,41 +5,48 @@
             <el-form ref="form" class="" :model="form" label-width="80px">
             <el-form-item label="订单编号">
                 <el-input v-model="form.ordersId "></el-input>
-            </el-form-item>       
+            </el-form-item> 
+            <el-form-item label="店铺名称" v-if="seachMove">
+            <el-input v-model="form.storeName "></el-input>
+          </el-form-item>      
             <el-form-item label="下单时间" >
                 <el-date-picker  type="date"  placeholder="选择开始日期时间" v-model="form.startTime"></el-date-picker>
-                <el-date-picker  type="date"  placeholder="选择结束日期时间" v-model="form.endTime"> </el-date-picker>
+                <el-date-picker  type="date"  placeholder="选择结束日期时间" v-model="form.endTime"  > </el-date-picker>
             </el-form-item>     
             <el-form-item>
                 <el-button type="primary" @click="onSubmit('search')">查询</el-button>
             </el-form-item>
             </el-form>
         </div>
-  <el-table  :data="getData" border style="width: 98%">
+  <el-table  :data="getData" border style="width: 98%"  v-loading="listLoading">
     <!-- 子级 -->
     <el-table-column type="expand"  prop="goodsList">
       <template scope="scope">
-            <el-table    :data="scope.row.goodsList"  style="width: 90%">  
-                <el-table-column   prop="goods.goodsTitle"  label="商品名称" min-width="120px"> </el-table-column>
-                <el-table-column prop="goodsPic" label="商品图片" width="150" >
-                  <template scope="scope" >                 
-                      <img :src="scope.row.goods.goodsPic[0].path" />                 
-                  </template>
-              </el-table-column>
-                <el-table-column prop="goods.goodsSubTitle"  label="商品描述"> </el-table-column>
-                <el-table-column prop="goodsId"  label="商品编号"> </el-table-column>
-                <el-table-column  prop="goods.price.GOODS_MARKET_PRICE" label="商品单价">
-                   <template scope="scope">   
-                      <span class="price">{{ scope.row.goods.price.GOODS_MARKET_PRICE | currency }}</span>
-                  </template>
-                   </el-table-column>
-                <el-table-column  prop="number" label="商品数量"> </el-table-column>
-                <el-table-column  prop="price" label="小计"> 
-                   <template scope="scope">   
-                    <span class="price">{{ scope.row.price | currency }}</span>
-                </template>
-                </el-table-column>
+           <el-table border :data="scope.row.goodsList" style="width: 90%">
+
+            <el-table-column prop="goods.goodsTitle" label="商品名称" min-width="200px"> </el-table-column>
+            <el-table-column prop="goodsId" label="商品编号" width="200px"> </el-table-column>
+            <el-table-column prop="goods.price.GOODS_MARKET_PRICE" label="商品单价" width="100px">
+              <template scope="scope">
+                <span class="price">{{ scope.row.goods.price.GOODS_MARKET_PRICE | currency }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column prop="number" label="商品数量" width="100px"> </el-table-column>
+            <el-table-column prop="price" label="小计" width="100px">
+              <template scope="scope">
+                <span class="price">{{ scope.row.price | currency }}</span>
+              </template>
+            </el-table-column>
           </el-table>
+          <!-- <img :src="scope.row.qrcodeImg" style="width:100px;"/> -->
+          <ul class="getAddr">
+            <li>
+              <span>收货人:</span> {{scope.row.orderDaddress.name}}</li>
+            <li>
+              <span>电话:</span> {{scope.row.orderDaddress.phone}}</li>
+            <li>
+              <span>收货地址:</span> {{scope.row.orderDaddress.address}}</li>
+          </ul>
       </template>
     </el-table-column>
     <!-- 父级 -->
@@ -49,9 +56,30 @@
             {{scope.row.store.storeName}}
          </template>
     </el-table-column> -->
-    <el-table-column label="下单时间"  prop="createTime" min-width="100px">
-      <template scope="scope">   
-            <span>{{ scope.row.createTime | formatDate }}</span>
+   
+    <el-table-column label="店铺" prop="">
+        <template scope="scope">
+          {{scope.row.store.storeName}}
+        </template>
+      </el-table-column>
+       <el-table-column label="买家" prop="username">
+        <template scope="scope">   
+            <span>{{ scope.row.username}}</span>
+        </template>
+    </el-table-column>
+     <el-table-column label="收货人" prop="">
+        <template scope="scope">   
+            <span>{{ scope.row.orderDaddress?scope.row.orderDaddress.name:'-'}}</span>
+        </template>
+    </el-table-column>
+     <el-table-column label="收货人地址" prop="">
+        <template scope="scope">   
+            <span>{{ scope.row.orderDaddress?scope.row.orderDaddress.address:''}}</span>
+        </template>
+    </el-table-column>
+    <el-table-column label="收货人电话" prop="">
+        <template scope="scope">   
+            <span>{{ scope.row.orderDaddress?scope.row.orderDaddress.phone:''}}</span>
         </template>
     </el-table-column>
     <el-table-column label="订单总额" prop="price">
@@ -59,19 +87,9 @@
             <span class="price">{{ scope.row.price | currency }}</span>
         </template>
     </el-table-column>
-     <el-table-column label="买家" prop="">
-        <template scope="scope">   
-            <span>{{ scope.row.orderDaddress?scope.row.orderDaddress.name:'-'}}</span>
-        </template>
-    </el-table-column>
-     <el-table-column label="买家地址" prop="">
-        <template scope="scope">   
-            <span>{{ scope.row.orderDaddress?scope.row.orderDaddress.address:''}}</span>
-        </template>
-    </el-table-column>
-    <el-table-column label="买家电话" prop="">
-        <template scope="scope">   
-            <span>{{ scope.row.orderDaddress?scope.row.orderDaddress.phone:''}}</span>
+     <el-table-column label="下单时间"  prop="createTime" min-width="100px">
+      <template scope="scope">   
+            <span>{{ scope.row.createTime | formatDate }}</span>
         </template>
     </el-table-column>
   </el-table>
@@ -86,10 +104,12 @@
 
 
 <script>
-import {findadvOrder} from '@/service/getData'
+import { getStore } from '@/config/storage'
+import {findadvOrder,findStoreadvOrder} from '@/service/getData'
 export default {
   data(){
     return{ 
+        listLoading:false,
          form: {
           ordersId : '',
           storeName:'',
@@ -104,17 +124,24 @@ export default {
         lists: [],
         sels: [],//列表选中列
         getData:[],
+        seachMove:true
     }
   },
      mounted(){         
-           this.getorderlist()
+           
+            if(getStore('roleName') &&　getStore('roleName').roleCode.indexOf('SELLER')>0){
+                this.seachMove = false//商家所属订单
+            } 
+            console.log('this.seachMove',this.seachMove)
+            this.getorderlist()
     },
     methods:{
         getorderlist(){
+            this.listLoading = true
              let para = {
                 page: this.page-1,
                 pageSize:this.pageSize,
-                storeId:'S20170901141042903',   
+                // storeId:'S20170901141042903',   
                 startTime:this.form.startTime,
                 endTime:this.form.endTime,
                 ordersId:this.form.ordersId
@@ -129,16 +156,33 @@ export default {
             }else{
               para.endTime=para.endTime.getTime()
             }
-         
-          this.getData=[]
-          this.total = 0
+            if(para.startTime!='' && para.endTime!='' && para.endTime<para.startTime){
+                this.$message('结束时间应该大于开始时间')
+                return false
+            }
+        //   if(this.seachMove == true){
+               
               findadvOrder(para).then((res) => {
+                  this.listLoading = false
                   if(res.data.state == 200){
                       console.log(res.data)
                     this.getData=res.data.content.content
                     this.total = res.data.content.totalElements
+                  }else{
+                      this.getData = []
+                      this.total = 0
+                      this.$message(res.data.messages)
                   }
               })
+            // }else{
+            //     findStoreadvOrder(para).then((res) => {
+            //       if(res.data.state == 200){
+            //           console.log(res.data)
+            //         this.getData=res.data.content.content
+            //         this.total = res.data.content.totalElements
+            //       }
+            //   })
+            // }
        },
           // 查询
       onSubmit(data){

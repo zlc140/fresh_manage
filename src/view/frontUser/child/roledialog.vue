@@ -44,7 +44,7 @@ export default {
                 pIds: '',
                 roleCode: '',
                 name: '',
-                theDefault :''
+                theDefault :false
             },
              addFormRules: {
                 name: [
@@ -77,6 +77,7 @@ export default {
     mounted() {
        console.log(this.addForm)
         if (this.type == "edit") {
+            
             this.addForm = {
                 id: this.formData.id,
                 pIds:'',
@@ -84,10 +85,11 @@ export default {
                 roleCode: this.formData.roleCode,
                 theDefault :this.formData.theDefault
             }
+             this.getPer()
            
         }
-        this.getclass()
-        this.getPer()
+        this.getclass()//得到权限列表
+        // this.getPer()
         
     },
     methods: {
@@ -149,7 +151,7 @@ export default {
                         pIds: this.addForm.pIds,
                         name: this.addForm.name,
                         roleCode: this.addForm.roleCode,
-                        theDefault :this.addForm.theDefault
+                        default :this.addForm.theDefault
                     }
                     console.log('role',para)
                     if (this.type == 'add') {

@@ -153,9 +153,12 @@ export default {
         this.listLoding = true;
         let para = { id: row.id }
         roledel(para).then((res) => {
+          console.log('del',res)
           this.listLoding = false;
           _this.getList()
         })
+      }).catch((res) => {
+        
       })
     },
   }

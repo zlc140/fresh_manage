@@ -39,7 +39,34 @@
 				<!-- 父级 -->
 				<el-table-column label="描述"　type="expand" prop="description" width="40"> 
 						<template scope="scope">
-							 <div v-html="scope.row.description"></div>
+						<el-table :data="scope.row.billsInfos"  style="width: 100%;">
+                     <el-table-column align="center" prop="" label="订单号" width="180">
+                        <template scope="scope">
+                            {{scope.row.orderId?scope.row.orderId:''}}
+                        </template>
+                    </el-table-column>
+                    <el-table-column align="center" prop="createTime" label="创建日期" width="180">
+                        <template scope="scope">
+                            {{scope.row.createTime | formatDate}}
+                        </template>
+                    </el-table-column>
+                    <el-table-column align="center" prop="description" label="描述" >
+                    </el-table-column>
+                    <el-table-column align="left" prop="money" label="金额" width="120">
+                        <template scope="scope">
+                            <span :class="scope.row.type == 300?'greens':'reds'">{{ scope.row.type==300?'+':'-' }} {{ scope.row.money | currency}}</span>
+                        </template>
+                    </el-table-column>
+                   <el-table-column align="center"   label="操作"  width="120" >
+											<template scope="scope">
+												<div class="play_box">
+													<a  @click="aboutClick(scope.row.orderId)">订单详情</a>
+												</div>
+											</template>
+										</el-table-column>
+                </el-table>
+								<p class="tip">交易记录</p>
+							 <div style="line-height:30px;" v-html="scope.row.description!=null?scope.row.description:'无记录'"></div>
 						</template>
 				</el-table-column>
 				<el-table-column label="账单号" prop="id" width="180">  </el-table-column>
@@ -76,7 +103,6 @@
 				<el-table-column align="center"   label="操作"  width="120" >
 					<template scope="scope">
 						<div class="play_box">
-							<a  @click="aboutClick(scope.row)">查看详情</a>
 							<a class="reds" @click="handleDialog(scope.row)" v-if="scope.row.state==100">手动收账</a>
 						</div>
 					</template>
@@ -87,8 +113,8 @@
 				<el-pagination layout="total,prev,pager,next" :current-page.sync="currentPage1" :page-size='pageSize' :total="total" @current-change="handleCurrentChange">
 				</el-pagination>        
         </el-col>
-        <el-dialog v-model="isShowDialog">
-            <bill-detail :datas="bills"   ></bill-detail> 	
+        <el-dialog  v-model="isShowDialog">
+            <bill-detail :datas="orderDetail"  v-if="isShowDialog" ></bill-detail> 	
         </el-dialog>
 		 		<el-dialog v-model="isShowForm">
 					 <el-form :model="addForm" label-width="180px" size="small" :rules="addFormRules"  ref="addForm">
@@ -152,7 +178,7 @@ export default {
 				select:'one',
 				isShowDialog:false,
 				lists:[],
-				bills:[],
+				orderDetail:null,
 				state:''
 			}
 		},
@@ -205,9 +231,12 @@ export default {
 				}
 				this.getBills()
 			},
-			aboutClick(row){
-				this.bills = row.billsInfos
+			aboutClick(id){
+				// this.bills = row.billsInfos
+				this.orderDetail = id
 				this.isShowDialog = true
+			
+			 
 			},
 			closeDialog (attr) {
 				this[attr] = false

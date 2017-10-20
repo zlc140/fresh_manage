@@ -1,8 +1,8 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 
-import {Login} from './component'
-
+import {Login,Index} from './component'
+ 
 
 import main from '../components/main'
 import Print from '../components/print'
@@ -45,6 +45,14 @@ export const router = new Router({
   routes: [
     { path:'/', redirect:'/login'},
     {  path:'/login', name:'登录', component:Login },
+    {  
+      path:'/welcome',
+      name:'后台首页', 
+      component:main,
+      children:[
+          {path:'index',component:Index,name:'后台首页'},
+      ]
+    },
     {
       path:'/content',
       name:'首页管理',
@@ -107,7 +115,7 @@ export const router = new Router({
     },
     {
       path:'/check',
-      name:'审核',
+      name:'审核模块',
       component:main,
       children:[
           {path:'checkBrand',component:checkBrand,name:'品牌审核'},
@@ -157,5 +165,19 @@ export const router = new Router({
       component:Print
     }
     ]
+})
+
+//通过afterEach做的页面名称的改变
+router.afterEach(( to,from ) => {
+  let titles = []
+  let matched = to.name
+ // title动态添加
+ document.title = matched
+ const decode = decodeURIComponent
+ // 打印路由
+ if(process.env.NODE_ENV === 'development'){
+     console.info(`[路由日志] ${decode(from.path || '')} => ${decode(to.path)}`)
+ }
+ 
 })
   
