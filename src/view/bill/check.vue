@@ -34,7 +34,34 @@
 				<!-- 父级 -->
 				<el-table-column label="描述"　type="expand" prop="description" width="40"> 
 						<template scope="scope">
-							 <div v-html="scope.row.description"></div>
+						<el-table :data="scope.row.billsInfos"  style="width: 100%;">
+							<el-table-column align="center" prop="" label="订单号" width="180">
+								<template scope="scope">
+									{{scope.row.orderId?scope.row.orderId:''}}
+								</template>
+							</el-table-column>
+							<el-table-column align="center" prop="createTime" label="创建日期" width="180">
+								<template scope="scope">
+									{{scope.row.createTime | formatDate}}
+								</template>
+							</el-table-column>
+							<el-table-column align="center" prop="description" label="描述" >
+							</el-table-column>
+							<el-table-column align="left" prop="money" label="金额" width="120">
+								<template scope="scope">
+									<span :class="scope.row.type == 300?'greens':'reds'">{{ scope.row.type==300?'+':'-' }} {{ scope.row.money | currency}}</span>
+								</template>
+							</el-table-column>
+							<el-table-column align="center"   label="操作"  width="120" >
+								<template scope="scope">
+									<div class="play_box">
+										<a  @click="aboutClick(scope.row.orderId)">订单详情</a>
+									</div>
+								</template>
+							</el-table-column>
+						</el-table>
+						<p class="tip">交易记录</p>
+						<div v-html="scope.row.description"></div>
 						</template>
 				</el-table-column>
 				<el-table-column label="账单号" prop="id" width="180">  </el-table-column>
@@ -71,7 +98,6 @@
 				<el-table-column align="center"   label="操作"  width="120" >
 					<template scope="scope">
 						<div class="play_box">
-							<a  @click="aboutClick(scope.row)">查看详情</a>
 							<a class="reds" @click="handleDialog(scope.row)">审核账单</a>
 						</div>
 					</template>
@@ -181,8 +207,8 @@ export default {
 				}
 				this.getBills()
 			},
-			aboutClick(row){
-				this.bills = row.billsInfos
+			aboutClick(id){
+				this.orderDetail = id
 				this.isShowDialog = true
 			},
 			closeDialog (attr) {

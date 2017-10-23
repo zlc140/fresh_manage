@@ -3,7 +3,7 @@
         <div class="dialog-content" v-loading="listLoading" >
             <div class="table" v-if="orderDetail != null">
             <ul class="getAddr">
-                <li><span>订单号:</span> {{orderDetail.ordersId}}<span>应付金额:</span><span class="tip"> {{orderDetail.price | currency}}</span></li>
+                <li><span>订单号:</span> {{orderDetail.ordersId}}   　　　<span>应付金额:</span><span class="tip"> {{orderDetail.price | currency}}</span></li>
             </ul>
             <el-table  border  :data="orderDetail.goodsList"  style="width: 100%" >  
                     <el-table-column   prop="goods.goodsTitle"  label="商品名称" min-width="200px"> </el-table-column>

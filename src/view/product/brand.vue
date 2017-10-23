@@ -75,7 +75,7 @@
 <script>
 import { getStore } from '@/config/storage'
 import dialogTem from './prochild/branddia'
-import { brandlist, branddelete,selectStore,getMyStore,closeBrand } from '@/service/getData'
+import { brandlist, branddelete,selectAllStore,getMyStore,closeBrand } from '@/service/getData'
 export default {
   data() {
     return {
@@ -142,7 +142,7 @@ export default {
         storeId: this.form.storeId,
       }
       brandlist(para).then((res) => {
-        console.log('brand',para)
+        console.log('brand',res)
         _this.listLoading = false
         if(res.data.state == 200){
             _this.getData = res.data.content.content;
@@ -154,12 +154,12 @@ export default {
     },
       // 得到店铺
      getStore() {
-      let para = {
-        state: 'STORE_STATE_CHECK_ON'
-      }
-      selectStore(para).then((res) => {
+      // let para = {
+      //   state: 'STORE_STATE_CHECK_ON'
+      // }
+      selectAllStore().then((res) => {
         if (res.data.state == 200) {
-          this.storeData = res.data.content.content;
+          this.storeData = res.data.content;
           this.storeData.push({
             storeId:'',
             storeName:'全部'

@@ -156,7 +156,7 @@ import {quillEditor} from 'vue-quill-editor'
     },
     data() {
       return {
-        content: '',
+        content: '商品编辑',
         editorOption: {
           modules: {
             toolbar: '#toolbar'

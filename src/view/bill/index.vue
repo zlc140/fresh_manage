@@ -235,8 +235,6 @@ export default {
 				// this.bills = row.billsInfos
 				this.orderDetail = id
 				this.isShowDialog = true
-			
-			 
 			},
 			closeDialog (attr) {
 				this[attr] = false

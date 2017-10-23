@@ -244,6 +244,9 @@ export default {
              }
           child.rolesName = child.rolesName.substr(0,child.rolesName.length-1) 
             }, this);     
+        }else{
+          _this.tableData = []
+          _this.totalElements = 0
         }
       }).catch(() => {
         _this.listLoading = false

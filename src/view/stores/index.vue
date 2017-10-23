@@ -17,7 +17,7 @@
           </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="onSubmit('search')">查询</el-button>
-             <el-button type="primary" :plain="true"  @click="handleDialog('add')">创建店铺</el-button>
+             <!-- <el-button type="primary" :plain="true"  @click="handleDialog('add')">创建店铺</el-button> -->
           </el-form-item>
           <el-form-item>
            
